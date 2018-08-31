@@ -10,6 +10,8 @@ typedef struct Atom{
 	double bvv0;//prefered bond valence vector equilibrium
 	double bvvreal;//real valence according to bond valence vector formula.
 	int type;
+	std::list<int> pairbv;
+	std::list<int> pairbvv;
 }atom;
 class box{
 	public:
@@ -18,14 +20,15 @@ class box{
 				int t,
 				int s,
 				double* period,
-				double** pairbvco,
 				double cutoff
 				);
+		void freezeforce();/*freeze force for other people to calculate accumulative force*/
+		void updatelistforbv();/*update once and use forever, big trick*/
+		void computebv(double** pair_bv_co,double rcut);
 		~box(){
 			delete p;
 			delete allatom;
 			delete virtatom;
-			delete pair_bv_co;
 		};
 	private:
 		int virtsize;
@@ -34,6 +37,5 @@ class box{
 		int size;//store how many atoms are in the simulation box.
 		int type;//store how many types of atoms are in the simulation box.
 		atom* virtatom;//store the virtual atom image.
-		double** pair_bv_co;//store the pair_bv_co;
 };
 #endif

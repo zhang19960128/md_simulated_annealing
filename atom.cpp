@@ -6,7 +6,6 @@ box::box(atom* inputallatom,
 		int t,
 		int s,
 		double* period,
-		double** pairbvco,
 		double cutoff
 		){
 	p=new double[3];
@@ -16,15 +15,34 @@ box::box(atom* inputallatom,
 	allatom=new atom[s];
 	type=t;
 	size=s;
-	pair_bv_co=new double* [t];
-	for(size_t i=0;i<t;i++){
-		pair_bv_co[i]=new double[t];
-	}
-	for(size_t i=0;i<t;i++)
-		for(size_t j=0;j<t;j++){
-			pair_bv_co[i][j]=pairbvco[i][j];
-		}
 	int virt_size;
 	virtatom=imageall(allatom,size,period,cutoff,virt_size);
 	virtsize=virt_size;
 }
+box::freezeforce(){
+	for(size_t i=0;i<size;i++){
+		allatom[i].force[0]=0.0;
+		allatom[i].force[0]=0.0;
+		allatom[i].force[0]=0.0;
+	}
+}
+box::updatelistbv(){
+
+}
+/*starting a light version of bond valence with computing the force and bond valence energy*/
+void box::computebv(double** pair_bv_co,double rcut){
+	/*bond valence parameters.
+	 *typeone typetwo r0 Nij S V0 rcut
+	 * 1     1        ###############   
+	 * 1     1        ###############
+	 * 1     1        ###############
+	 * 1     1        ###############
+	 * 1     1        ###############
+	 * 1     1        ###############
+	 * 1     1        ###############
+	 * 1     1        ###############
+	 * 1     1        ###############
+	 */
+	 
+}
+/*end define the bond-valence energy*/

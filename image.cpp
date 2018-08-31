@@ -26,6 +26,7 @@ atom* imageall(atom* input,int size,double* p,double cutoff,int& virt_size){
 				imagetick=(i+virt_size)+(j+virt_size)*virt_size+(k+virt_size)*virt_size*virt_size;
 				shift(allimage+imagetick,size,p,shiftv);
 	}
+	virt_size=virt_size*virt_size*virt_size*size;
 	return allimage;
 }
 void shift(atom* input,int size,double* p,int* shiftv){
