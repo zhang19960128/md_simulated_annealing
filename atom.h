@@ -10,6 +10,22 @@ typedef struct Atom{
 	double bvv0;//prefered bond valence vector equilibrium
 	double bvvreal;//real valence according to bond valence vector formula.
 	int type;
-}atom
-
+}atom;
+class box{
+	public:
+		box()=default;//c++ 11 feature
+		box(atom* inputallatom,
+				int t,
+				int s,
+				double* period,
+				double** pairbvco
+				);
+	private:
+		double* p;//store the periodical boundary condition.
+		atom* allatom;//store the atom array.
+		int size;//store how many atoms are in the simulation box.
+		int type;//store how many types of atoms are in the simulation box.
+		atom* virtatom;//store the virtual atom image.
+		double** pair_bv_co;//store the pair_bv_co;
+}
 #endif

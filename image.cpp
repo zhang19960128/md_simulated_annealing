@@ -1,4 +1,5 @@
 #include "atom.h"
+#include <new>
 #include "image.h"
 #include "stdio.h"
 atom* imageall(atom* input,int size,double* p,double cutoff,double& virt){
