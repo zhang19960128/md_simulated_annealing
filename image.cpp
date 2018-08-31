@@ -2,14 +2,14 @@
 #include <new>
 #include "image.h"
 #include "stdio.h"
-atom* imageall(atom* input,int size,double* p,double cutoff,double& virt){
+atom* imageall(atom* input,int size,double* p,double cutoff,int& virt_size){
 	double min=0.0;
 	for(size_t i=0;i<3;i++){
 		if(p[i]>min)
 			min=p[i];
 	}
 	int nimage=ceil(cutoff/min);
-	virt=nimage*2+1;
+	virt_size=nimage*2+1;
 	atom* allimage=new atom[virt*size*virt*virt];
 	/*copy all the memory to different images*/
 	for(size_t i=0;i<virt*virt*virt;i++){

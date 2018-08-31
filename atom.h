@@ -35,5 +35,5 @@ class box{
 		int type;//store how many types of atoms are in the simulation box.
 		atom* virtatom;//store the virtual atom image.
 		double** pair_bv_co;//store the pair_bv_co;
-}
+};
 #endif

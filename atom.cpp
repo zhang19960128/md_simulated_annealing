@@ -2,13 +2,13 @@
 #include <stdio.h>
 #include "image.h"
 #include <new>
-box(atom* inputallatom,
-				int t,
-				int s,
-				double* period,
-				double** pairbvco,
-				double cutoff
-				){
+box::box(atom* inputallatom,
+		int t,
+		int s,
+		double* period,
+		double** pairbvco,
+		double cutoff
+		){
 	p=new double[3];
 	for(size_t i=0;i<3;i++){
 		p[i]=period[i];
