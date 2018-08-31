@@ -18,9 +18,17 @@ class box{
 				int t,
 				int s,
 				double* period,
-				double** pairbvco
+				double** pairbvco,
+				double cutoff
 				);
+		~box(){
+			delete p;
+			delete allatom;
+			delete virtatom;
+			delete pair_bv_co;
+		};
 	private:
+		int virtsize;
 		double* p;//store the periodical boundary condition.
 		atom* allatom;//store the atom array.
 		int size;//store how many atoms are in the simulation box.

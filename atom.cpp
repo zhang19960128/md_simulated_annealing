@@ -7,7 +7,7 @@ box(atom* inputallatom,
 				int s,
 				double* period,
 				double** pairbvco,
-				double** cutoff
+				double cutoff
 				){
 	p=new double[3];
 	for(size_t i=0;i<3;i++){
@@ -24,5 +24,7 @@ box(atom* inputallatom,
 		for(size_t j=0;j<t;j++){
 			pair_bv_co[i][j]=pairbvco[i][j];
 		}
-	virtatom=imageall(allatom,size,period,)
+	int virt_size;
+	virtatom=imageall(allatom,size,period,cutoff,virt_size);
+	virtsize=virt_size;
 }
