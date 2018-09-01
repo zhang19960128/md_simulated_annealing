@@ -6,7 +6,7 @@ atom* imageall(atom* input,int size,double* p,double cutoff,int& virt_size){
 	double min=0.0;
 	for(size_t i=0;i<3;i++){
 		if(p[i]>min)
-			min=p[i];
+			min=p[i]; /*I don't think this operation can give you the correct cell parameters*/
 	}
 	int nimage=ceil(cutoff/min);
 	virt_size=nimage*2+1;
