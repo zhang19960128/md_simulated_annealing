@@ -1,3 +1,1 @@
-# dataprocess_ABO3
-# md_simulated_annealing
-I just finished the construction of box.
+This code is used to perform the simulated annealing.
