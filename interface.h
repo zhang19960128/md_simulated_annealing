@@ -2,5 +2,5 @@
 #define interface_h
 #include <fstream>
 #include <string>
-double** getparameter(std::string pair_style,std::fstream fs)
+double** getparameter(std::string pair_style,std::fstream& fs);
 #endif
