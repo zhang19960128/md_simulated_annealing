@@ -1,5 +1,6 @@
 #ifndef atom_h
 #define atom_h
+#include <list>
 /*since this is a light version of calculating the bond valence energy and force, we are not going to construct neighbor list for this atom*/
 typedef struct Atom{
 	double position[3];
@@ -10,9 +11,10 @@ typedef struct Atom{
 	double bvv0;//prefered bond valence vector equilibrium
 	double bvvreal;//real valence according to bond valence vector formula.
 	int type;
-	std::list<int> pairbv;
-	std::list<int> pairbvv;
+	std::list<int> neibv;
+	std::list<int> neibvv;
 }atom;
+double distance(double* a,double* b);
 class box{
 	public:
 		box()=default;//c++ 11 feature
@@ -23,7 +25,8 @@ class box{
 				double cutoff
 				);
 		void freezeforce();/*freeze force for other people to calculate accumulative force*/
-		void updatelistforbv();/*update once and use forever, big trick*/
+		void updatelistbv(double rcut);/*update once and use forever, big trick*/
+		void updatelistbvv(double rcut);
 		void computebv(double** pair_bv_co,double rcut);
 		~box(){
 			delete p;
@@ -31,7 +34,7 @@ class box{
 			delete virtatom;
 		};
 	private:
-		int virtsize;
+		int virtsize;//store how many image atoms are there.
 		double* p;//store the periodical boundary condition.
 		atom* allatom;//store the atom array.
 		int size;//store how many atoms are in the simulation box.
