@@ -7,6 +7,7 @@ typedef struct Atom{
 	double force[3];
 	double charge;//coulumb charge
 	double bv0;//prefered bond valence_equilibrium.
+	double s0;//real bond valence term
 	double bvreal;//real valence according to bond valence formula
 	double bvv0;//prefered bond valence vector equilibrium
 	double bvvreal;//real valence according to bond valence vector formula.
@@ -22,12 +23,13 @@ class box{
 				int t,
 				int s,
 				double* period,
-				double cutoff
+				double** pairbv_input,
+				double** pairbvv_input
 				);
 		void freezeforce();/*freeze force for other people to calculate accumulative force*/
-		void updatelistbv(double rcut);/*update once and use forever, big trick*/
-		void updatelistbvv(double rcut);
-		void computebv(double** pair_bv_co,double rcut);
+		void updatelistbv();/*update once and use forever, big trick*/
+		void updatelistbvv();
+		void computebv();
 		~box(){
 			delete p;
 			delete allatom;
@@ -40,5 +42,15 @@ class box{
 		int size;//store how many atoms are in the simulation box.
 		int type;//store how many types of atoms are in the simulation box.
 		atom* virtatom;//store the virtual atom image.
+	  /*the name of the parameters refer to Shi Liu
+		 *Reinterpretation of the bond-valence model with bond-valence model with bond-order formalism: An improved bond-valence-based interatomic potential for PbTiO3
+		 * */
+		double** r0;//bv r0
+		double** v0;//bv v0
+		double** cij;//bv powerlaw
+		double** sij;//bv energy coeffiecient
+		double** bvrcut;//cut-off for bv
+		double bvenergy;//energy produced by bond valence.
+		double** bvvrcut;//cut-off for bvv
 };
 #endif
