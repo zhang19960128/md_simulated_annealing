@@ -3,7 +3,7 @@
 #include "image.h"
 #include <iostream>
 atom* imageall(atom* input,int size,double* p,double cutoff,int& virt_size){
-	double min=0.0;
+	double min=100000;
 	for(size_t i=0;i<3;i++){
 		if(p[i]<min)
 			min=p[i]; 
@@ -27,6 +27,7 @@ atom* imageall(atom* input,int size,double* p,double cutoff,int& virt_size){
 				shift(allimage+imagetick,size,p,shiftv);
 	}
 	virt_size=virt_size*virt_size*virt_size*size;
+	std::cout<<virt_size<<std::endl;
 	return allimage;
 }
 void shift(atom* input,int size,double* p,int* shiftv){
