@@ -15,6 +15,7 @@ typedef struct Atom{
 	int type;
 	std::list<int> neibv;
 	std::list<int> neibvv;
+    std::list<int> neilj;
 }atom;
 double distance(double* a,double* b);
 class box{
@@ -26,14 +27,21 @@ class box{
 				double* period,
 				double** pairbv_input,
 				double** pairbvv_input
-				);
+				double** pairlj_input,
+                double ljrcut=8.0
+
+                );
 		void freezeforce();/*freeze force for other people to calculate accumulative force*/
 		void updatelistbv();/*update once and use forever, big trick*/
 		void updatelistbvv();
 		void updatebv(double** input);
-		void computebv();
+		void updatelistlj();
+        void computebv();
 		void printnei();
-		~box(){
+        void lj12();
+
+		~box()
+        {
 			for(size_t i=0;i<type;i++){
 				delete [] r0[i];
 				delete [] v0[i];
@@ -42,6 +50,7 @@ class box{
 				delete [] bvrcut[i];
 				delete [] bvvrcut[i];
 				delete [] vv0[i];
+                delete [] bij[i];
 			}
 			delete [] r0;
 			delete [] v0;
@@ -51,6 +60,7 @@ class box{
 			delete [] bvvrcut;
 			delete [] vv0;
 			delete [] allatom;
+            delete [] bij;
 		};
 	private:
 		int virtsize;//store how many image atoms are there.
@@ -68,7 +78,11 @@ class box{
 		double** sij;//bv energy coeffiecient
 		double** bvrcut;//cut-off for bv
 		double bvenergy;//energy produced by bond valence.
-		double** bvvrcut;//cut-off for bvv
+		double ljenergy;
+        double** bvvrcut;//cut-off for bvv
 		double** vv0;
+        double ljrcut;
+        double **bij;
+        double coul;
 };
 #endif

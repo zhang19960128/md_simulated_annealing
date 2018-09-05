@@ -17,8 +17,9 @@ box::box(atom* inputallatom,
 		int s,
 		double* period,
 		double** pairbv_input,
-		double** pairbvv_input
-		){
+		double** pairbvv_input,
+		double ljrcut=8.0
+        ){
 	/*this paribv_input should be similar to lammps input*/
 	/*this paribvv_input should be similar to lammps input*/
 	p=new double[3];
@@ -37,6 +38,8 @@ box::box(atom* inputallatom,
 	bvrcut=new double* [t];/*cut-off for bond valence*/
 	bvvrcut=new double* [t];/*cut-off for bond valence vector*/
 	vv0=new double* [t];/*equlibrium bvv0*/
+    coul = new double* [t];
+    bij = new double* [t];
 	for(size_t i=0;i<t;i++){
 		r0[i]=new double[t];
 		v0[i]=new double[t];
@@ -45,6 +48,8 @@ box::box(atom* inputallatom,
 		bvrcut[i]=new double[t];
 		bvvrcut[i]=new double[t];
 		vv0[i]=new double[t];
+        coul[i] = new double[t];
+        bij[i] = new double[t];
 	}
 	size_t temp=0;
 	double maxcutoff=0.0;
@@ -64,8 +69,13 @@ box::box(atom* inputallatom,
 			vv0[j][i]=vv0[i][j];
 			bvvrcut[i][j]=pairbvv_input[temp][4];
 			bvvrcut[j][i]=bvvrcut[i][j];
-			maxcutoff=maxcutoff > bvrcut[i][j] ? maxcutoff : bvrcut[i][j];
-			temp++;
+            coul[i][j] = pairlj_input[temp][0];
+            coul[j][i] = coul[i][j];
+            bij[i][j] = pairlj_input[temp][1];
+            bij[j][i] = bij[i][j];
+            maxcutoff=maxcutoff > bvrcut[i][j] ? maxcutoff : bvrcut[i][j];
+			maxcutoff=maxcutoff > ljruct ? maxcutoff : ljrcut;
+            temp++;
 		}
 	int virt_size;
 	virtatom=imageall(allatom,size,period,maxcutoff,virt_size);
@@ -119,6 +129,21 @@ void box::updatelistbvv(){
 		}
 	}
 }
+
+void box::updatelistlj(){
+    double tmp;
+    double paircut;
+    for (size_t i=0; i<size;i++){
+        allatom[i].neilj.clear();
+        for (size_t j=0; j<virtsize; j++){
+            tmp = distance(allatom[i].position,virtatom[j].position);
+            if (tmp<ljrcut && tmp>0.0000001){
+                allatom[i].neilj.push_back(j);
+            }
+        }
+    }
+}
+
 /*starting a light version of bond valence with computing the force and bond valence energy*/
 void box::computebv(){
 	/*bond valence parameters.
@@ -165,6 +190,23 @@ void box::computebv(){
 			allatom[i].force[2]+=2*sij[allatom[i].type][allatom[i].type]*(allatom[i].s0-v0[allatom[i].type][allatom[i].type])*Aij/r*delz;
 	}
 }
-
+void box::lj12(){
+    double e_lj = 0.0;
+    double delx, dely, delz,rsq,r;
+    for (size_t i=0; i<size;i++){
+        for (std::list<int>::iterator j=allatom[i].neilj.begin(); j!=allatom[i].neilj.end(); j++){          
+  			delx=allatom[i].position[0]-virtatom[*j].position[0];
+			dely=allatom[i].position[1]-virtatom[*j].position[1];
+			delz=allatom[i].position[2]-virtatom[*j].position[2];
+			rsq=delx*delx+dely*dely+delz*delz;
+			r=sqrt(rsq);
+            ljenergy += pow(bij[allatom[i].type][allatom[j].type]/r,12);
+            allatom[i].force[0] += 12*pow(bij[allatom[i].type][allatom[j].type],12)/pow(r,14)*delx;
+            allatom[i].force[1] += 12*pow(bij[allatom[i].type][allatom[j].type],12)/pow(r,14)*dely;
+            allatom[i].force[2] += 12*pow(bij[allatom[i].type][allatom[j].type],12)/pow(r,14)*delz;
+        }
+    }
+    ljenergy = ljenergy/2;
+}
 /*finished computing bond valence force*/
 /*end define the bond-valence energy*/
