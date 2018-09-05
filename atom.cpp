@@ -18,7 +18,8 @@ box::box(atom* inputallatom,
 		double* period,
 		double** pairbv_input,
 		double** pairbvv_input,
-		double ljrcut=8.0
+        double** pairlj_input,
+        double ljrcut=8.0
         ){
 	/*this paribv_input should be similar to lammps input*/
 	/*this paribvv_input should be similar to lammps input*/
