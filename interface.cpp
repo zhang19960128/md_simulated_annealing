@@ -1,5 +1,6 @@
 #include <fstream>
 #include <string>
+#include "atom.h"
 #include <sstream>
 #include <iostream>
 #include <stdlib.h>
@@ -90,4 +91,62 @@ double** getparameter(std::string pair_style,std::string file){
 	}while(!fs.eof());
         fs.close();
 	return para;
+}
+atom* configuration(std::string file){
+	std::fstream fs;
+	fs.open(file,std::fstream::in);
+	std::string line;
+	std::string one;
+	std::string two;
+	std::istringstream stream1;
+	int atomnum;
+	int atomtype;
+	do{
+		getline(fs,line);
+	  stream1.str(line);
+		two="";
+		while(stream1>>one){
+			if(one=="atoms"&&two.length()!=0){
+				atomnum=std::stoi(two);
+			}
+			two=one;
+		}
+		stream1.clear();
+	}while(!fs.eof());
+	fs.close();
+	/*we now know how many atoms are in the configuration file*/
+	atom* config=new atom[atomnum];
+	fs.open(file,std::fstream::in);
+	int ticknum,groupID,type;
+	double charge,x,y,z;
+	do{
+		getline(fs,line);
+		if(line=="Atoms"){
+			getline(fs,line);
+			while(line.length()==0){
+				getline(fs,line);
+			}
+			for(size_t j=0;j<atomnum;j++){
+				stream1.str(line);
+				stream1>>ticknum;
+				stream1>>groupID;
+				stream1>>type;
+				stream1>>charge;
+				stream1>>x;
+				stream1>>y;
+				stream1>>z;
+				config[ticknum-1].charge=charge;
+				config[ticknum-1].type=type-1;
+				config[ticknum-1].position[0]=x;
+				config[ticknum-1].position[1]=y;
+				config[ticknum-1].position[2]=z;
+				stream1.clear();
+				getline(fs,line);
+			}
+		}
+	}while(!fs.eof());
+	for(size_t i=0;i<atomnum;i++){
+		std::cout<<i+1<<" "<<config[i].type+1<<" "<<config[i].charge<<" "<<config[i].position[0]<<" "<<config[i].position[1]<<" "<<config[i].position[2]<<std::endl;
+	}
+	return config;
 }
