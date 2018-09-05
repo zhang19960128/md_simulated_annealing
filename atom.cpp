@@ -47,7 +47,6 @@ box::box(atom* inputallatom,
 	}
 	size_t temp=0;
 	double maxcutoff=0.0;
-	std::cout<<"I am here"<<std::endl;
 	for(size_t i=0;i<t;i++)
 		for(size_t j=i;j<t;j++){
 			r0[i][j]=pairbv_input[temp][0];
@@ -60,9 +59,9 @@ box::box(atom* inputallatom,
 			maxcutoff=maxcutoff > bvrcut[i][j] ? maxcutoff : bvrcut[i][j];
 			temp++;
 		}
-	//int virt_size;
-	//virtatom=imageall(allatom,size,period,maxcutoff,virt_size);
-	//virtsize=virt_size;
+	int virt_size;
+	virtatom=imageall(allatom,size,period,maxcutoff,virt_size);
+	virtsize=virt_size;
 }
 void box::updatebv(double** pairbv_input){
 	size_t temp=0;	
