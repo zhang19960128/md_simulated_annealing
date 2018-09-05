@@ -49,6 +49,8 @@ class box{
 			delete [] bvrcut;
 			delete [] bvvrcut;
 			delete [] vv0;
+			delete [] allatom;
+			delete [] virtatom;
 		};
 	private:
 		int virtsize;//store how many image atoms are there.
