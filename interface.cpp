@@ -45,8 +45,8 @@ double** getparameter(std::string pair_style,std::string file){
       int tick1,tick2;
       int onedim;
       int* base=new int[type];
-      for(size_t j=0;j<4;j++){
-         base[j]=type-j;
+      for(size_t j=0;j<type;j++){
+         base[j]=(type-j+type)*(j+1)/2;
       }
       do{
 	    getline(fs,line);
@@ -60,19 +60,19 @@ double** getparameter(std::string pair_style,std::string file){
                      exit(EXIT_FAILURE);
                   }
                   stream1>>temp;
-                  onedim=tick1*base[tick1-1]+(tick2-tick1);
-                  if(pair_style=="12lj/cut/coul/long"){
+                  onedim=(tick1-1!=0)*base[(tick1-2)>0?(tick1-2):0]+(tick2-tick1);
+                  if(temp=="12lj/cut/coul/long"){
                      para[onedim]=new double[2];
                      stream1>>para[onedim][0];
                      stream1>>para[onedim][1];
                   }
-                  else if(pair_style=="bv"){
+                  else if(temp=="bv"){
                      para[onedim]=new double[5];
                      for(size_t i=0;i<5;i++){
                         stream1>>para[onedim][i];
                      }
                   }
-                  else if(pair_style=="bvv"){
+                  else if(temp=="bvv"){
                      para[onedim]=new double[5];
                      for(size_t i=0;i<5;i++){
                         stream1>>para[onedim][i];
