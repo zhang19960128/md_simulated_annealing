@@ -27,6 +27,14 @@ atom* imageall(atom* input,int size,double* p,double cutoff,int& virt_size){
 				shift(allimage+imagetick*size,size,p,shiftv);
 	}
 	virt_size=virt_size*virt_size*virt_size*size;
+  /*  for(size_t i=0;i<virt_size;i++){
+        std::cout<<i<<" ";
+        for(size_t j=0;j<3;j++){
+            std::cout<<allimage[i].position[j]<<" ";
+        }
+        std::cout<<std::endl;
+    }
+    */
 	return allimage;
 }
 void shift(atom* input,int size,double* p,int* shiftv){

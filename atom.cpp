@@ -108,12 +108,13 @@ void box::updatelistbv(){
 		allatom[i].neibv.clear();
 		for(size_t j=0;j<virtsize;j++){
 			temp=distance(allatom[i].position,virtatom[j].position);
-			paircut=bvrcut[allatom[i].type][virtatom[j].type];
-			std::cout<<temp<<std::endl;
-			if(temp<paircut && temp>0.0000001){
+            paircut=bvrcut[allatom[i].type][virtatom[j].type];
+            if(temp<paircut && temp>0.0000001){
+                //std::cout<<j<<std::endl;
 				allatom[i].neibv.push_back(j);
 			}
 		}
+        std::cout<<allatom[i].neibv.size()<<std::endl;
 	}
 }
 void box::updatelistbvv(){
