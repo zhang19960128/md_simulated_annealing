@@ -95,7 +95,7 @@ void box::updatelistbvv(){
 void box::computebv(){
 	/*bond valence parameters.
 	 *typeone typetwo r0 Nij S V0 rcut
-	 * 1     1        #  #  # #  #   
+	 * 1     1        #  #  # #  #
 	 * 1     1        #  #  # #  #
 	 * 1     1        ###############
 	 * 1     1        ###############
