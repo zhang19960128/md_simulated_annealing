@@ -60,7 +60,7 @@ double** getparameter(std::string pair_style,std::string file){
                      exit(EXIT_FAILURE);
                   }
                   stream1>>temp;
-                  onedim=tick1*base[tick1-1]+(tick2-tick1+1);
+                  onedim=tick1*base[tick1-1]+(tick2-tick1);
                   if(pair_style=="12lj/cut/coul/long"){
                      para[onedim]=new double[2];
                      stream1>>para[onedim][0];
@@ -87,5 +87,11 @@ double** getparameter(std::string pair_style,std::string file){
          stream1.clear();
 	}while(!fs.eof());
         fs.close();
+        size_t k=0;
+        for(size_t i=0;i<5;i++)
+           for(size_t j=i;j<5;j++){
+              std::cout<<para[k][0]<<" "<<para[k][1]<<" "<<para[k][2]<<" "<<para[k][3]<<" "<<para[k][4]<<" "<<std::endl;
+              k++;
+           }
 	return para;
 }
