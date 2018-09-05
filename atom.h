@@ -26,10 +26,9 @@ class box{
 				int s,//total number of atoms
 				double* period,
 				double** pairbv_input,
-				double** pairbvv_input
+				double** pairbvv_input,
 				double** pairlj_input,
                 double ljrcut=8.0
-
                 );
 		void freezeforce();/*freeze force for other people to calculate accumulative force*/
 		void updatelistbv();/*update once and use forever, big trick*/
@@ -82,7 +81,7 @@ class box{
         double** bvvrcut;//cut-off for bvv
 		double** vv0;
         double ljrcut;
-        double **bij;
-        double coul;
+        double** bij;
+        double** coul;
 };
 #endif

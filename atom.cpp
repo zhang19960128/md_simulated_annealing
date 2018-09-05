@@ -19,7 +19,7 @@ box::box(atom* inputallatom,
 		double** pairbv_input,
 		double** pairbvv_input,
         double** pairlj_input,
-        double ljrcut=8.0
+        double ljrcut
         ){
 	/*this paribv_input should be similar to lammps input*/
 	/*this paribvv_input should be similar to lammps input*/
@@ -75,7 +75,7 @@ box::box(atom* inputallatom,
             bij[i][j] = pairlj_input[temp][1];
             bij[j][i] = bij[i][j];
             maxcutoff=maxcutoff > bvrcut[i][j] ? maxcutoff : bvrcut[i][j];
-			maxcutoff=maxcutoff > ljruct ? maxcutoff : ljrcut;
+			maxcutoff=maxcutoff > ljrcut ? maxcutoff : ljrcut;
             temp++;
 		}
 	int virt_size;
@@ -201,10 +201,10 @@ void box::lj12(){
 			delz=allatom[i].position[2]-virtatom[*j].position[2];
 			rsq=delx*delx+dely*dely+delz*delz;
 			r=sqrt(rsq);
-            ljenergy += pow(bij[allatom[i].type][allatom[j].type]/r,12);
-            allatom[i].force[0] += 12*pow(bij[allatom[i].type][allatom[j].type],12)/pow(r,14)*delx;
-            allatom[i].force[1] += 12*pow(bij[allatom[i].type][allatom[j].type],12)/pow(r,14)*dely;
-            allatom[i].force[2] += 12*pow(bij[allatom[i].type][allatom[j].type],12)/pow(r,14)*delz;
+            ljenergy += pow(bij[allatom[i].type][allatom[*j].type]/r,12);
+            allatom[i].force[0] += 12*pow(bij[allatom[i].type][allatom[*j].type],12)/pow(r,14)*delx;
+            allatom[i].force[1] += 12*pow(bij[allatom[i].type][allatom[*j].type],12)/pow(r,14)*dely;
+            allatom[i].force[2] += 12*pow(bij[allatom[i].type][allatom[*j].type],12)/pow(r,14)*delz;
         }
     }
     ljenergy = ljenergy/2;

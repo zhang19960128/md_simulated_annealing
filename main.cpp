@@ -11,7 +11,7 @@ int main(){
 	 atom* testconfig;//the test atom configuration for bond-valence model in lammps
 	 testconfig=configuration("mixdata.BTO");
 	 double period[3]={8.08,8.08,8.08};
-	 box test(testconfig,4,40,period,inputbv,inputbvv);
+	 box test(testconfig,4,40,period,inputbv,inputbvv,inputljcoul);
 	 test.updatelistbv();
 	 /*
 	 for(size_t i=0;i<40;i++){
