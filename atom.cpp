@@ -83,7 +83,7 @@ box::box(atom* inputallatom,
 	virtsize=virt_size;
 }
 void box::updatebv(double** pairbv_input){
-	size_t temp=0;	
+	size_t temp=0;
 	for(size_t i=0;i<type;i++)
 		for(size_t j=i;j<type;j++){
 			r0[i][j]=pairbv_input[temp][0];
@@ -110,12 +110,15 @@ void box::updatelistbv(){
 			temp=distance(allatom[i].position,virtatom[j].position);
             paircut=bvrcut[allatom[i].type][virtatom[j].type];
             if(temp<paircut && temp>0.0000001){
-                //std::cout<<j<<std::endl;
 				allatom[i].neibv.push_back(j);
 			}
 		}
-        std::cout<<allatom[i].neibv.size()<<std::endl;
 	}
+}
+void box::printnei(int i){
+   for(std::list<int>::iterator a=allatom[i].neibv.begin();a!=allatom[i].neibv.end();a++){
+      std::cout<<" "<<*a;
+   }
 }
 void box::updatelistbvv(){
 	double temp;
@@ -176,6 +179,7 @@ void box::computebv(){
 		s=allatom[i].s0-v0[allatom[i].type][allatom[i].type];
 		bvenergy=sij[allatom[i].type][allatom[i].type]*(s*s)+bvenergy;
 	}
+        std::cout<<"the computed bond-valence energy is: "<<bvenergy<<std::endl;
 	/*finished computing energy and started to compute force*/
 	double Aij=0.0;
 	for(size_t i=0;i<size;i++)
@@ -196,7 +200,7 @@ void box::lj12(){
     double e_lj = 0.0;
     double delx, dely, delz,rsq,r;
     for (size_t i=0; i<size;i++){
-        for (std::list<int>::iterator j=allatom[i].neilj.begin(); j!=allatom[i].neilj.end(); j++){          
+        for (std::list<int>::iterator j=allatom[i].neilj.begin(); j!=allatom[i].neilj.end(); j++){
   			delx=allatom[i].position[0]-virtatom[*j].position[0];
 			dely=allatom[i].position[1]-virtatom[*j].position[1];
 			delz=allatom[i].position[2]-virtatom[*j].position[2];

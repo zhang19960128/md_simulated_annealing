@@ -36,7 +36,7 @@ class box{
 		void updatebv(double** input);
 		void updatelistlj();
         void computebv();
-		void printnei();
+		void printnei(int i);
         void lj12();
 
 		~box()

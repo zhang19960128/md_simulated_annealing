@@ -12,13 +12,8 @@ int main(){
 	 testconfig=configuration("mixdata.BTO");
 	 double period[3]={8.08,8.08,8.08};
 	 box test(testconfig,4,40,period,inputbv,inputbvv,inputljcoul);
+         /*this testconfig is useless after initialization*/
 	 test.updatelistbv();
-	 for(size_t i=0;i<40;i++){
-	 	std::cout<<"atom "<<i<<" ";
-		for(std::list<int>::iterator a=testconfig[i].neibv.begin();a!=testconfig[i].neibv.end();a++){
-			std::cout<<*a<<" ";
-		}
-		std::cout<<std::endl;
-	 }
-	 return 0;
+         test.computebv();
+         return 0;
 }
