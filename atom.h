@@ -32,6 +32,7 @@ class box{
 		void updatelistbvv();
 		void updatebv(double** input);
 		void computebv();
+		void printnei();
 		~box(){
 			for(size_t i=0;i<type;i++){
 				delete [] r0[i];
@@ -50,7 +51,6 @@ class box{
 			delete [] bvvrcut;
 			delete [] vv0;
 			delete [] allatom;
-			delete [] virtatom;
 		};
 	private:
 		int virtsize;//store how many image atoms are there.

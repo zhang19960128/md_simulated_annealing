@@ -26,6 +26,7 @@ box::box(atom* inputallatom,
 		p[i]=period[i];
 	}
 	allatom=new atom[s];
+	std::copy(inputallatom,inputallatom+s,allatom);
 	type=t;//specify how many type are in the simulation
 	size=s;//specify how many atoms are in the simulation
 	/*should have C(n,2) pair*/
@@ -50,12 +51,19 @@ box::box(atom* inputallatom,
 	for(size_t i=0;i<t;i++)
 		for(size_t j=i;j<t;j++){
 			r0[i][j]=pairbv_input[temp][0];
+			r0[j][i]=r0[i][j];
 			cij[i][j]=pairbv_input[temp][1];
+			cij[j][i]=cij[i][j];
 			sij[i][j]=pairbv_input[temp][2];
+			sij[j][i]=sij[i][j];
 			v0[i][j]=pairbv_input[temp][3];
+			v0[j][i]=v0[i][j];
 			bvrcut[i][j]=pairbv_input[temp][4];
+			bvrcut[j][i]=bvrcut[i][j];
 			vv0[i][j]=pairbvv_input[temp][3];
+			vv0[j][i]=vv0[i][j];
 			bvvrcut[i][j]=pairbvv_input[temp][4];
+			bvvrcut[j][i]=bvvrcut[i][j];
 			maxcutoff=maxcutoff > bvrcut[i][j] ? maxcutoff : bvrcut[i][j];
 			temp++;
 		}
@@ -90,6 +98,7 @@ void box::updatelistbv(){
 		for(size_t j=0;j<virtsize;j++){
 			temp=distance(allatom[i].position,virtatom[j].position);
 			paircut=bvrcut[allatom[i].type][virtatom[j].type];
+			std::cout<<temp<<std::endl;
 			if(temp<paircut && temp>0.0000001){
 				allatom[i].neibv.push_back(j);
 			}
@@ -156,5 +165,6 @@ void box::computebv(){
 			allatom[i].force[2]+=2*sij[allatom[i].type][allatom[i].type]*(allatom[i].s0-v0[allatom[i].type][allatom[i].type])*Aij/r*delz;
 	}
 }
+
 /*finished computing bond valence force*/
 /*end define the bond-valence energy*/
