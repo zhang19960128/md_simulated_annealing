@@ -3,6 +3,7 @@
 #include "image.h"
 #include <new>
 #include <list>
+#include <iostream>
 #include <math.h>
 double distance(double* a,double* b){
 	double s=0.0;
@@ -33,15 +34,20 @@ box::box(atom* inputallatom,
 	cij=new double* [t];/*power law of bond valence*/
 	sij=new double* [t];/*only contains diagonal elements*/
 	bvrcut=new double* [t];/*cut-off for bond valence*/
+	bvvrcut=new double* [t];/*cut-off for bond valence vector*/
+	vv0=new double* [t];/*equlibrium bvv0*/
 	for(size_t i=0;i<t;i++){
 		r0[i]=new double[t];
 		v0[i]=new double[t];
 		cij[i]=new double[t];
 		sij[i]=new double[t];
 		bvrcut[i]=new double[t];
+		bvvrcut[i]=new double[t];
+		vv0[i]=new double[t];
 	}
 	size_t temp=0;
 	double maxcutoff=0.0;
+	std::cout<<"I am here"<<std::endl;
 	for(size_t i=0;i<t;i++)
 		for(size_t j=i;j<t;j++){
 			r0[i][j]=pairbv_input[temp][0];
@@ -49,12 +55,26 @@ box::box(atom* inputallatom,
 			sij[i][j]=pairbv_input[temp][2];
 			v0[i][j]=pairbv_input[temp][3];
 			bvrcut[i][j]=pairbv_input[temp][4];
+			vv0[i][j]=pairbvv_input[temp][3];
+			bvvrcut[i][j]=pairbvv_input[temp][4];
 			maxcutoff=maxcutoff > bvrcut[i][j] ? maxcutoff : bvrcut[i][j];
 			temp++;
 		}
-	int virt_size;
-	virtatom=imageall(allatom,size,period,maxcutoff,virt_size);
-	virtsize=virt_size;
+	//int virt_size;
+	//virtatom=imageall(allatom,size,period,maxcutoff,virt_size);
+	//virtsize=virt_size;
+}
+void box::updatebv(double** pairbv_input){
+	size_t temp=0;	
+	for(size_t i=0;i<type;i++)
+		for(size_t j=i;j<type;j++){
+			r0[i][j]=pairbv_input[temp][0];
+			cij[i][j]=pairbv_input[temp][1];
+			sij[i][j]=pairbv_input[temp][2];
+			v0[i][j]=pairbv_input[temp][3];
+			bvrcut[i][j]=pairbv_input[temp][4];
+			temp++;
+		}
 }
 void box::freezeforce(){
 	for(size_t i=0;i<size;i++){

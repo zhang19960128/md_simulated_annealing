@@ -145,8 +145,5 @@ atom* configuration(std::string file){
 			}
 		}
 	}while(!fs.eof());
-	for(size_t i=0;i<atomnum;i++){
-		std::cout<<i+1<<" "<<config[i].type+1<<" "<<config[i].charge<<" "<<config[i].position[0]<<" "<<config[i].position[1]<<" "<<config[i].position[2]<<std::endl;
-	}
 	return config;
 }
