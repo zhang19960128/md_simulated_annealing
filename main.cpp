@@ -14,6 +14,7 @@ int main(){
 	 box test(testconfig,4,40,period,inputbv,inputbvv,inputljcoul);
          /*this testconfig is useless after initialization*/
 	 test.updatelistbv();
-         test.computebv();
-         return 0;
+     test.freezeforce();
+     test.computebv();
+     return 0;
 }

@@ -180,10 +180,9 @@ void box::computebv(){
 		s=allatom[i].s0-v0[allatom[i].type][allatom[i].type];
 		bvenergy=sij[allatom[i].type][allatom[i].type]*(s*s)+bvenergy;
 	}
-        std::cout<<"the computed bond-valence energy is: "<<std::setprecision(15)<<bvenergy<<std::endl;
 	/*finished computing energy and started to compute force*/
 	double Aij=0.0;
-	for(size_t i=0;i<size;i++)
+	for(size_t i=0;i<size;i++){
 		for(std::list<int>::iterator j=allatom[i].neibv.begin();j!=allatom[i].neibv.end();j++){
 			delx=allatom[i].position[0]-virtatom[*j].position[0];
 			dely=allatom[i].position[1]-virtatom[*j].position[1];
@@ -196,6 +195,8 @@ void box::computebv(){
 			allatom[i].force[1]+=2*sij[allatom[i].type][allatom[i].type]*(allatom[i].s0-v0[allatom[i].type][allatom[i].type])*Aij/r*dely;
 			allatom[i].force[2]+=2*sij[allatom[i].type][allatom[i].type]*(allatom[i].s0-v0[allatom[i].type][allatom[i].type])*Aij/r*delz;
 	}
+    std::cout<<allatom[i].force[0]<<" "<<allatom[i].force[1]<<" "<<allatom[i].force[2]<<std::endl;
+    }
 }
 void box::lj12(){
     double e_lj = 0.0;
