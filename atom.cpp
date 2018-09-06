@@ -182,6 +182,7 @@ void box::computebv(){
 		bvenergy=sij[allatom[i].type][allatom[i].type]*(s*s)+bvenergy;
 		fp[i]=2*sij[allatom[i].type][allatom[i].type]*s;
 	}
+   //std::cout<<std::setprecision(15)<<bvenergy<<std::endl;
 	/*finished computing energy and started to compute force*/
 	double Aij=0.0;
 	for(size_t i=0;i<size;i++){
@@ -197,7 +198,7 @@ void box::computebv(){
 			allatom[i].force[1]+=(fp[i]+fp[*j%size])*Aij*dely/r;
 			allatom[i].force[2]+=(fp[i]+fp[*j%size])*Aij*delz/r;
 		}
-		std::cout<<allatom[i].force[0]<<" "<<allatom[i].force[1]<<" "<<allatom[i].force[2]<<std::endl;
+   	std::cout<<allatom[i].force[0]<<" "<<allatom[i].force[1]<<" "<<allatom[i].force[2]<<std::endl;
     }
 }
 void box::lj12(){

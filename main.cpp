@@ -6,7 +6,7 @@
 int main(){
    double** inputbv=getparameter("bv","in.BTO");
 	 double** inputbvv=getparameter("bvv","in.BTO");
-	 double** inputljcoul=getparameter("12lj/cut/coul/long","in.BTO");
+	 double** inputljcoul=getparameter("12lj/cut/coul/long","inlj.BTO");
 	 /*input the configuration for lammps simulation*/
 	 atom* testconfig;//the test atom configuration for bond-valence model in lammps
 	 testconfig=configuration("mixdata.BTO");
