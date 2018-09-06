@@ -98,8 +98,8 @@ void box::updatebv(double** pairbv_input){
 void box::freezeforce(){
 	for(size_t i=0;i<size;i++){
 		allatom[i].force[0]=0.0;
-		allatom[i].force[0]=0.0;
-		allatom[i].force[0]=0.0;
+		allatom[i].force[1]=0.0;
+		allatom[i].force[2]=0.0;
 	}
 }
 void box::updatelistbv(){
@@ -143,7 +143,7 @@ void box::updatelistlj(){
         allatom[i].neilj.clear();
         for (size_t j=0; j<virtsize; j++){
             tmp = distance(allatom[i].position,virtatom[j].position);
-            if (tmp<ljrcut && tmp>0.0000001){
+            if (tmp<ljrcut && tmp>0.00001){
                 allatom[i].neilj.push_back(j);
             }
         }
@@ -166,6 +166,7 @@ void box::computebv(){
 	 */
 	double delx,dely,delz,rsq,recip,r,s;
 	bvenergy=0.00;
+	double* fp=new double[size];
 	for(size_t i=0;i<size;i++){
 		allatom[i].s0=0;
 		for(std::list<int>::iterator j=allatom[i].neibv.begin();j!=allatom[i].neibv.end();j++){
@@ -179,6 +180,7 @@ void box::computebv(){
 		}
 		s=allatom[i].s0-v0[allatom[i].type][allatom[i].type];
 		bvenergy=sij[allatom[i].type][allatom[i].type]*(s*s)+bvenergy;
+		fp[i]=2*sij[allatom[i].type][allatom[i].type]*s;
 	}
 	/*finished computing energy and started to compute force*/
 	double Aij=0.0;
@@ -191,11 +193,11 @@ void box::computebv(){
 			r=sqrt(rsq);
 			recip=1.0/r;
 			Aij=cij[allatom[i].type][virtatom[*j].type]*pow(r0[allatom[i].type][virtatom[*j].type]/r,cij[allatom[i].type][virtatom[*j].type])/r;
-			allatom[i].force[0]+=2*sij[allatom[i].type][allatom[i].type]*(allatom[i].s0-v0[allatom[i].type][allatom[i].type])*Aij/r*delx;
-			allatom[i].force[1]+=2*sij[allatom[i].type][allatom[i].type]*(allatom[i].s0-v0[allatom[i].type][allatom[i].type])*Aij/r*dely;
-			allatom[i].force[2]+=2*sij[allatom[i].type][allatom[i].type]*(allatom[i].s0-v0[allatom[i].type][allatom[i].type])*Aij/r*delz;
-	}
-    std::cout<<allatom[i].force[0]<<" "<<allatom[i].force[1]<<" "<<allatom[i].force[2]<<std::endl;
+			allatom[i].force[0]+=(fp[i]+fp[*j%size])*Aij*delx/r;
+			allatom[i].force[1]+=(fp[i]+fp[*j%size])*Aij*dely/r;
+			allatom[i].force[2]+=(fp[i]+fp[*j%size])*Aij*delz/r;
+		}
+		std::cout<<allatom[i].force[0]<<" "<<allatom[i].force[1]<<" "<<allatom[i].force[2]<<std::endl;
     }
 }
 void box::lj12(){
