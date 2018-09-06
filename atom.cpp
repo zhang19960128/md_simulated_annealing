@@ -3,6 +3,7 @@
 #include "image.h"
 #include <new>
 #include <list>
+#include <iomanip>
 #include <iostream>
 #include <math.h>
 double distance(double* a,double* b){
@@ -179,7 +180,7 @@ void box::computebv(){
 		s=allatom[i].s0-v0[allatom[i].type][allatom[i].type];
 		bvenergy=sij[allatom[i].type][allatom[i].type]*(s*s)+bvenergy;
 	}
-        std::cout<<"the computed bond-valence energy is: "<<bvenergy<<std::endl;
+        std::cout<<"the computed bond-valence energy is: "<<std::setprecision(15)<<bvenergy<<std::endl;
 	/*finished computing energy and started to compute force*/
 	double Aij=0.0;
 	for(size_t i=0;i<size;i++)
