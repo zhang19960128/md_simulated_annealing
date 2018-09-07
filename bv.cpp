@@ -68,7 +68,6 @@ void box::computebv(){
 			allatom[i].force[1]+=(fp[i]+fp[*j%size])*Aij*dely/r;
 			allatom[i].force[2]+=(fp[i]+fp[*j%size])*Aij*delz/r;
 		}
-   	std::cout<<allatom[i].force[0]<<" "<<allatom[i].force[1]<<" "<<allatom[i].force[2]<<std::endl;
     }
 }
 void box::updatebv(double** pairbv_input){

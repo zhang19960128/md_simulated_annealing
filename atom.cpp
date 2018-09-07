@@ -37,6 +37,7 @@ box::box(atom* inputallatom,
 	v0=new double* [t];/*equilibrium valence zero only diagonal elements are considered*/
 	cij=new double* [t];/*power law of bond valence*/
 	sij=new double* [t];/*only contains diagonal elements*/
+	svvij=new double* [t];/*only contains diagnoal elements*/
 	bvrcut=new double* [t];/*cut-off for bond valence*/
 	bvvrcut=new double* [t];/*cut-off for bond valence vector*/
 	vv0=new double* [t];/*equlibrium bvv0*/
@@ -47,6 +48,7 @@ box::box(atom* inputallatom,
 		v0[i]=new double[t];
 		cij[i]=new double[t];
 		sij[i]=new double[t];
+		svvij[i]=new double[t];
 		bvrcut[i]=new double[t];
 		bvvrcut[i]=new double[t];
 		vv0[i]=new double[t];
@@ -63,12 +65,14 @@ box::box(atom* inputallatom,
 			cij[j][i]=cij[i][j];
 			sij[i][j]=pairbv_input[temp][2];
 			sij[j][i]=sij[i][j];
+			svvij[i][j]=pairbvv_input[temp][2];
+			svvij[j][i]=svvij[i][j];
 			v0[i][j]=pairbv_input[temp][3];
 			v0[j][i]=v0[i][j];
-			bvrcut[i][j]=pairbv_input[temp][4];
-			bvrcut[j][i]=bvrcut[i][j];
 			vv0[i][j]=pairbvv_input[temp][3];
 			vv0[j][i]=vv0[i][j];
+			bvrcut[i][j]=pairbv_input[temp][4];
+			bvrcut[j][i]=bvrcut[i][j];
 			bvvrcut[i][j]=pairbvv_input[temp][4];
 			bvvrcut[j][i]=bvvrcut[i][j];
             coul[i][j] = pairlj_input[temp][0];
@@ -95,21 +99,6 @@ void box::printnei(int i){
       std::cout<<" "<<*a;
    }
 }
-void box::updatelistbvv(){
-	double temp;
-	double paircut;
-	for(size_t i=0;i<size;i++){
-		allatom[i].neibvv.clear();
-		for(size_t j=0;j<virtsize;j++){
-			temp=distance(allatom[i].position,virtatom[j].position);
-	    paircut=bvvrcut[allatom[i].type][virtatom[j].type];
-			if(temp<paircut && temp>0.0000001){
-				allatom[i].neibvv.push_back(j);
-			}
-		}
-	}
-}
-
 void box::updatelistlj(){
     double tmp;
     double paircut;

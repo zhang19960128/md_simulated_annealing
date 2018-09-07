@@ -16,5 +16,6 @@ int main(){
 	 test.updatelistbv();
      test.freezeforce();
      test.computebv();
+		 test.computebvv();
      return 0;
 }

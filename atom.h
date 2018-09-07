@@ -9,6 +9,9 @@ typedef struct Atom{
 	double charge;//coulumb charge
 	double bv0;//prefered bond valence_equilibrium.
 	double s0;//real bond valence term
+	double s0x;//bond valence vector x
+	double s0y;//bond valence vector y
+	double s0z;//bond valence vector z
 	double bvreal;//real valence according to bond valence formula
 	double bvv0;//prefered bond valence vector equilibrium
 	double bvvreal;//real valence according to bond valence vector formula.
@@ -34,12 +37,12 @@ class box{
 		void updatelistbv();/*update once and use forever, big trick*/
 		void updatelistbvv();
 		void updatebv(double** input);
-                void updatebvv(double** input);
+    void updatebvv(double** input);
 		void updatelistlj();
-        void computebv();
+    void computebv();
+		void computebvv();
 		void printnei(int i);
-        void lj12();
-
+    void lj12();
 		~box()
         {
 			for(size_t i=0;i<type;i++){
@@ -76,8 +79,10 @@ class box{
 		double** v0;//bv v0
 		double** cij;//bv powerlaw
 		double** sij;//bv energy coeffiecient
+		double** svvij;//bvv energy coeffiecient
 		double** bvrcut;//cut-off for bv
 		double bvenergy;//energy produced by bond valence.
+		double bvvenergy;//energy produced by bond valence energy.
 		double ljenergy;
                 double** bvvrcut;//cut-off for bvv
 		double** vv0;
