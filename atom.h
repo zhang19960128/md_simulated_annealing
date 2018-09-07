@@ -34,6 +34,7 @@ class box{
 		void updatelistbv();/*update once and use forever, big trick*/
 		void updatelistbvv();
 		void updatebv(double** input);
+                void updatebvv(double** input);
 		void updatelistlj();
         void computebv();
 		void printnei(int i);
@@ -78,7 +79,7 @@ class box{
 		double** bvrcut;//cut-off for bv
 		double bvenergy;//energy produced by bond valence.
 		double ljenergy;
-        double** bvvrcut;//cut-off for bvv
+                double** bvvrcut;//cut-off for bvv
 		double** vv0;
         double ljrcut;
         double** bij;
