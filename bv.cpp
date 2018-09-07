@@ -39,7 +39,7 @@ void box::computebv(){
 	double* fp=new double[size];
 	for(size_t i=0;i<size;i++){
 		allatom[i].s0=0;
-                std::cout<<allatom[i].neibv.size()<<std::endl;
+        //        std::cout<<allatom[i].neibv.size()<<std::endl;
 		for(std::list<int>::iterator j=allatom[i].neibv.begin();j!=allatom[i].neibv.end();j++){
 			delx=allatom[i].position[0]-virtatom[*j].position[0];
 			dely=allatom[i].position[1]-virtatom[*j].position[1];
@@ -55,7 +55,6 @@ void box::computebv(){
 	}
         std::cout<<std::setprecision(15)<<bvenergy<<std::endl;
 	/*finished computing energy and started to compute force*/
-	/*
         double Aij=0.0;
 	for(size_t i=0;i<size;i++){
 		for(std::list<int>::iterator j=allatom[i].neibv.begin();j!=allatom[i].neibv.end();j++){
@@ -71,7 +70,6 @@ void box::computebv(){
 			allatom[i].force[2]+=(fp[i]+fp[*j%size])*Aij*delz/r;
 		}
     }
-    */
 }
 void box::updatebv(double** pairbv_input){
 		size_t temp=0;

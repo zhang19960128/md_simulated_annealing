@@ -10,7 +10,7 @@ void box::updatelistbvv(){
 	double temp;
 	double paircut;
 	for(size_t i=0;i<size;i++){
-		allatom[i].neibv.clear();
+		allatom[i].neibvv.clear();
 		for(size_t j=0;j<virtsize;j++){
 			temp=distance(allatom[i].position,virtatom[j].position);
             paircut=bvvrcut[allatom[i].type][virtatom[j].type];

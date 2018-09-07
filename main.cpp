@@ -16,10 +16,11 @@ int main(){
 	 test.updatelistbv();
      test.freezeforce();
      test.computebv();
-     test.updatelistbvv();
+     //test.updatelistbvv();
      test.computebvv();
      for(size_t i=0;i<2;i++){
        test.computebv();
+       test.computebvv();
      }
      return 0;
 }
