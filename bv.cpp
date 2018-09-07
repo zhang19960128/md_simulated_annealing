@@ -39,6 +39,7 @@ void box::computebv(){
 	double* fp=new double[size];
 	for(size_t i=0;i<size;i++){
 		allatom[i].s0=0;
+                std::cout<<allatom[i].neibv.size()<<std::endl;
 		for(std::list<int>::iterator j=allatom[i].neibv.begin();j!=allatom[i].neibv.end();j++){
 			delx=allatom[i].position[0]-virtatom[*j].position[0];
 			dely=allatom[i].position[1]-virtatom[*j].position[1];
@@ -49,12 +50,13 @@ void box::computebv(){
 			allatom[i].s0+=pow(r0[allatom[i].type][virtatom[*j].type]/r,cij[allatom[i].type][virtatom[*j].type]);
 		}
 		s=allatom[i].s0-v0[allatom[i].type][allatom[i].type];
-		bvenergy=sij[allatom[i].type][allatom[i].type]*(s*s)+bvenergy;
+                bvenergy=sij[allatom[i].type][allatom[i].type]*(s*s)+bvenergy;
 		fp[i]=2*sij[allatom[i].type][allatom[i].type]*s;
 	}
-   //std::cout<<std::setprecision(15)<<bvenergy<<std::endl;
+        std::cout<<std::setprecision(15)<<bvenergy<<std::endl;
 	/*finished computing energy and started to compute force*/
-	double Aij=0.0;
+	/*
+        double Aij=0.0;
 	for(size_t i=0;i<size;i++){
 		for(std::list<int>::iterator j=allatom[i].neibv.begin();j!=allatom[i].neibv.end();j++){
 			delx=allatom[i].position[0]-virtatom[*j].position[0];
@@ -69,16 +71,22 @@ void box::computebv(){
 			allatom[i].force[2]+=(fp[i]+fp[*j%size])*Aij*delz/r;
 		}
     }
+    */
 }
 void box::updatebv(double** pairbv_input){
-	size_t temp=0;
+		size_t temp=0;
 	for(size_t i=0;i<type;i++)
 		for(size_t j=i;j<type;j++){
 			r0[i][j]=pairbv_input[temp][0];
+                        r0[j][i]=r0[i][j];
 			cij[i][j]=pairbv_input[temp][1];
+                        r0[j][i]=r0[i][j];
 			sij[i][j]=pairbv_input[temp][2];
+                        sij[j][i]=svvij[i][j];
 			v0[i][j]=pairbv_input[temp][3];
+                        v0[j][i]=v0[i][j];
 			bvrcut[i][j]=pairbv_input[temp][4];
+                        bvrcut[j][i]=bvvrcut[i][j];
 			temp++;
 		}
 }

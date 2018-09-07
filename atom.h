@@ -50,20 +50,22 @@ class box{
 				delete [] v0[i];
 				delete [] cij[i];
 				delete [] sij[i];
+                                delete [] svvij[i];
 				delete [] bvrcut[i];
 				delete [] bvvrcut[i];
 				delete [] vv0[i];
-                delete [] bij[i];
+                                delete [] bij[i];
 			}
 			delete [] r0;
 			delete [] v0;
 			delete [] cij;
 			delete [] sij;
+                        delete [] svvij;
 			delete [] bvrcut;
 			delete [] bvvrcut;
 			delete [] vv0;
 			delete [] allatom;
-            delete [] bij;
+                        delete [] bij;
 		};
 	private:
 		int virtsize;//store how many image atoms are there.

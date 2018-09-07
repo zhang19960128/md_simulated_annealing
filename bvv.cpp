@@ -71,8 +71,4 @@ double delx,dely,delz,rsq,recip,r,s,ss;
 		ss=s*s;
 		bvvenergy=bvvenergy+svvij[allatom[i].type][allatom[i].type]*ss;
 	}
-        for(size_t i=0;i<4;i++){
-            std::cout<<svvij[i][0]<<" "<<svvij[i][1]<<" "<<svvij[i][2]<<" "<<svvij[i][3]<<std::endl;
-        }
-	std::cout<<"the all bond valence energy is: "<<bvvenergy+bvenergy<<std::endl;
 }
