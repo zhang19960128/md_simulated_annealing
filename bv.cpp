@@ -71,3 +71,15 @@ void box::computebv(){
    	std::cout<<allatom[i].force[0]<<" "<<allatom[i].force[1]<<" "<<allatom[i].force[2]<<std::endl;
     }
 }
+void box::updatebv(double** pairbv_input){
+	size_t temp=0;
+	for(size_t i=0;i<type;i++)
+		for(size_t j=i;j<type;j++){
+			r0[i][j]=pairbv_input[temp][0];
+			cij[i][j]=pairbv_input[temp][1];
+			sij[i][j]=pairbv_input[temp][2];
+			v0[i][j]=pairbv_input[temp][3];
+			bvrcut[i][j]=pairbv_input[temp][4];
+			temp++;
+		}
+}

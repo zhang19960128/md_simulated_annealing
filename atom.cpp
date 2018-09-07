@@ -83,18 +83,6 @@ box::box(atom* inputallatom,
 	virtatom=imageall(allatom,size,period,maxcutoff,virt_size);
 	virtsize=virt_size;
 }
-void box::updatebv(double** pairbv_input){
-	size_t temp=0;
-	for(size_t i=0;i<type;i++)
-		for(size_t j=i;j<type;j++){
-			r0[i][j]=pairbv_input[temp][0];
-			cij[i][j]=pairbv_input[temp][1];
-			sij[i][j]=pairbv_input[temp][2];
-			v0[i][j]=pairbv_input[temp][3];
-			bvrcut[i][j]=pairbv_input[temp][4];
-			temp++;
-		}
-}
 void box::freezeforce(){
 	for(size_t i=0;i<size;i++){
 		allatom[i].force[0]=0.0;
