@@ -71,4 +71,5 @@ double delx,dely,delz,rsq,recip,r,s,ss;
 		ss=s*s;
 		bvvenergy=bvvenergy+svvij[allatom[i].type][allatom[i].type]*ss;
 	}
+	std::cout<<"bond valence energy and bond valence vector energy is: "<<std::setprecision(15)<<bvenergy+bvvenergy<<std::endl;
 }

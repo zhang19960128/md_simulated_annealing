@@ -6,7 +6,7 @@
 int main(){
    double** inputbv=getparameter("bv","in.BTO");
 	 double** inputbvv=getparameter("bvv","in.BTO");
-	 double** inputljcoul=getparameter("12lj/cut/coul/long","inlj.BTO");
+	 double** inputljcoul=getparameter("12lj/cut/coul/long","in.BTO");
 	 /*input the configuration for lammps simulation*/
 	 atom* testconfig;//the test atom configuration for bond-valence model in lammps
 	 testconfig=configuration("mixdata.BTO");
@@ -16,7 +16,7 @@ int main(){
 	 test.updatelistbv();
      test.freezeforce();
      test.computebv();
-     //test.updatelistbvv();
+     test.updatelistbvv();
      test.computebvv();
      for(size_t i=0;i<2;i++){
        test.computebv();
