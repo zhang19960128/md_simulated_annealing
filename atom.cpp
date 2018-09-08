@@ -20,7 +20,10 @@ box::box(atom* inputallatom,
 		double** pairbv_input,
 		double** pairbvv_input,
         double** pairlj_input,
-        double ljrcut
+        double ljrcut=8.0,
+        double ewd_sigma=100,
+        int ewd_nmax=5,
+        int ewd_gmax=5
         ){
 	/*this paribv_input should be similar to lammps input*/
 	/*this paribvv_input should be similar to lammps input*/
@@ -86,6 +89,9 @@ box::box(atom* inputallatom,
 	int virt_size;
 	virtatom=imageall(allatom,size,period,maxcutoff,virt_size);
 	virtsize=virt_size;
+    sigma = ewd_sigma;
+    nmax = ewd_nmax;
+    gmax = ewd_gmax;
 }
 void box::freezeforce(){
 	for(size_t i=0;i<size;i++){
@@ -98,38 +104,6 @@ void box::printnei(int i){
    for(std::list<int>::iterator a=allatom[i].neibv.begin();a!=allatom[i].neibv.end();a++){
       std::cout<<" "<<*a;
    }
-}
-void box::updatelistlj(){
-    double tmp;
-    double paircut;
-    for (size_t i=0; i<size;i++){
-        allatom[i].neilj.clear();
-        for (size_t j=0; j<virtsize; j++){
-            tmp = distance(allatom[i].position,virtatom[j].position);
-            if (tmp<ljrcut && tmp>0.00001){
-                allatom[i].neilj.push_back(j);
-            }
-        }
-    }
-}
-
-void box::lj12(){
-    double e_lj = 0.0;
-    double delx, dely, delz,rsq,r;
-    for (size_t i=0; i<size;i++){
-        for (std::list<int>::iterator j=allatom[i].neilj.begin(); j!=allatom[i].neilj.end(); j++){
-  			delx=allatom[i].position[0]-virtatom[*j].position[0];
-			dely=allatom[i].position[1]-virtatom[*j].position[1];
-			delz=allatom[i].position[2]-virtatom[*j].position[2];
-			rsq=delx*delx+dely*dely+delz*delz;
-			r=sqrt(rsq);
-            ljenergy += pow(bij[allatom[i].type][allatom[*j].type]/r,12);
-            allatom[i].force[0] += 12*pow(bij[allatom[i].type][allatom[*j].type],12)/pow(r,14)*delx;
-            allatom[i].force[1] += 12*pow(bij[allatom[i].type][allatom[*j].type],12)/pow(r,14)*dely;
-            allatom[i].force[2] += 12*pow(bij[allatom[i].type][allatom[*j].type],12)/pow(r,14)*delz;
-        }
-    }
-    ljenergy = ljenergy/2;
 }
 /*finished computing bond valence force*/
 /*end define the bond-valence energy*/

@@ -9,10 +9,12 @@ using namespace Eigen;
 
 /*Perform the Ewald summation. The lattice paramters should be given*/
 /*Lattice should be a flattened array*/
-double EwaldSum(atom* input, int size, double* lattice, double sigma, double rcut, double gcut){
+void box::computelong(){
     double ShortRange = 0;
     double LongRange = 0;
     double selfe = 0;
+    double *lattice = p;
+    atom *input = allatom;
     Matrix3d mtx_lattice;
     for (int i=0; i<9; i++){
         mtx_lattice << lattice[i];
@@ -22,9 +24,9 @@ double EwaldSum(atom* input, int size, double* lattice, double sigma, double rcu
     is however preferred due to following matrices multiplication*/
     
     /*Calculate the short-range energy*/
-    for (int lx=-rcut; lx<rcut; lx++){
-        for (int ly=-rcut; ly<ruct; ly++){
-            for (int lz=-rcut; lz<rcut; lz++){
+    for (int lx=-nmax; lx<nmax; lx++){
+        for (int ly=-nmax; ly<nmax; ly++){
+            for (int lz=-nmax; lz<nmax; lz++){
                 for (int i=0; i<size; i++){
                     for (int j=0; j<size; j++){
                         if (i==j && lx==0 && ly==0 && lz==0){
@@ -54,9 +56,9 @@ double EwaldSum(atom* input, int size, double* lattice, double sigma, double rcu
     }
     
     /*Calculate the long-range energy*/
-    for (int gx=-rcut; gx<rcut; gx++){
-        for (int gy=-rcut; gy<ruct; gy++){
-            for (int gz=-rcut; gz<rcut; gz++){
+    for (int gx=-gmax; gx<gmax; gx++){
+        for (int gy=-gmax; gy<gmax; gy++){
+            for (int gz=-gmax; gz<gmax; gz++){
                 if (gx==0 && gy==0 && gz == 0){
                     continue;
                 }
@@ -80,6 +82,5 @@ double EwaldSum(atom* input, int size, double* lattice, double sigma, double rcu
         }
     }
     
-    return ShortRange - selfe + LongRange;
-    
+    coulenergy =  ShortRange - selfe + LongRange;    
 }

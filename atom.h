@@ -32,6 +32,9 @@ class box{
 				double** pairbvv_input,
 				double** pairlj_input,
                 double ljrcut=8.0
+                double ewd_sigma=100,
+                int ewd_nmax=5,
+                int ewd_gmax=5
                 );
 		void freezeforce();/*freeze force for other people to calculate accumulative force*/
 		void updatelistbv();/*update once and use forever, big trick*/
@@ -41,6 +44,8 @@ class box{
 		void updatelistlj();
     void computebv();
 		void computebvv();
+        void computelj();
+        void computelong();
 		void printnei(int i);
     void lj12();
 		~box()
@@ -85,11 +90,14 @@ class box{
 		double** bvrcut;//cut-off for bv
 		double bvenergy;//energy produced by bond valence.
 		double bvvenergy;//energy produced by bond valence energy.
-		double ljenergy;
+		double ljenergy;//LJ 12 order energy
+        double coulenergy;//Long range Coulumb energy
                 double** bvvrcut;//cut-off for bvv
 		double** vv0;
         double ljrcut;
         double** bij;
         double** coul;
+        double ewd_sigma;
+        int nmax, gmax;
 };
 #endif
