@@ -75,6 +75,9 @@ void box::computebvv(){
 			recip=1.0/r;
 			temp=pow(r0[allatom[i].type][virtatom[*j].type]/r,cij[allatom[i].type][virtatom[*j].type]);
 			allatom[i].s0x+=temp*delx/r;
+		//	if(i==0){
+		//		std::cout<<i<<" "<<std::setprecision(9)<<allatom[i].s0x<<std::endl;;
+		//	}
 			allatom[i].s0y+=temp*dely/r;
 			allatom[i].s0z+=temp*delz/r;
 		}
@@ -84,9 +87,9 @@ void box::computebvv(){
 		Dix[i]=svvij[allatom[i].type][allatom[i].type]*2*2*allatom[i].s0x*s;
 		Diy[i]=svvij[allatom[i].type][allatom[i].type]*2*2*allatom[i].s0y*s;
 		Diz[i]=svvij[allatom[i].type][allatom[i].type]*2*2*allatom[i].s0z*s;
+	//	std::cout<<std::fixed<<std::setprecision(10)<<"\t"<<std::setw(15)<<s<<" "<<std::setw(15)<<Dix[i]<<" "<<std::setw(15)<<Diy[i]<<" "<<std::setw(15)<<Diz[i]<<std::endl;
 	}
-
-	std::cout<<"the whole energy is :"<<std::setprecision(15)<<bvenergy+bvvenergy<<std::endl;
+	std::cout<<"the total energy is "<<std::setprecision(10)<<bvenergy+bvvenergy<<std::endl;
 	/*finished calculating the bond valence vector energy*/
   /*started to compute the */
 	for(size_t i=0;i<size;i++){
@@ -118,7 +121,7 @@ void box::computebvv(){
 				allatom[i].force[1]+=fy;
 				allatom[i].force[2]+=fz;
 		}
-		std::cout<<allatom[i].force[0]<<" "<<allatom[i].force[1]<<" "<<allatom[i].force[2]<<std::endl;
+		std::cout<<std::fixed<<std::setprecision(15)<<std::setw(15)<<allatom[i].force[0]<<" "<<std::setw(15)<<allatom[i].force[1]<<" "<<std::setw(15)<<allatom[i].force[2]<<std::endl;
 	}
 	delete [] Dix;
 	delete [] Diy;
