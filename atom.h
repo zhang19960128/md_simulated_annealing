@@ -32,8 +32,8 @@ class box{
 				double** pairbvv_input,
 				double** pairlj_input,
                 double ljrcut=8.0,
-                double ewd_sigma=100,
-                int ewd_nmax=5,
+                double ewd_sigma=3,
+                int ewd_nmax=3,
                 int ewd_gmax=5
                 );
 		void freezeforce();/*freeze force for other people to calculate accumulative force*/

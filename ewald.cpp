@@ -14,6 +14,7 @@ void box::computelong(){
     double LongRange = 0;
     double selfe = 0;
     double *lattice = p;
+    double epsil = 0; 
     atom *input = allatom;
     Matrix3d mtx_lattice;
     for (int i=0; i<9; i++){
@@ -24,11 +25,14 @@ void box::computelong(){
     is however preferred due to following matrices multiplication*/
     
     /*Calculate the short-range energy*/
+    Vector3d rijn;
+    double deno = 0;
+    double alpha = 1/pow(1/2,1/2)/sigma;/*Used to calculate the force*/
     for (int lx=-nmax; lx<nmax; lx++){
         for (int ly=-nmax; ly<nmax; ly++){
             for (int lz=-nmax; lz<nmax; lz++){
-                for (int i=0; i<size; i++){
-                    for (int j=0; j<size; j++){
+                for (size_t i=0; i<size; i++){
+                    for (size_t j=0; j<size; j++){
                         if (i==j && lx==0 && ly==0 && lz==0){
                             continue;
                         }
@@ -37,12 +41,17 @@ void box::computelong(){
                             Vector3d vj;
                             Vector3d nreal;
                             nreal << lx, ly, lz;
-                            for (int k=0; k<3; k++){
+                            for (size_t k=0; k<3; k++){
                                 vi << (input+i)->position[k];
                                 vj << (input+j)->position[k];
                             }
-                            double deno = (vi - vj + mtx_lattice.transpose()*nreal).norm();
-                            ShortRange += 0.5*(input+i)->charge*(input+j)->charge*erfc(deno/pow(2,0.5)/sigma)/deno;
+                            rijn = (vi - vj + mtx_lattice.transpose()*nreal); 
+                            deno = (rijn).norm();
+                            epsil = coul[(input+i)->type][(input+j)->type];
+                            ShortRange += 1/8/pi/epsil*(input+i)->charge*(input+j)->charge*erfc(deno/pow(2,0.5)/sigma)/deno;
+                            for (size_t k=0; k<3; k++){
+                                (input+i)->force[k] += 1/4/pi/epsil*(input+i)->charge*(input+j)->charge*rijn[k]/pow(deno,3)*(erfc(alpha*deno) + 2*alpha/pow(pi,1/2)*deno*exp(-pow(alpha*deno, 2))); 
+                            } 
                         }
                     }
                 }
@@ -52,10 +61,11 @@ void box::computelong(){
     
     /*Calculate the self energy*/
     for (int i=0; i<size; i++){
-        selfe += 1/pow(2*pi,0.5)/sigma*pow((input+i)->charge,2);
+        selfe += 1/pow(2*pi,0.5)/sigma/4/pi/epsil*pow((input+i)->charge,2);
     }
     
     /*Calculate the long-range energy*/
+    Vector3d rij;
     for (int gx=-gmax; gx<gmax; gx++){
         for (int gy=-gmax; gy<gmax; gy++){
             for (int gz=-gmax; gz<gmax; gz++){
@@ -76,7 +86,23 @@ void box::computelong(){
                         sk += (input+i)->charge*exp(unit_i*gvec.dot(vpos));
                     }
                     double k = gvec.norm();
-                    LongRange += 2*pi*exp(-sigma*sigma*k*k/2)*pow(norm(sk),2)/volume/k/k;
+                    LongRange += 1/epsil/2*exp(-sigma*sigma*k*k/2)*pow(norm(sk),2)/volume/k/k;
+                    /*Finish the calculation of energy, continue to calculate the force*/
+                    for (size_t i=0; i<size; i++){
+                        for (size_t j=0; j<size; j++){
+                            Vector3d vi;
+                            Vector3d vj;
+                            for (size_t kk=0; kk<3; kk++){
+                                vi << (input+i)->position[kk];
+                                vj << (input+j)->position[kk];
+                            }
+                            rij = vi-vj;
+                            for (size_t kk=0; kk<3; kk++){
+                                (input+i)->force[kk] +=
+                                -1/volume/epsil*(input+i)->charge*(input+j)->charge*sin(gvec.dot(rij))*exp(-sigma*sigma*k*k/2)*gvec[kk]/k/k; 
+                            }
+                        }
+                    }
                 }
             }
         }
