@@ -20,10 +20,10 @@ box::box(atom* inputallatom,
 		double** pairbv_input,
 		double** pairbvv_input,
         double** pairlj_input,
-        double ljrcut=8.0,
-        double ewd_sigma=100,
-        int ewd_nmax=5,
-        int ewd_gmax=5
+        double ljrcut,
+        double ewd_sigma,
+        int ewd_nmax,
+        int ewd_gmax
         ){
 	/*this paribv_input should be similar to lammps input*/
 	/*this paribvv_input should be similar to lammps input*/

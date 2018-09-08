@@ -31,7 +31,7 @@ class box{
 				double** pairbv_input,
 				double** pairbvv_input,
 				double** pairlj_input,
-                double ljrcut=8.0
+                double ljrcut=8.0,
                 double ewd_sigma=100,
                 int ewd_nmax=5,
                 int ewd_gmax=5
@@ -97,7 +97,7 @@ class box{
         double ljrcut;
         double** bij;
         double** coul;
-        double ewd_sigma;
+        double sigma;
         int nmax, gmax;
 };
 #endif

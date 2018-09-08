@@ -20,7 +20,7 @@ void box::computelong(){
         mtx_lattice << lattice[i];
     }
     double volume = mtx_lattice.determinant();
-    Matrix3f gvecs = 2*pi*mtx_lattice.inverse(); /*By doing this, we actually got the transpose of the g lattice, which
+    Matrix3d gvecs = 2*pi*mtx_lattice.inverse(); /*By doing this, we actually got the transpose of the g lattice, which
     is however preferred due to following matrices multiplication*/
     
     /*Calculate the short-range energy*/
@@ -41,7 +41,7 @@ void box::computelong(){
                                 vi << (input+i)->position[k];
                                 vj << (input+j)->position[k];
                             }
-                            double deno = (vi - vj + mtx_lattice.transpose()*N).norm();
+                            double deno = (vi - vj + mtx_lattice.transpose()*nreal).norm();
                             ShortRange += 0.5*(input+i)->charge*(input+j)->charge*erfc(deno/pow(2,0.5)/sigma)/deno;
                         }
                     }
