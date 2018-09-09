@@ -20,6 +20,7 @@ int main(){
 		 	test.freezeforce();
    		test.computebv();
    		test.computebvv();
+			test.computelong();
 	 }
    return 0;
 }
