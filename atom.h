@@ -31,7 +31,7 @@ class box{
 				double** pairbv_input,
 				double** pairbvv_input,
 				double** pairlj_input,
-                double ljrcut=8.0,
+                double ljcut=8.0,
                 double ewd_sigma=3,
                 int ewd_nmax=3,
                 int ewd_gmax=5
@@ -47,7 +47,6 @@ class box{
         void computelj();
         void computelong();
 		void printnei(int i);
-    void lj12();
 		~box()
         {
 			for(size_t i=0;i<type;i++){

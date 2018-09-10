@@ -15,12 +15,14 @@ int main(){
          /*this testconfig is useless after initialization*/
 	 test.updatelistbv();
 	 test.updatelistbvv();
+     test.updatelistlj();
 	 for(size_t i=0;i<10000;i++){
    		std::cout<<i<<std::endl;
 		 	test.freezeforce();
    		test.computebv();
    		test.computebvv();
-			test.computelong();
+	    test.computelj();
+        test.computelong();
 	 }
    return 0;
 }

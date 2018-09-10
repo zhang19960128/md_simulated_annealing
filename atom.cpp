@@ -20,7 +20,7 @@ box::box(atom* inputallatom,
 		double** pairbv_input,
 		double** pairbvv_input,
         double** pairlj_input,
-        double ljrcut,
+        double ljcut,
         double ewd_sigma,
         int ewd_nmax,
         int ewd_gmax
@@ -92,6 +92,7 @@ box::box(atom* inputallatom,
     sigma = ewd_sigma;
     nmax = ewd_nmax;
     gmax = ewd_gmax;
+    ljrcut = ljcut;
 }
 void box::freezeforce(){
 	for(size_t i=0;i<size;i++){

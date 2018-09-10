@@ -5,6 +5,7 @@
 #include <list>
 #include <iostream>
 #include <math.h>
+using namespace std;
 void box::updatelistlj(){
     double tmp;
     double paircut;
@@ -13,7 +14,7 @@ void box::updatelistlj(){
         for (size_t j=0; j<virtsize; j++){
             tmp = distance(allatom[i].position,virtatom[j].position);
             if (tmp<ljrcut && tmp>0.00001){
-                allatom[i].neilj.push_back(j);
+                allatom[i].neilj.push_back(j); 
             }
         }
     }
@@ -23,8 +24,8 @@ void box::computelj(){
     double e_lj = 0.0;
     double delx, dely, delz,rsq,r;
     for (size_t i=0; i<size;i++){
-        for (std::list<int>::iterator j=allatom[i].neilj.begin(); j!=allatom[i].neilj.end(); j++){
-  			delx=allatom[i].position[0]-virtatom[*j].position[0];
+        for (std::list<int>::iterator j=allatom[i].neilj.begin(); j!=allatom[i].neilj.end(); j++){	
+            delx=allatom[i].position[0]-virtatom[*j].position[0];
 			dely=allatom[i].position[1]-virtatom[*j].position[1];
 			delz=allatom[i].position[2]-virtatom[*j].position[2];
 			rsq=delx*delx+dely*dely+delz*delz;
