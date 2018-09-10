@@ -108,3 +108,11 @@ void box::printnei(int i){
 }
 /*finished computing bond valence force*/
 /*end define the bond-valence energy*/
+void box::printlj(){
+   for(size_t i=0;i<4;i++){
+      for(size_t j=0;j<4;j++){
+         std::cout<<bij[i][j]<<" ";
+      }
+   std::cout<<std::endl;
+   }
+}

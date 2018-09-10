@@ -39,6 +39,7 @@ class box{
 		void freezeforce();/*freeze force for other people to calculate accumulative force*/
 		void updatelistbv();/*update once and use forever, big trick*/
 		void updatelistbvv();
+                void printlj();
 		void updatebv(double** input);
     void updatebvv(double** input);
 		void updatelistlj();
