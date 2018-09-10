@@ -18,14 +18,11 @@ int main(){
 	 test.updatelistbvv();
          test.updatelistlj();
          std::clock_t c_start=std::clock();
-	 for(size_t i=0;i<10000;i++){
-   	        	std::cout<<i<<std::endl;
 		 	test.freezeforce();
    		test.computebv();
    		test.computebvv();
 	        //test.computelj();
         test.computelong();
-	 }
          std::clock_t c_end=std::clock();
          std::cout<<"CPU time used: "<<(c_end-c_start)/CLOCKS_PER_SEC<<std::endl;
    return 0;
