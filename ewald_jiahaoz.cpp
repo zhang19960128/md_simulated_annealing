@@ -14,15 +14,23 @@ void box::computelong(){
     double volume=p[0]*p[1]*p[2];
     double delx,dely,delz,rsq,r;
     double root2pi=1/pow(2*pi,0.5);
+    double* xall=new double[size];
+    double* yall=new double [size];
+    double* zall=new double [size];
+    double* allcharge=new double [size];
     for(size_t i=0;i<size;i++){
-      for(std::list<int>::iterator j=allatom[i].neilj.begin();j!=allatom[i].neilj.end();j++){
+       xall[i]=allatom[i].position[0];
+       yall[i]=allatom[i].position[1];
+       zall[i]=allatom[i].position[2];
+       charge[i]=allatom[i].charge;
+       for(std::list<int>::iterator j=allatom[i].neilj.begin();j!=allatom[i].neilj.end();j++){
          delx=allatom[i].position[0]-virtatom[*j].position[0];
          dely=allatom[i].position[1]-virtatom[*j].position[1];
-         delz=allatom[i].position[3]-virtatom[*j].position[2];
+         delz=allatom[i].position[2]-virtatom[*j].position[2];
          rsq=delx*delx+dely*dely+delz*delz;
          r=sqrt(rsq);
-         epsil=coul[allatom[i].type][allatom[*j].type];
-         ShortRange+=1/pi/epsil/4*allatom[i].charge*virtatom[*j].charge/r;
+        // epsil=coul[allatom[i].type][allatom[*j].type];
+        // ShortRange+=1/pi/epsil/4*allatom[i].charge*virtatom[*j].charge/r;
       }
     }
     ShortRange=ShortRange/2.0;
@@ -36,5 +44,60 @@ void box::computelong(){
      *+I(********************************************************) similar term just expand it
      *
      * */
+    /*define array for cos(k_x*r_x),cos(k_y*r_y),cos(k_z*r_z),sin(k_x*r_x),sin(k_y*r_y),sin(k_z*r_z)*/
+    double** cskxrx=new double* [gmax];
+    double** cskyry=new double* [gmax];
+    double** cskzrz=new double* [gmax];
+    double** snkxrx=new double* [gmax];
+    double** snkyry=new double* [gmax];
+    double** snkzrz=new double* [gmax];
+    for(size_t i=0;i<gmax;i++){
+      cskxrx[i]=new double [size];
+      cskyry[i]=new double [size];
+      cskzrz[i]=new double [size];
+      snkxrx[i]=new double [size];
+      snkyry[i]=new double [size];
+      snkzrz[i]=new double [size];
+    }
+    for(int i=0;i<gmax;i++)
+       for(size_t j=0;j<size;j++){
+          cskxrx[i][j]=cos(2*pi/p[0]*i*xall[j]);
+          cskyry[i][j]=cos(2*pi/p[1]*i*yall[j]);
+          cskzrz[i][j]=cos(2*pi/p[2]*i*zall[j]);
+          snkxrx[i][j]=sin(2*pi/p[0]*i*xall[j]);
+          snkyry[i][j]=sin(2*pi/p[1]*i*yall[j]);
+          snkzrz[i][j]=sin(2*pi/p[2]*i*zall[j]);
+       }
+    double skre,skim;
+    for(int h=-1*gmax;h<gmax;h++)
+       for(int k=-1*gmax;k<gmax;k++)
+          for(int l=-1*gmax;l<gmax;l++){
+             skre=0.0;
+             skim=0.0;
+             for(size_t i=0;i<size;i++){
+                skre=skre+cskxrx[abs(h)][i]*cskyry[abs(k)][i]*cskzrz[abs(l)][i];
+                skre=skre+cskxrx[abs(h)][i]*snkyry[abs(k)][i]*snkzrz[abs(l)][i]*(k>0 ? 1:-1)*(l>0 ? 1:-1);
+             }
+          }
 
+    /*this is the final step*/
+    for(size_t i=0;i<gmax;i++){
+      delete [] cskxrx[i];
+      delete [] cskyry[i];
+      delete [] cskzrz[i];
+      delete [] snkxrx[i];
+      delete [] snkyry[i];
+      delete [] snkzrz[i];
+    }
+    delete [] cskxrx;
+    delete [] cskyry;
+    delete [] cskzrz;
+    delete [] snkxrx;
+    delete [] snkyry;
+    delete [] snkzrz;
+    delete [] xall;
+    delete [] yall;
+    delete [] zall;
+    delete [] allcharge;
+    /*end memory allocation*/
 }
