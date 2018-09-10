@@ -68,18 +68,28 @@ void box::computelong(){
           snkyry[i][j]=sin(2*pi/p[1]*i*yall[j]);
           snkzrz[i][j]=sin(2*pi/p[2]*i*zall[j]);
        }
-    double skre,skim;
+    double skre,skim,skmodsq,ksq;
     for(int h=-1*gmax;h<gmax;h++)
        for(int k=-1*gmax;k<gmax;k++)
           for(int l=-1*gmax;l<gmax;l++){
              skre=0.0;
              skim=0.0;
              for(size_t i=0;i<size;i++){
+							 /*finish computing real part*/
                 skre=skre+cskxrx[abs(h)][i]*cskyry[abs(k)][i]*cskzrz[abs(l)][i];
-                skre=skre+cskxrx[abs(h)][i]*snkyry[abs(k)][i]*snkzrz[abs(l)][i]*(k>0 ? 1:-1)*(l>0 ? 1:-1);
+                skre=skre-cskxrx[abs(h)][i]*snkyry[abs(k)][i]*snkzrz[abs(l)][i]*(k>0 ? 1:-1)*(l>0 ? 1:-1);
+								skre=skre-snkxrx[abs(h)][i]*cskyry[abs(k)][i]*snkzrz[abs(l)][i]*(h>0 ? 1:-1)*(l>0 ? 1:-1);
+								skre=skre-snkxrx[abs(h)][i]*snkyry[abs(k)][i]*cskzrz[abs(l)][i]*(h>0 ? 1:-1)*(k>0 ? 1:-1);
+								/*start to compute the imaginary part*/
+								skim=skim+cskxrx[abs(h)][i]*cskyry[abs(k)][i]*snkzrz[abs(l)][i]*(l>0 ? 1:-1);
+								skim=skim+snkxrx[abs(h)][i]*cskyry[abs(k)][i]*cskzrz[abs(l)][i]*(h>0 ? 1:-1);
+								skim=skim+cskxrx[abs(h)][i]*snkyry[abs(k)][i]*cskzrz[abs(l)][i]*(k>0 ? 1:-1);
+								skim=skim-snkxrx[abs(h)][i]*snkyry[abs(k)][i]*snkzrz[abs(l)][i]*(h>0 ? 1:-1)*(k>0 ? 1:-1)*(l>0 ? 1:-1);
              }
+						 ksq=h*2*pi/p[0]*h*2*pi/p[0]+k*2*pi/p[1]*k*2*pi/p[1]+l*2*pi/p[2]*l*2*pi/p[2];
+						 skmodsq=skre*skre+skim*skim;
+						 longRange=longRange+1/volume/2/epsilon*(exp(-1*sigma*sigma)*ksq/2)/ksq*skmodsq
           }
-
     /*this is the final step*/
     for(size_t i=0;i<gmax;i++){
       delete [] cskxrx[i];
