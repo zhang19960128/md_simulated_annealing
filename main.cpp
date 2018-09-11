@@ -18,7 +18,6 @@ int main(){
 	 test.updatelistbv();
 	 test.updatelistbvv();
          test.updatelistlj();
-         test.printlj();
          std::clock_t c_start=std::clock();
 	 for(size_t i=0;i<1;i++){
 		 	test.freezeforce();

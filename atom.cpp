@@ -44,7 +44,7 @@ box::box(atom* inputallatom,
 	bvrcut=new double* [t];/*cut-off for bond valence*/
 	bvvrcut=new double* [t];/*cut-off for bond valence vector*/
 	vv0=new double* [t];/*equlibrium bvv0*/
-    coul = new double* [t];
+    epsilon = new double* [t];
     bij = new double* [t];
 	for(size_t i=0;i<t;i++){
 		r0[i]=new double[t];
@@ -55,7 +55,7 @@ box::box(atom* inputallatom,
 		bvrcut[i]=new double[t];
 		bvvrcut[i]=new double[t];
 		vv0[i]=new double[t];
-        coul[i] = new double[t];
+        epsilon[i] = new double[t];
         bij[i] = new double[t];
 	}
 	size_t temp=0;
@@ -78,8 +78,8 @@ box::box(atom* inputallatom,
 			bvrcut[j][i]=bvrcut[i][j];
 			bvvrcut[i][j]=pairbvv_input[temp][4];
 			bvvrcut[j][i]=bvvrcut[i][j];
-            coul[i][j] = pairlj_input[temp][0];
-            coul[j][i] = coul[i][j];
+            epsilon[i][j] = pairlj_input[temp][0];
+            epsilon[j][i] = epsilon[i][j];
             bij[i][j] = pairlj_input[temp][1];
             bij[j][i] = bij[i][j];
             maxcutoff=maxcutoff > bvrcut[i][j] ? maxcutoff : bvrcut[i][j];
