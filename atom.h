@@ -32,7 +32,7 @@ class box{
 				double** pairbvv_input,
 				double** pairlj_input,
                 double ljcut=8.0,
-                double ewd_sigma=3,
+                double ewd_sigma=1.5,
                 int ewd_nmax=3,
                 int ewd_gmax=5
                 );

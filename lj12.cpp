@@ -5,7 +5,7 @@
 #include <list>
 #include <iostream>
 #include <math.h>
-
+#include <iomanip>
 
 void box::updatelistlj(){
     double tmp;
@@ -39,10 +39,10 @@ void box::computelj(){
 				}
     }
     ljenergy = ljenergy/2;
-	std::cout<<"E: "<<ljenergy<<std::endl;
-                for (size_t i=0; i<size; i++){
-        std::cout<<allatom[i].force[0] <<"  "<<allatom[i].force[1]<<"  "<<allatom[i].force[2]<<std::endl;
-    }
+	  //std::cout<<"E: "<<ljenergy<<std::endl;
+    //            for (size_t i=0; i<size; i++){
+    //    std::cout<<std::fixed<<std::setprecision(14)<<std::setw(20)<<allatom[i].force[0] <<"  "<<allatom[i].force[1]<<"  "<<allatom[i].force[2]<<std::endl;
+    // }
 }
 
 
