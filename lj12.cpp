@@ -30,21 +30,19 @@ void box::computelj(){
 			delz=allatom[i].position[2]-virtatom[*j].position[2];
 			rsq=delx*delx+dely*dely+delz*delz;
 			r=sqrt(rsq);
-            ljenergy += pow(bij[allatom[i].type][virtatom[*j].type]/r,12);
-            allatom[i].force[0] += 12*pow(bij[allatom[i].type][virtatom[*j].type],12)/pow(r,14)*delx;
-            allatom[i].force[1] += 12*pow(bij[allatom[i].type][virtatom[*j].type],12)/pow(r,14)*dely;
-            allatom[i].force[2] += 12*pow(bij[allatom[i].type][virtatom[*j].type],12)/pow(r,14)*delz;
+            ljenergy += 4*epsilon[allatom[i].type][virtatom[*j].type]*pow(bij[allatom[i].type][virtatom[*j].type]/r,12);
+            allatom[i].force[0] += 12*4*epsilon[allatom[i].type][virtatom[*j].type]*pow(bij[allatom[i].type][virtatom[*j].type],12)/pow(r,14)*delx;
+            allatom[i].force[1] += 12*4*epsilon[allatom[i].type][virtatom[*j].type]*pow(bij[allatom[i].type][virtatom[*j].type],12)/pow(r,14)*dely;
+            allatom[i].force[2] += 12*4*epsilon[allatom[i].type][virtatom[*j].type]*pow(bij[allatom[i].type][virtatom[*j].type],12)/pow(r,14)*delz;
 
 						//std::cout<<bij[allatom[i].type][virtatom[*j].type]<<std::endl;
 				}
     }
     ljenergy = ljenergy/2;
-	/*	std::cout<<"E: "<<ljenergy<<std::endl;
-
+	std::cout<<"E: "<<ljenergy<<std::endl;
                 for (size_t i=0; i<size; i++){
         std::cout<<allatom[i].force[0] <<"  "<<allatom[i].force[1]<<"  "<<allatom[i].force[2]<<std::endl;
     }
-    */
 }
 
 
