@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <list>
+#include <iomanip>
 #define pi 3.14159265359
 /*Perform the Ewald summation. The lattice paramters should be given*/
 /*Lattice should be a flattened array*/
@@ -12,10 +13,10 @@ void box::computelong(){
     double selfe = 0;
     double epsil = 0;
 		double coul_prefactor=180.9512801302711;
-		/*e^2/epsilon0=180.951  ev when use U=k*q1*q2/r*/
+		/*e/(epsilon0*A)=180.951  ev when use U=k*q1*q2/r*/
     double volume=p[0]*p[1]*p[2];
     double delx,dely,delz,rsq,r;
-    double root2pi=1/pow(2*pi,0.5);
+    double root2pi=pow(2*pi,0.5);
     double* xall=new double[size];
     double* yall=new double [size];
     double* zall=new double [size];
@@ -31,16 +32,15 @@ void box::computelong(){
          delz=allatom[i].position[2]-virtatom[*j].position[2];
          rsq=delx*delx+dely*dely+delz*delz;
          r=sqrt(rsq);
-        // epsil=coul[allatom[i].type][allatom[*j].type];
-         ShortRange+=coul_prefactor/4/pi*allatom[i].charge*virtatom[*j].charge/r*erf(r/sqrt(2)/sigma);
+         ShortRange+=coul_prefactor/4/pi*allatom[i].charge*virtatom[*j].charge/r*erfc(r/sqrt(2)/sigma);
       }
     }
     ShortRange=ShortRange/2.0;
-		std::cout<<"the short range coulumb potential is: "<<ShortRange<<std::endl;
+		//std::cout<<"the short range coulumb potential is: "<<ShortRange<<std::endl;
     for(size_t i=0;i<size;i++){
       selfe=selfe-1/root2pi/sigma/4/pi*coul_prefactor*(allatom[i].charge)*allatom[i].charge;
     }
-		std::cout<<"the self energy is: "<<selfe<<std::endl;
+		//std::cout<<"the self energy is: "<<selfe<<std::endl;
     /*calculate the longrange energy*/
     /*exp(i*k_v*r)
      *=exp(i*k_x*r_x)*exp(i*k_y*r_y)*exp(i*k_z*r_z)
@@ -98,11 +98,11 @@ void box::computelong(){
 		// std::cout<<"the real part is: "<<skre<<" the imaginary part is: "<<skim<<std::endl;
 		 ksq=h*2*pi/p[0]*h*2*pi/p[0]+k*2*pi/p[1]*k*2*pi/p[1]+l*2*pi/p[2]*l*2*pi/p[2];
 		 skmodsq=skre*skre+skim*skim;
-		 std::cout<<skmodsq<<std::endl;
-		 LongRange=LongRange+1/volume/2*coul_prefactor*(exp(-1*sigma*sigma)*ksq/2)/ksq*skmodsq;
+		 LongRange=LongRange+1/volume/2*coul_prefactor*exp(-1*sigma*sigma*ksq/2)/ksq*skmodsq;
           }
-		std::cout<<"the long range energy is: "<<LongRange<<std::endl;
-    /*this is the final step*/
+		//std::cout<<"the long range energy is: "<<LongRange<<std::endl;
+		std::cout<<"the toatl energy is: "<<std::setprecision(10)<<std::setw(10)<<LongRange+selfe+ShortRange<<std::endl;
+		/*this is the final step*/
     for(size_t i=0;i<gmax;i++){
       delete [] cskxrx[i];
       delete [] cskyry[i];
