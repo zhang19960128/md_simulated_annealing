@@ -6,7 +6,7 @@
 typedef struct Atom{
 	double position[3];
 	double force[3];
-	double charge;//coulumb charge
+	double charge;//epsilonumb charge
 	double bv0;//prefered bond valence_equilibrium.
 	double s0;//real bond valence term
 	double s0x;//bond valence vector x
@@ -60,7 +60,7 @@ class box{
 				delete [] bvvrcut[i];
 				delete [] vv0[i];
                 delete [] bij[i];
-                delete [] coul[i];
+                delete [] epsilon[i];
 			}
 			delete [] r0;
 			delete [] v0;
@@ -72,7 +72,7 @@ class box{
 			delete [] vv0;
 			delete [] allatom;
       delete [] bij;
-      delete [] coul;
+      delete [] epsilon;
 		};
 	private:
 		int virtsize;//store how many image atoms are there.
@@ -93,12 +93,12 @@ class box{
 		double bvenergy;//energy produced by bond valence.
 		double bvvenergy;//energy produced by bond valence energy.
 		double ljenergy;//LJ 12 order energy
-        double coulenergy;//Long range Coulumb energy
+        double epsilonenergy;//Long range epsilonumb energy
                 double** bvvrcut;//cut-off for bvv
 		double** vv0;
         double ljrcut;
         double** bij;
-        double** coul;
+        double** epsilon;
         double sigma;
         int nmax, gmax;
 };
