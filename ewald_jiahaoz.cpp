@@ -96,10 +96,7 @@ void box::computelong(){
 			//		std::cout<<cskxrx[i][j]<<" "<<cskyry[i][j]<<" "<<cskzrz[i][j]<<std::endl;
 				  //std::cout<<xall[j]<<" "<<yall[j]<<" "<<zall[j]<<std::endl;
        }
-    double skre,skim,skmodsq,ksq,snkr,cskr,kr,sumh,sumk,suml;
-		sumh=0.0;
-		sumk=0.0;
-		suml=0.0;
+    double skre,skim,skmodsq,ksq,snkr,cskr,kr;
     for(int h=-1*gmax;h<=gmax;h++)
        for(int k=-1*gmax;k<=gmax;k++)
           for(int l=-1*gmax;l<=gmax;l++){
@@ -127,31 +124,33 @@ void box::computelong(){
 						 for(size_t i=0;i<size;i++){
 		//std::cout<<"the real part is: "<<skre<<" the imaginary part is: "<<skim<<std::endl;
 		 			chargei=allcharge[i];
-		 			//kr=h*2*pi/p[0]*xall[i]+k*2*pi/p[1]*yall[i]+l*2*pi/p[2]*zall[i];
-					//snkr=sin(kr);
+		 			kr=h*2*pi/p[0]*xall[i]+k*2*pi/p[1]*yall[i]+l*2*pi/p[2]*zall[i];
+					snkr=sin(kr);
 					//snkr=(snkxrx[abs(h)][i]*cskyry[abs(k)][i])*cskzrz[abs(l)][i]*(h>0?1:-1);
-					snkr=(snkxrx[abs(h)][i]*cskyry[abs(k)][i]*(h>0?1:-1)+cskxrx[abs(h)][i]*snkyry[abs(k)][i]*(k>0?1:-1))*cskzrz[abs(l)][i];
+					//snkr=(snkxrx[abs(h)][i]*cskyry[abs(k)][i]*(h>0?1:-1)+cskxrx[abs(h)][i]*snkyry[abs(k)][i]*(k>0?1:-1))*cskzrz[abs(l)][i];
+					//snkr=snkr
 					/*
 					 * the full formula require this, but due to symmetry, the net sum of snkzrz is basically zeros, so this is useless
 					snkr=snkr+(cskxrx[abs(h)][i]*cskyry[abs(k)][i]-snkxrx[abs(h)][i]*snkyry[abs(k)][i]*(h>0?1:-1)*(k>0?1:-1))*snkzrz[abs(l)][i];
 		 			*/
-					//cskr=cos(kr);
-				  //	cskr=cskxrx[abs(h)][i]*cskyry[abs(k)][i]*cskzrz[abs(l)][i];
-					  	cskr=(cskxrx[abs(h)][i]*cskyry[abs(k)][i]-snkxrx[abs(h)][i]*snkyry[abs(k)][i]*(h>0?1:-1)*(k>0?1:-1))*cskzrz[abs(l)][i];
-				 /*
-				 * the full formula require this, but due to symmetry, the net sum of snkzrz is basically zeros, so this is useless.
-					cskr=cskr-(snkxrx[abs(h)][i]*cskyry[abs(k)][i]*(h>0?1:-1)+cskxrx[abs(h)][i]*snkyry[abs(k)][i]*(k>0?1:-1))*snkzrz[abs(l)][i];
-         
-				 */
+					cskr=cos(kr);
+				  	cskr=cskxrx[abs(h)][i]*cskyry[abs(k)][i]*cskzrz[abs(l)][i];
+					  cskr=(cskxrx[abs(h)][i]*cskyry[abs(k)][i]-snkxrx[abs(h)][i]*snkyry[abs(k)][i]*(h>0?1:-1)*(k>0?1:-1))*cskzrz[abs(l)][i];
+						cskr=cskr-(snkxrx[abs(h)][i]*cskyry[abs(k)][i]*(h>0?1:-1)+cskxrx[abs(h)][i]*snkyry[abs(k)][i]*(k>0?1:-1))*snkzrz[abs(l)][i];
 					fx[i]=fx[i]+1/volume/2/epsil*temp*chargei*2*pi/p[0]*h*2*(snkr*skre-cskr*skim);
-					fy[i]=fy[i]+1/volume/2/epsil*temp*chargei*2*pi/p[1]*k*2*(snkr*skre-cskr*skim);
-					fz[i]=fz[i]+1/volume/2/epsil*temp*chargei*2*pi/p[2]*l*2*(snkr*skre-cskr*skim);
+					    fy[i]=fy[i]+1/volume/2/epsil*temp*chargei*2*pi/p[1]*k*2*(snkr*skre-cskr*skim);
+					    fz[i]=fz[i]+1/volume/2/epsil*temp*chargei*2*pi/p[2]*l*2*(snkr*skre-cskr*skim);
 						 }
 						 }
 		std::cout<<"the long range energy is: "<<LongRange<<std::endl;
 		std::cout<<"the toatl energy is: "<<std::setprecision(10)<<std::setw(10)<<LongRange+selfe+ShortRange<<std::endl;
 		for(size_t i=0;i<size;i++){
 			std::cout<<fx[i]<<" "<<fy[i]<<" "<<fz[i]<<std::endl;
+		}
+		for(size_t i=0;i<size;i++){
+			allatom[i].force[0]+=fx[i];
+			allatom[i].force[1]+=fy[i];
+			allatom[i].force[2]+=fz[i];
 		}
 		/*this is the final step*/
     for(size_t i=0;i<gmax;i++){

@@ -1,5 +1,5 @@
-CXX=g++
-CXXFLAGS= -std=c++11 -Wall
+CXX=icc
+CXXFLAGS= -std=c++11
 DEPS= interface.h image.h atom.h
 LIBPATH =-L/opt/gcc/7.3.0/snos/lib64
 CXXFLAGS += -I/opt/gcc/7.3.0/snos/include
