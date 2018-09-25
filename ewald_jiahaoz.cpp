@@ -143,6 +143,7 @@ void box::computelong(){
 						 }
 						 }
 		std::cout<<"the long range energy is: "<<LongRange<<std::endl;
+		std::cout<<"the self energy is: "<<selfe<<std::endl;
 		std::cout<<"the toatl energy is: "<<std::setprecision(10)<<std::setw(10)<<LongRange+selfe+ShortRange<<std::endl;
 		for(size_t i=0;i<size;i++){
 			std::cout<<fx[i]<<" "<<fy[i]<<" "<<fz[i]<<std::endl;

@@ -21,7 +21,7 @@ box::box(atom* inputallatom,
 		double** pairbvv_input,
         double** pairlj_input,
         double ljcut,
-        double ewd_sigma,
+        double ewd_alpha,
         int ewd_nmax,
         int ewd_gmax
         ){
@@ -89,7 +89,7 @@ box::box(atom* inputallatom,
 	int virt_size;
 	virtatom=imageall(allatom,size,period,maxcutoff,virt_size);
 	virtsize=virt_size;
-    sigma = ewd_sigma;
+    sigma = 1/sqrt(2)/ewd_alpha;
     nmax = ewd_nmax;
     gmax = ewd_gmax;
     ljrcut = ljcut;
@@ -109,10 +109,7 @@ void box::printnei(int i){
 /*finished computing bond valence force*/
 /*end define the bond-valence energy*/
 void box::printlj(){
-   for(size_t i=0;i<4;i++){
-      for(size_t j=0;j<4;j++){
-         std::cout<<bij[i][j]<<" ";
-      }
-   std::cout<<std::endl;
-   }
+	for(size_t i=0;i<size;i++){
+		std::cout<<allatom[i].force[0]<<" "<<allatom[i].force[1]<<" "<<allatom[i].force[2]<<std::endl;
+	}
 }
