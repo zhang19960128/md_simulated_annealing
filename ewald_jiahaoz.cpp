@@ -61,17 +61,12 @@ void box::computelong(){
 				 erfc_interpolate = t * (A1+t*(A2+t*(A3+t*(A4+t*A5)))) * expm2;
 				 //std::cout<<"the difference is: "<<erfc_interpolate-erfc(r/root2/sigma)<<std::endl;
 				 ShortRange+=1/epsil/4/pi*chargei*chargej/r*erfc_interpolate;
-				 temp2=1.0/8.0/epsil/pi*chargei*chargej/r3*erfc_interpolate;
-				 fx[i]=delx*temp2+fx[i];
-				 fy[i]=dely*temp2+fy[i];
-				 fz[i]=delz*temp2+fz[i];
-				 //temp=1.0/4/pi/epsil*1.0/2.0*chargei*chargej/rsq*(1.0/rootpi*2.0*expm2)*1.0/root2/sigma;
-				 temp=1.0/4/pi/epsil*1.0/2.0*chargei*chargej/r3*1.0/rootpi*2.0*(EWALD_F*expm2*grij+erfc_interpolate);
+				 temp=1.0/4/pi/epsil*1.0/2.0*chargei*chargej/r3*(EWALD_F*expm2*grij+erfc_interpolate);
 				 fx[i]=fx[i]+temp*delx;
 				 fy[i]=fy[i]+temp*dely;
 				 fz[i]=fz[i]+temp*delz;
 			 }
-			 std::cout<<fx[i]<<" "<<fy[i]<<" "<<fz[i]<<std::endl;
+			 std::cout<<i<<" "<<fx[i]<<" "<<fy[i]<<" "<<fz[i]<<std::endl;
     }
     ShortRange=ShortRange/2.0;
 		//std::cout<<"the short range coulumb potential is: "<<std::setprecision(10)<<ShortRange<<std::endl;
