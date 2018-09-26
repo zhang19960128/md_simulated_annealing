@@ -22,7 +22,6 @@ box::box(atom* inputallatom,
         double** pairlj_input,
         double ljcut,
         double ewd_alpha,
-        int ewd_nmax,
         int ewd_gmax
         ){
 	/*this paribv_input should be similar to lammps input*/
@@ -89,7 +88,7 @@ box::box(atom* inputallatom,
 	int virt_size;
 	virtatom=imageall(allatom,size,period,maxcutoff,virt_size);
 	virtsize=virt_size;
-    sigma = 1/sqrt(2)/ewd_alpha;
+    sigma = 1.0/sqrt(2)/ewd_alpha;
     nmax = ewd_nmax;
     gmax = ewd_gmax;
     ljrcut = ljcut;

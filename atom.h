@@ -32,9 +32,8 @@ class box{
 				double** pairbvv_input,
 				double** pairlj_input,
                 double ljcut=8.0,
-                double ewd_alpha=0.347343,
-                int ewd_nmax=3,
-                int ewd_gmax=4
+                double ewd_alpha=1.680099,
+                int ewd_gmax=10
                 );
 		void freezeforce();/*freeze force for other people to calculate accumulative force*/
 		void updatelistbv();/*update once and use forever, big trick*/
