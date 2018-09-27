@@ -89,7 +89,6 @@ box::box(atom* inputallatom,
 	virtatom=imageall(allatom,size,period,maxcutoff,virt_size);
 	virtsize=virt_size;
     sigma = 1.0/sqrt(2)/ewd_alpha;
-    nmax = ewd_nmax;
     gmax = ewd_gmax;
     ljrcut = ljcut;
 }

@@ -44,6 +44,7 @@ void box::computelong(){
 			 fz[i]=0.00;
        allcharge[i]=allatom[i].charge;
 			 chargei=allcharge[i];
+			 std::cout<<"I got "<<allatom[i].neilj.size()<<"neighbors"<<std::endl;
        for(std::list<int>::iterator j=allatom[i].neilj.begin();j!=allatom[i].neilj.end();j++){
          chargej=virtatom[*j].charge;
 				 delx=allatom[i].position[0]-virtatom[*j].position[0];
@@ -56,12 +57,12 @@ void box::computelong(){
         // ShortRange+=1/epsil/4/pi*chargei*chargej/r*temp;
 				 //temp2=1.0/8.0/epsil/pi*chargei*chargej/r3*erfc(r/root2/sigma); this is the standard erfc function but now I want to use the interpolation method to accelerate.
 				 grij=ewald_alpha*r;
-				 expm2=exp(-grij*grij);//=exp(-1*rsq/2/sigma^2)
+				 expm2=exp(-1.0*grij*grij);//=exp(-1*rsq/2/sigma^2)
 				 t= 1.0 / (1.0 + EWALD_P*grij);
 				 erfc_interpolate = t * (A1+t*(A2+t*(A3+t*(A4+t*A5)))) * expm2;
 				 //std::cout<<"the difference is: "<<erfc_interpolate-erfc(r/root2/sigma)<<std::endl;
-				 ShortRange+=1/epsil/4/pi*chargei*chargej/r*erfc_interpolate;
-				 temp=1.0/4/pi/epsil*1.0/2.0*chargei*chargej/r3*(EWALD_F*expm2*grij+erfc_interpolate);
+				 ShortRange+=1.0/epsil/4.0/pi*chargei*chargej/r*erfc_interpolate;
+				 temp=1.0/4.0/pi/epsil*1.0/2.0*chargei*chargej/r3*(EWALD_F*expm2*grij+erfc_interpolate);
 				 fx[i]=fx[i]+temp*delx;
 				 fy[i]=fy[i]+temp*dely;
 				 fz[i]=fz[i]+temp*delz;

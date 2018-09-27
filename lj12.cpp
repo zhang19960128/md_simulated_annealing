@@ -13,7 +13,7 @@ void box::updatelistlj(){
         allatom[i].neilj.clear();
         for (size_t j=0; j<virtsize; j++){
             tmp = distance(allatom[i].position,virtatom[j].position);
-            if (tmp<ljrcut && tmp>0.00001){
+            if (tmp<ljrcut && tmp>0.00000001){
                 allatom[i].neilj.push_back(j);
             }
         }
