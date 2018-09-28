@@ -213,9 +213,11 @@ void box::computelong(double accuracy_relative){
 		//std::cout<<"the self energy is: "<<std::setprecision(10)<<std::setw(10)<<selfe<<std::endl;
 		//std::cout<<"the Short Range energy is: "<<std::setprecision(10)<<std::setw(10)<<ShortRange<<std::endl;
 		//std::cout<<"the toatl energy is: "<<std::setprecision(10)<<std::setw(10)<<LongRange+selfe+ShortRange<<std::endl;
+	/*
 		for(size_t i=0;i<size;i++){
 			std::cout<<fx[i]<<" "<<fy[i]<<" "<<fz[i]<<std::endl;
 		}
+		*/
 		for(size_t i=0;i<size;i++){
 			allatom[i].force[0]+=fx[i];
 			allatom[i].force[1]+=fy[i];
