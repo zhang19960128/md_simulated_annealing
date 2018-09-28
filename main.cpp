@@ -21,9 +21,10 @@ int main(){
          std::clock_t c_start=std::clock();
 				test.freezeforce();
 				test.computelong();
-				test.computelj();
-				test.computebv();
-				test.computebvv();
+		//		test.computelj();
+		//		test.computebv();
+		//		test.computebvv();
+		//		test.printlj();
 				std::clock_t c_end=std::clock();
 				std::cout<<"the total time used is: "<<(c_end-c_start)/CLOCKS_PER_SEC<<std::endl;
    return 0;
