@@ -14,13 +14,17 @@
 #define A4       -1.453152027
 #define A5        1.061405429
 /*Lattice should be a flattened array*/
-void box::computelong(){
+double rms(double g_ewald,int km,double prd,int natoms,double q2){
+	double value=2.0*q2*g_ewald/prd*sqrt(1.0/pi/km/natoms)*exp(-1*pi*pi*km*km/(g_ewald*g_ewald*prd*prd));
+	return value;
+}
+void box::computelong(double accuracy_relative){
     double ShortRange = 0;
     double LongRange = 0;
     double selfe = 0;
     double epsil = 0.0055263885;
 		double coul_prefactor=180.9512801302711;
-		double ewald_alpha=1/sqrt(2)/sigma;
+		double ewald_alpha;
 		/*e/(epsilon0*A)=180.951  ev when use U=k*q1*q2/r*/
     double volume=p[0]*p[1]*p[2];
     double delx,dely,delz,rsq,r;
@@ -35,7 +39,38 @@ void box::computelong(){
 		double* fy=new double [size];
 		double* fz=new double [size];
 		double chargei,chargej,temp,temp2,r3,erfc_interpolate,expm2,grij,t;//erfc_exact; use to debug when compare different erfc function.
-    for(size_t i=0;i<size;i++){
+  /*determin the value of g_ewald according to the accuracy you want*/
+	double q2=0.0;
+	double accuracy=accuracy_relative*coul_prefactor/4.0/pi;
+	for(size_t i=0;i<size;i++){
+		q2=allatom[i].charge*allatom[i].charge+q2;
+	}
+	q2=q2*coul_prefactor/4/pi;
+	ewald_alpha=accuracy*sqrt(size*ljrcut*p[0]*p[1]*p[2])/2.0/q2;
+	if(ewald_alpha >=1.0){
+	   ewald_alpha=(1.35-0.15*log(accuracy))/ljrcut;
+	}
+	else{
+		ewald_alpha=sqrt(-log(ewald_alpha))/ljrcut;
+	}
+	int gmax=1;
+	double err=rms(ewald_alpha,gmax,p[0],size,q2);
+    while (err > accuracy) {
+      gmax++;
+      err = rms(ewald_alpha,gmax,p[0],size,q2);
+    }
+    while (err > accuracy) {
+      gmax++;
+      err = rms(ewald_alpha,gmax,p[1],size,q2);
+    }  
+		while (err > accuracy) {
+      gmax++;
+      err = rms(ewald_alpha,gmax,p[1],size,q2);
+    }
+		std::cout<<"the parameter for ewald alphs is "<<ewald_alpha<<" the k cut is: "<<gmax<<std::endl;
+		double sigma=1.0/sqrt(2)/ewald_alpha;
+		/****finish esitimate the g_ewald and kmax******/
+		for(size_t i=0;i<size;i++){
        xall[i]=allatom[i].position[0];
        yall[i]=allatom[i].position[1];
        zall[i]=allatom[i].position[2];
@@ -67,7 +102,7 @@ void box::computelong(){
 				 fy[i]=fy[i]+temp*dely;
 				 fz[i]=fz[i]+temp*delz;
 			 }
-			 std::cout<<i<<" "<<fx[i]<<" "<<fy[i]<<" "<<fz[i]<<std::endl;
+			 //std::cout<<i<<" "<<fx[i]<<" "<<fy[i]<<" "<<fz[i]<<std::endl;
     }
     ShortRange=ShortRange/2.0;
 		//std::cout<<"the short range coulumb potential is: "<<std::setprecision(10)<<ShortRange<<std::endl;
@@ -174,10 +209,10 @@ void box::computelong(){
 
 		std::cout<<"the surface dipole energy is: "<<surface_dipole_e<<std::endl;
 		end code dipole correction to the total edwald summation*/
-		std::cout<<"the long range energy is: "<<std::setprecision(10)<<std::setw(10)<<LongRange<<std::endl;
-		std::cout<<"the self energy is: "<<std::setprecision(10)<<std::setw(10)<<selfe<<std::endl;
-		std::cout<<"the Short Range energy is: "<<std::setprecision(10)<<std::setw(10)<<ShortRange<<std::endl;
-		std::cout<<"the toatl energy is: "<<std::setprecision(10)<<std::setw(10)<<LongRange+selfe+ShortRange<<std::endl;
+		//std::cout<<"the long range energy is: "<<std::setprecision(10)<<std::setw(10)<<LongRange<<std::endl;
+		//std::cout<<"the self energy is: "<<std::setprecision(10)<<std::setw(10)<<selfe<<std::endl;
+		//std::cout<<"the Short Range energy is: "<<std::setprecision(10)<<std::setw(10)<<ShortRange<<std::endl;
+		//std::cout<<"the toatl energy is: "<<std::setprecision(10)<<std::setw(10)<<LongRange+selfe+ShortRange<<std::endl;
 		for(size_t i=0;i<size;i++){
 			std::cout<<fx[i]<<" "<<fy[i]<<" "<<fz[i]<<std::endl;
 		}
