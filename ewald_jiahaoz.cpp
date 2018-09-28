@@ -62,7 +62,7 @@ void box::computelong(){
 				 erfc_interpolate = t * (A1+t*(A2+t*(A3+t*(A4+t*A5)))) * expm2;
 				 //std::cout<<"the difference is: "<<erfc_interpolate-erfc(r/root2/sigma)<<std::endl;
 				 ShortRange+=1.0/epsil/4.0/pi*chargei*chargej/r*erfc_interpolate;
-				 temp=2.0*1.0/4.0/pi/epsil*1.0/2.0*chargei*chargej/r3*(EWALD_F*expm2*grij+erfc_interpolate);
+				 temp=1.0/4.0/pi/epsil*chargei*chargej/r3*(EWALD_F*expm2*grij+erfc_interpolate);
 				 fx[i]=fx[i]+temp*delx;
 				 fy[i]=fy[i]+temp*dely;
 				 fz[i]=fz[i]+temp*delz;
