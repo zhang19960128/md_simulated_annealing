@@ -44,7 +44,7 @@ void box::computelong(){
 			 fz[i]=0.00;
        allcharge[i]=allatom[i].charge;
 			 chargei=allcharge[i];
-			 std::cout<<"I got "<<allatom[i].neilj.size()<<"neighbors"<<std::endl;
+			 //std::cout<<"I got "<<allatom[i].neilj.size()<<"neighbors"<<std::endl;
        for(std::list<int>::iterator j=allatom[i].neilj.begin();j!=allatom[i].neilj.end();j++){
          chargej=virtatom[*j].charge;
 				 delx=allatom[i].position[0]-virtatom[*j].position[0];
@@ -62,7 +62,7 @@ void box::computelong(){
 				 erfc_interpolate = t * (A1+t*(A2+t*(A3+t*(A4+t*A5)))) * expm2;
 				 //std::cout<<"the difference is: "<<erfc_interpolate-erfc(r/root2/sigma)<<std::endl;
 				 ShortRange+=1.0/epsil/4.0/pi*chargei*chargej/r*erfc_interpolate;
-				 temp=1.0/4.0/pi/epsil*1.0/2.0*chargei*chargej/r3*(EWALD_F*expm2*grij+erfc_interpolate);
+				 temp=2.0*1.0/4.0/pi/epsil*1.0/2.0*chargei*chargej/r3*(EWALD_F*expm2*grij+erfc_interpolate);
 				 fx[i]=fx[i]+temp*delx;
 				 fy[i]=fy[i]+temp*dely;
 				 fz[i]=fz[i]+temp*delz;
@@ -154,6 +154,26 @@ void box::computelong(){
 					    fz[i]=fz[i]+1/volume/2/epsil*temp*chargei*2*pi/p[2]*l*2*(snkr*skre-cskr*skim);
 						 }
 						 }
+		/*started to code dipole correction to the total edwald summation
+		double surface_dipole_e=0.0;
+		double surface_dipole[3]={0.0,0.0,0.0};
+		for(size_t i=0;i<size;i++){
+			for(size_t j=0;j<3;j++){
+			surface_dipole[j]=surface_dipole[j]+allatom[i].charge*allatom[i].position[j];
+		}
+		}
+		for(size_t i=0;i<3;i++){
+		surface_dipole_e+=1.0/6.0/epsil/volume*surface_dipole[i]*surface_dipole[i];
+		}
+		for(size_t i=0;i<3;i++){
+			chargei=allcharge[i];
+			fx[i]+=-1.0/3.0/epsil/volume*surface_dipole[0]*chargei;
+			fy[i]+=-1.0/3.0/epsil/volume*surface_dipole[1]*chargei;
+			fz[i]+=-1.0/3.0/epsil/volume*surface_dipole[2]*chargei;
+		}
+
+		std::cout<<"the surface dipole energy is: "<<surface_dipole_e<<std::endl;
+		end code dipole correction to the total edwald summation*/
 		std::cout<<"the long range energy is: "<<std::setprecision(10)<<std::setw(10)<<LongRange<<std::endl;
 		std::cout<<"the self energy is: "<<std::setprecision(10)<<std::setw(10)<<selfe<<std::endl;
 		std::cout<<"the Short Range energy is: "<<std::setprecision(10)<<std::setw(10)<<ShortRange<<std::endl;
