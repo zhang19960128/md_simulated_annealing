@@ -48,6 +48,7 @@ class box{
     void computelj();
     void computelong(double accuraccy);
 		void printnei(int i);
+		void printinfo();
 		~box()
         {
 			for(size_t i=0;i<type;i++){
