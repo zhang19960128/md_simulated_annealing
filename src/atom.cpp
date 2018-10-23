@@ -95,6 +95,24 @@ box::box(atom* inputallatom,
 		}
 	}
 }
+void box::init(atom* inputallatom,int s,double* period,double dft_energy,double** stress_dft,double w){
+	p=new double[3];
+	for(size_t i=0;i<3;i++){
+		p[i]=period[i];
+	}
+	allatom=new atom[s];
+	std::copy(inputallatom,inputallatom+s,allatom);
+	size=s;
+	dftenergy=dft_energy;
+	weight=w;
+	stressdft=new double* [3];
+	for(size_t i=0;i<3;i++){
+		stressdft[i]=new double [3];
+		for(size_t j=0;j<3;j++){
+			stressdft[i][j]=stress_dft[i][j];
+		}
+	}
+}
 void box::freezeforce(){
 	for(size_t i=0;i<size;i++){
 		allatom[i].force[0]=0.0;

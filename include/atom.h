@@ -5,7 +5,8 @@
 /*since this is a light version of calculating the bond valence energy and force, we are not going to construct neighbor list for this atom*/
 typedef struct Atom{
 	double position[3];
-	double force[3];
+	double force[3];//MD force.
+	double dftforce[3];//DFT force.
 	double charge;//epsilonumb charge
 	double bv0;//prefered bond valence_equilibrium.
 	double s0;//real bond valence term
@@ -18,7 +19,7 @@ typedef struct Atom{
 	int type;
 	std::list<int> neibv;
 	std::list<int> neibvv;
-    std::list<int> neilj;
+  std::list<int> neilj;
 }atom;
 double distance(double* a,double* b);
 class box{
@@ -33,18 +34,19 @@ class box{
 				double** pairlj_input,
                 double ljcut=8.0
                 );
+		void init(atom* inputallatom,int s,double* period,double dft_energy,double** stress_dft,double w);
 		void freezeforce();/*freeze force for other people to calculate accumulative force*/
 		void updatelistbv();/*update once and use forever, big trick*/
 		void updatelistbvv();
-                void printlj();
+    void printlj();
 		void updatebv(double** input);
     void updatebvv(double** input);
 		void updatelistlj();
     void computebv();
 		void computebvv();
 		void computestress();
-        void computelj();
-        void computelong(double accuraccy);
+    void computelj();
+    void computelong(double accuraccy);
 		void printnei(int i);
 		~box()
         {
@@ -98,5 +100,8 @@ class box{
     double** bij;
     double** epsilon;
 		double** stress;
+		double** stressdft;
+		double dftenergy;
+		double weight;
 };
 #endif
