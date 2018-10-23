@@ -17,8 +17,8 @@ void box::computestress(){
 	}
 	for(size_t k=0;k<3;k++){
 		for(size_t j=0;j<3;j++){
-			std::cout<<stress[k][j]<<" "<<"\t";
+//			std::cout<<stress[k][j]<<" "<<"\t";
 		}
-		std::cout<<std::endl;
+//		std::cout<<std::endl;
 	}
 }

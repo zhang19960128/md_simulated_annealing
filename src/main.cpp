@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "readion.h"
 #include <ctime>
 #include "interface.h"
 int main(){
@@ -29,5 +30,6 @@ int main(){
 		//		test.printlj();
 				std::clock_t c_end=std::clock();
 				std::cout<<"the total time used is: "<<(c_end-c_start)/CLOCKS_PER_SEC<<std::endl;
-   return 0;
+        readion("IonFor.dat",40);
+				return 0;
 }

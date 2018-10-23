@@ -112,6 +112,7 @@ void box::init(atom* inputallatom,int s,double* period,double dft_energy,double*
 			stressdft[i][j]=stress_dft[i][j];
 		}
 	}
+	std::cout<<"the size of the system is: "<<size<<std::endl;
 }
 void box::freezeforce(){
 	for(size_t i=0;i<size;i++){
@@ -130,5 +131,27 @@ void box::printnei(int i){
 void box::printlj(){
 	for(size_t i=0;i<size;i++){
 		std::cout<<allatom[i].force[0]<<" "<<allatom[i].force[1]<<" "<<allatom[i].force[2]<<std::endl;
+	}
+}
+void box::printinfo(){
+	for(size_t i=0;i<size;i++){
+		for(size_t j=0;j<3;j++){
+			std::cout<<allatom[i].position[j]<<" ";
+		}
+		std::cout<<std::endl;
+	}
+	std::cout<<p[0]<<" "<<p[1]<<" "<<p[2]<<std::endl;
+	for(size_t i=0;i<size;i++){
+		for(size_t j=0;j<3;j++){
+			std::cout<<allatom[i].dftforce[j]<<" ";
+		}
+		std::cout<<std::endl;
+	}
+	std::cout<<dftenergy<<std::endl;
+	for(size_t i=0;i<3;i++){
+		for(size_t j=0;j<3;j++){
+			std::cout<<stressdft[i][j]<<" ";
+		}
+	std::cout<<std::endl;
 	}
 }

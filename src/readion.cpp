@@ -5,17 +5,16 @@
 #include <iostream>
 #include <sstream>
 box* readion(std::string inputfile,int number){
-	int size;
 	std::fstream fs;
 	fs.open(inputfile,std::fstream::in);
 	std::string line;
 	std::istringstream stream1;
 	getline(fs,line);
 	stream1.str(line);
-	stream1>>size;
+	int flag=0;
+	stream1>>flag;
 	stream1.clear();
-	box* ionall=new box[size];
-	size_t flag=0;
+	box* ionall=new box[flag];
 	atom* atomconfig;
 	double* period=new double[3];
 	double** stress_dft;
@@ -34,11 +33,12 @@ box* readion(std::string inputfile,int number){
 			stream1.clear();
 			/*end reading that*/
 		}
+		getline(fs,line);
 		/*reading periodical boudary condition*/
 		for(size_t k=0;k<3;k++){
 				getline(fs,line);
 				stream1.str(line);
-				for(size_t m=0;m<k;m++){
+				for(size_t m=0;m<=k;m++){
 						stream1>>period[k];
 				}
 				stream1.clear();
@@ -82,6 +82,11 @@ box* readion(std::string inputfile,int number){
 		getline(fs,line);
 		stream1.str(line);
 		stream1>>weight;
+		for(size_t i=0;i<number;i++){
+			for(size_t j=0;j<3;j++){
+				atomconfig[i].position[j]=atomconfig[i].position[j]*period[j];
+			}
+		}
 		ionall[tick].init(atomconfig,number,period,dftenergy,stress_dft,weight);
 	}
 	return ionall;
