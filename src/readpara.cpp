@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include "sa.h"
+#include <vector>
 /*read parameters in control.PT,and param.map, this will mainly 
  determined the total parameters.*/
 namespace control{
