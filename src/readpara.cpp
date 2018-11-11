@@ -6,13 +6,6 @@
 #include <vector>
 /*read parameters in control.PT,and param.map, this will mainly 
  determined the total parameters.*/
-namespace control{
-	extern double* bvvmatrix;
-	extern double* bvvmatrixmap;
-	extern double* bvvrange;
-	extern double* charge;
-	extern int* type;
-}
 std::vector<std::string> split(std::string s, std::string delimiter) {
 		    size_t pos_start = 0, pos_end, delim_len = delimiter.length();
 				std::string token;

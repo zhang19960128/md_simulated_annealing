@@ -11,4 +11,11 @@ namespace saconst{
 	double sa_nt=3;
 	double sa_ns=3;
 }
+namespace control{
+	double* bvvmatrix;
+	double* bvvmatrixmap;
+	double* bvvrange;
+	double* charge;
+	int* type;
+}
 #endif

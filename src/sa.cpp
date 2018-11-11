@@ -8,4 +8,11 @@ namespace saconst{
 	extern double sa_sweight;
 	extern double sa_nt;
 	extern double sa_ns;
+};
+namespace control{
+	extern double* bvvmatrix;
+	extern double* bvvmatrixmap;
+	extern double* bvvrange;
+	extern double* charge;
+	extern int* type;
 }
