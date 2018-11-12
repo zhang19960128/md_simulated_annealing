@@ -112,7 +112,6 @@ void box::init(atom* inputallatom,int s,double* period,double dft_energy,double*
 			stressdft[i][j]=stress_dft[i][j];
 		}
 	}
-	std::cout<<"the size of the system is: "<<size<<std::endl;
 }
 void box::freezeforce(){
 	for(size_t i=0;i<size;i++){

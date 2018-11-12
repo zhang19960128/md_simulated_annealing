@@ -25,20 +25,17 @@ std::vector<std::string> split(std::string s, std::string delimiter) {
 				res.push_back(s.substr(pos_start));
 			  return res;
 }
-double findvalue(std::vector<std::string>& input,std::string key){
+void findvalue(std::vector<std::string>& input,std::string key,double& keyvalue){
 	   std::istringstream temp_stream;
 		 std::string flag=input[1];
-		 double keyvalue;
 	   if(input[0].find(key)!=std::string::npos){
+			 if(flag.find(",")!=std::string::npos){
 				flag=flag.substr(0,flag.find(","));
+			 }
 				temp_stream.str(flag);
 				temp_stream>>keyvalue;
 				temp_stream.clear();
-		    return keyvalue;
 			}
-		 else{
-		 	return -1;
-		 }
 }
 void readPT(std::string PTfile){
 	std::fstream fs;
@@ -49,20 +46,26 @@ void readPT(std::string PTfile){
 	getline(fs,temp);
 	std::vector<std::string> input;
 	while(!fs.eof()){
-		std::cout<<temp<<std::endl;
 		getline(fs,temp);
-		input=split(temp,"=");
-		/*reading parameters for simulated annealing*/
-		if(input.size()>=1){
-			saconst::sa_temp=findvalue(input,"sa_temp");
-			saconst::sa_ratio=findvalue(input,"sa_ratio");
-			saconst::sa_max=findvalue(input,"sa_eweigh");
-			saconst::sa_fweight=findvalue(input,"sa_fweight");
-			saconst::sa_sweight=findvalue(input,"sa_sweight");
-			saconst::sa_nt=findvalue(input,"sa_nt");
-			saconst::sa_ns=findvalue(input,"sa_ns");
+		std::cout<<temp<<std::endl;
+		if(!temp.empty()){
+	    	input=split(temp,"=");
+				if(input.size()>1){
+	    	findvalue(input,"sa_temp",saconst::sa_temp);
+	    	findvalue(input,"sa_ratio",saconst::sa_ratio);
+	    	findvalue(input,"sa_eweigh",saconst::sa_max);
+	    	findvalue(input,"sa_fweight",saconst::sa_fweight);
+	    	findvalue(input,"sa_sweight",saconst::sa_sweight);
+	    	findvalue(input,"sa_nt",saconst::sa_nt);
+	    	findvalue(input,"sa_ns",saconst::sa_ns);
+				}
 		}
+		else{
+			continue;
+		}
+		/*reading parameters for simulated annealing*/
 	}
+	std::cout<<"sa_temp: "<<saconst::sa_temp<<std::endl;
 	/*end reading sa parameters*/
 };
 void readvmmap(std::string mapfile){

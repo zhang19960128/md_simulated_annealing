@@ -28,7 +28,7 @@ int main(){
 	 std::clock_t c_end=std::clock();
 	 std::cout<<"the total time used is: "<<(c_end-c_start)/CLOCKS_PER_SEC<<std::endl;
    */
-	 readion("IonFor.dat",40);
+	// readion("IonFor.dat",40);
 	 readPT("control.PT");
 	 return 0;
 }
