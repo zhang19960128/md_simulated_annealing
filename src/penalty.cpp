@@ -32,6 +32,15 @@ void indexchargemap(int* chargemap,int tick,int& i){
 	}
 }
 void map(double* xp){
+	int m,n
+ 	for(int i=0;i<paracount_bvv;i++){
+		indexbvvmap(control::bvvmatrixmap,i,m,n);
+		control::bvvmatrix[m][n]=xp[i];
+	}
+	for(int i=control::paracount_bvv;i<control::paracount_bvv+control::paracount_charge;i++){
+		indexchargemap(control::chargemap,i,m);
+		control::charge[m]=xp[i];
+	}
 }
 double PenaltyFunc(double* ){
 }
