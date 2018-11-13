@@ -169,6 +169,7 @@ void readbound(std::string boundfile){
 	control::paracount=sum;
 	control::bvvrange=new double* [sum];
 	double rang;
+	std::cout<<"the total variable need to change is "<<sum<<std::endl;
 	for(size_t i=0;i<sum;i++){
 		control::bvvrange[i]=new double[2];
 		getline(fs,temp);
