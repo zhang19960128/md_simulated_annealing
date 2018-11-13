@@ -11,7 +11,8 @@
 namespace control{
  double** bvvmatrix;
  int** bvvmatrixmap;
- double** bvvrange;
+ double* lb;
+ double* ub;
  double* charge;
  int* chargemap;
  int* type;
@@ -167,17 +168,17 @@ void readbound(std::string boundfile){
 	for(size_t i=0;i<species::num.size();i++)
 		sum=sum+control::chargemap[i];
 	control::paracount=sum;
-	control::bvvrange=new double* [sum];
+	control::lb=new double [sum];
+	control::ub=new double [sum];
 	double rang;
 	std::cout<<"the total variable need to change is "<<sum<<std::endl;
 	for(size_t i=0;i<sum;i++){
-		control::bvvrange[i]=new double[2];
 		getline(fs,temp);
 		temp_stream.str(temp);
 		temp_stream>>rang;
-		control::bvvrange[i][0]=rang;
+		control::lb[i]=rang;
 		temp_stream>>rang;
-		control::bvvrange[i][1]=rang;
+		control::ub[i]=rang;
 		temp_stream.clear();
 	}
 }

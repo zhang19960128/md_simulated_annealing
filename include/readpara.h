@@ -7,7 +7,8 @@
 namespace control{
 extern double** bvvmatrix;
 extern int** bvvmatrixmap;
-extern double** bvvrange;
+extern double* lb;
+extern double* ub;
 extern double* charge;
 extern int* chargemap;
 extern int* type;
