@@ -30,5 +30,16 @@ int main(){
    */
 	// readion("IonFor.dat",40);
 	 readPT("control.PT");
+	 readvmmap("param.map");
+	 readbound("param.vmbound");
+	for(size_t i=0;i<control::pair_num;i++){
+		for(size_t j=0;j<10;j++){
+			std::cout<<control::bvvmatrixmap[i][j]<<"\t";
+		}
+		std::cout<<std::endl;
+	}
+	for(size_t i=0;i<control::paracount;i++){
+		std::cout<<control::bvvrange[0]<<"\t"<<control::bvvrange[1]<<std::endl;
+	}
 	 return 0;
 }
