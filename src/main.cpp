@@ -6,6 +6,7 @@
 #include <ctime>
 #include "interface.h"
 #include "readpara.h"
+#include "penalty.h"
 int main(){
 	/*
    double** inputbv=getparameter("bv","in.BTO");
@@ -41,5 +42,9 @@ int main(){
 	for(size_t i=0;i<control::paracount_bvv;i++){
 		std::cout<<control::lb[i]<<"\t"<<control::ub[i]<<std::endl;
 	}
+	int i,j;
+	indexbvvmap(control::bvvmatrixmap,6,i,j);
+	indexchargemap(control::chargemap,8,i);
+	std::cout<<i<<" "<<std::endl;
 	 return 0;
 }
