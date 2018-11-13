@@ -13,7 +13,8 @@ extern double* charge;
 extern int* chargemap;
 extern int* type;
 extern int pair_num;
-extern int paracount;
+extern int paracount_bvv;
+extern int paracount_charge;
 }
 namespace ewaldsum{
 extern double cutoff;

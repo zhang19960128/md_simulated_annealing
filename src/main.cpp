@@ -38,7 +38,7 @@ int main(){
 		}
 		std::cout<<std::endl;
 	}
-	for(size_t i=0;i<control::paracount;i++){
+	for(size_t i=0;i<control::paracount_bvv;i++){
 		std::cout<<control::lb[i]<<"\t"<<control::ub[i]<<std::endl;
 	}
 	 return 0;

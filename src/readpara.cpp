@@ -17,7 +17,9 @@ namespace control{
  int* chargemap;
  int* type;
  int pair_num;
- int paracount;
+ int paracount_bvv;
+ int paracount_charge;
+ double* xop;
 }
 namespace ewaldsum{
 	double cutoff;
@@ -165,9 +167,10 @@ void readbound(std::string boundfile){
 		for(size_t j=0;j<10;j++){
 			sum=sum+control::bvvmatrixmap[i][j];
 		}
+	control::paracount_bvv=sum;
 	for(size_t i=0;i<species::num.size();i++)
 		sum=sum+control::chargemap[i];
-	control::paracount=sum;
+	control::paracount_charge=sum-control::paracount_bvv;
 	control::lb=new double [sum];
 	control::ub=new double [sum];
 	double rang;
