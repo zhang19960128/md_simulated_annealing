@@ -71,19 +71,19 @@ void box::computebv(){
     }
 }
 void box::updatebv(double** pairbv_input){
-		size_t temp=0;
-	for(size_t i=0;i<type;i++)
-		for(size_t j=i;j<type;j++){
-			r0[i][j]=pairbv_input[temp][0];
-                        r0[j][i]=r0[i][j];
-			cij[i][j]=pairbv_input[temp][1];
-                        r0[j][i]=r0[i][j];
-			sij[i][j]=pairbv_input[temp][2];
-                        sij[j][i]=svvij[i][j];
-			v0[i][j]=pairbv_input[temp][3];
-                        v0[j][i]=v0[i][j];
-			bvrcut[i][j]=pairbv_input[temp][4];
-                        bvrcut[j][i]=bvvrcut[i][j];
-			temp++;
-		}
+			size_t temp=0;
+				for(size_t i=0;i<type;i++)
+							for(size_t j=i;j<type;j++){
+									r0[i][j]=pairbv_input[temp][0];
+									r0[j][i]=r0[i][j];
+								  cij[i][j]=pairbv_input[temp][1];
+								  r0[j][i]=r0[i][j];
+								  sij[i][j]=pairbv_input[temp][2];
+								  sij[j][i]=svvij[i][j];
+								  v0[i][j]=pairbv_input[temp][3];
+								  v0[j][i]=v0[i][j];
+								 bvrcut[i][j]=pairbv_input[temp][4];
+						     bvrcut[j][i]=bvvrcut[i][j];
+			           temp++;
+							}
 }

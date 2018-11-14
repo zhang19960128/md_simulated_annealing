@@ -40,6 +40,10 @@ class box{
 		void updatelistbv();/*update once and use forever, big trick*/
 		void updatelistbvv();
     void printlj();
+		/*not used*/
+		void updatebv(double** pairbv_input);
+		void updatebvv(double** pairbvv_input);
+		/***************************/
 		void updatebvparameter(double** input);
 		void updatelistlj();
     void computebv();
