@@ -15,6 +15,8 @@ extern int* type;
 extern int pair_num;
 extern int paracount_bvv;
 extern int paracount_charge;
+extern double* xop;
+extern std::vector<std::string> ionfile;
 }
 namespace ewaldsum{
 extern double cutoff;

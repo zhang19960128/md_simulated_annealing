@@ -41,6 +41,7 @@ void map(double* xp){
 		indexchargemap(control::chargemap,i,m);
 		control::charge[m]=xp[i];
 	}
+	/*perseve charge conservation law!*/
 }
 double PenaltyFunc(double* ){
 }

@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <iostream>
 #include <math.h>
+#include <vector>
 double distance(double* a,double* b){
 	double s=0.0;
 	for(size_t i=0;i<3;i++){
@@ -108,6 +109,8 @@ box::box(atom* inputallatom,
  3  3    0.00000    5.00000    0.60653    2.00000    4.00000    8.00000    1.00000    3.11268    1.00000   12.00000    0.15963    0.90215 
  3  4    1.86405    4.44881    0.00000    0.00000    0.00000    8.00000    1.00000    1.56763    1.00000   12.00000    0.00000    0.00000 
  4  4    0.00000    5.00000    0.01705    2.00000    2.00000    8.00000    1.00000    1.86348    1.00000   12.00000    5.46101    0.00001 
+ * 
+ * call function box::updatebvparameter(control::bvvmatrix);
  * */
 void box::updatebvparameter(double** input){
 	size_t temp=0;	
@@ -223,4 +226,12 @@ void box::printinfo(){
 		}
 	std::cout<<std::endl;
 	}
+}
+void box::settype(std::vector<int>& t){
+	size_t temp=0;
+	for(size_t i=0;i<t.size();i++)
+		for(size_t j=0;j<t[i];j++){
+			allatom[i].type=i;
+			temp++;
+		}
 }

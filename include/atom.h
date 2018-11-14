@@ -1,6 +1,7 @@
 #ifndef atom_h
 #define atom_h
 #include <list>
+#include <vector>
 #include <iostream>
 /*since this is a light version of calculating the bond valence energy and force, we are not going to construct neighbor list for this atom*/
 #define epsilon_lj 2.0
@@ -36,6 +37,7 @@ class box{
                 double ljcut=8.0
                 );
 		void init(atom* inputallatom,int s,int t,double maxcutoff,double* period,double dft_energy,double** stress_dft,double w);
+		void settype(std::vector<int>& t);
 		void freezeforce();/*freeze force for other people to calculate accumulative force*/
 		void updatelistbv();/*update once and use forever, big trick*/
 		void updatelistbvv();
