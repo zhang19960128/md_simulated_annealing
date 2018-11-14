@@ -25,7 +25,8 @@ extern double alpha;
 }
 namespace species{
 	extern std::vector<std::string> spe;
-	extern std::vector<int> num;
+	extern std::vector<int> nametag;
+	extern int** num;
 }
 void readPT(std::string PTfile);
 void readvmmap(std::string mapfile);

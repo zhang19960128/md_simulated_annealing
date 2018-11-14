@@ -220,7 +220,6 @@ void readvmmap(std::string mapfile){
 	std::fstream fs;
 	fs.open(mapfile,std::fstream::in);
 	size_t pair=control::pair_num;
-	pair=(pair+1)*pair/2;
 	control::bvvmatrixmap=new int* [pair];
 	std::istringstream temp_stream;
 	std::string temp;
@@ -233,10 +232,17 @@ void readvmmap(std::string mapfile){
 		temp_stream.clear();
 	}
 	getline(fs,temp);
-	control::chargemap=new int [species::num.size()];
+	control::chargemap=new int [species::spe.size()];
 	temp_stream.str(temp);
-	for(size_t j=0;j<species::num.size();j++){
+	for(size_t j=0;j<species::spe.size();j++){
 		temp_stream>>control::chargemap[j];
+	}
+	std::cout<<"the map matrix is: "<<std::endl;
+	for(size_t i=0;i<pair;i++){
+		for(size_t j=0;j<12;j++){
+			std::cout<<control::bvvmatrixmap[i][j]<<"\t";
+		}
+		std::cout<<std::endl;
 	}
 };
 void readbound(std::string boundfile){
@@ -250,7 +256,7 @@ void readbound(std::string boundfile){
 			sum=sum+control::bvvmatrixmap[i][j];
 		}
 	control::paracount_bvv=sum;
-	for(size_t i=0;i<species::num.size();i++)
+	for(size_t i=0;i<species::spe.size();i++)
 		sum=sum+control::chargemap[i];
 	control::paracount_charge=sum-control::paracount_bvv;
 	control::lb=new double [sum];

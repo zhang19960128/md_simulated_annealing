@@ -22,7 +22,7 @@ void indexchargemap(int* chargemap,int tick,int& i){
 	int count=tick+1;
 	int remain=count-control::paracount_bvv;/*the remaining parameters to be optimized, Assumed to be in the charge map*/
 	size_t sum=0;
-	for(size_t m=0;m<species::num.size();m++){
+	for(size_t m=0;m<species::spe.size();m++){
 		if(chargemap[m]==1){
 			sum=sum+1;
 			if(sum==remain){
