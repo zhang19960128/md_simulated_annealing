@@ -8,7 +8,7 @@
 void indexbvvmap(int** bvvmatrixmap,int tick,int& i,int& j){
 	size_t count=0;
 	for(size_t m=0;m<control::pair_num;m++)
-		for(size_t n=0;n<10;n++){
+		for(size_t n=0;n<12;n++){
 			if(bvvmatrixmap[m][n]==1){
 				if(count==tick){
 					i=m;
@@ -32,8 +32,8 @@ void indexchargemap(int* chargemap,int tick,int& i){
 	}
 }
 void map(double* xp){
-	int m,n
- 	for(int i=0;i<paracount_bvv;i++){
+	int m,n;
+ 	for(int i=0;i<control::paracount_bvv;i++){
 		indexbvvmap(control::bvvmatrixmap,i,m,n);
 		control::bvvmatrix[m][n]=xp[i];
 	}

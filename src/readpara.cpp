@@ -106,7 +106,7 @@ void readPT(std::string PTfile){
 					temp_stream.clear();
 					species::num.push_back(tick);
 				}
-				if(temp.find("bvmodel")!=std::string::npos){
+				if(temp.find("bvvmodel")!=std::string::npos){
 					getline(fs,temp);
 					while(temp.substr(0,1).find('#')!=std::string::npos){
 						getline(fs,temp);
@@ -115,12 +115,12 @@ void readPT(std::string PTfile){
 					control::pair_num=pair;
 					control::bvvmatrix=new double* [pair];
 					for(size_t i=0;i<pair;i++){
-						control::bvvmatrix[i]=new double[10];
+						control::bvvmatrix[i]=new double[12];
 						temp_stream.str(temp);
 						std::cout<<temp<<std::endl;
 						temp_stream>>tick;
 						temp_stream>>tick;
-						for(size_t j=0;j<10;j++)
+						for(size_t j=0;j<12;j++)
 							temp_stream>>control::bvvmatrix[i][j];
 						temp_stream.clear();
 						getline(fs,temp);
@@ -143,10 +143,10 @@ void readvmmap(std::string mapfile){
 	std::istringstream temp_stream;
 	std::string temp;
 	for(size_t i=0;i<pair;i++){
-		control::bvvmatrixmap[i]=new int[10];
+		control::bvvmatrixmap[i]=new int[12];
 		getline(fs,temp);
 		temp_stream.str(temp);
-		for(size_t j=0;j<10;j++)
+		for(size_t j=0;j<12;j++)
 			temp_stream>>control::bvvmatrixmap[i][j];
 		temp_stream.clear();
 	}
@@ -164,7 +164,7 @@ void readbound(std::string boundfile){
 	std::istringstream temp_stream;
 	std::string temp;
 	for(size_t i=0;i<control::pair_num;i++)
-		for(size_t j=0;j<10;j++){
+		for(size_t j=0;j<12;j++){
 			sum=sum+control::bvvmatrixmap[i][j];
 		}
 	control::paracount_bvv=sum;

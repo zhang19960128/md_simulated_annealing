@@ -3,6 +3,7 @@
 #include <list>
 #include <iostream>
 /*since this is a light version of calculating the bond valence energy and force, we are not going to construct neighbor list for this atom*/
+#define epsilon_lj 2.0
 typedef struct Atom{
 	double position[3];
 	double force[3];//MD force.
@@ -34,13 +35,12 @@ class box{
 				double** pairlj_input,
                 double ljcut=8.0
                 );
-		void init(atom* inputallatom,int s,double* period,double dft_energy,double** stress_dft,double w);
+		void init(atom* inputallatom,int s,int t,double maxcutoff,double* period,double dft_energy,double** stress_dft,double w);
 		void freezeforce();/*freeze force for other people to calculate accumulative force*/
 		void updatelistbv();/*update once and use forever, big trick*/
 		void updatelistbvv();
     void printlj();
-		void updatebv(double** input);
-    void updatebvv(double** input);
+		void updatebvparameter(double** input);
 		void updatelistlj();
     void computebv();
 		void computebvv();

@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-box* readion(std::string inputfile,int number){
+box* readion(std::string inputfile,int number,int type,double cutoff){
 	std::fstream fs;
 	fs.open(inputfile,std::fstream::in);
 	std::string line;
@@ -87,7 +87,7 @@ box* readion(std::string inputfile,int number){
 				atomconfig[i].position[j]=atomconfig[i].position[j]*period[j];
 			}
 		}
-		ionall[tick].init(atomconfig,number,period,dftenergy,stress_dft,weight);
+		ionall[tick].init(atomconfig,number,type,cutoff,period,dftenergy,stress_dft,weight);
 	}
 	return ionall;
 }
