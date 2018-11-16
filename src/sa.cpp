@@ -1,5 +1,6 @@
 #include "sa.h"
 #include "simann.h"
+#include "atom.h"
 #include <math.h>
 namespace saconst{
  double sa_temp=0.0001;
@@ -10,13 +11,15 @@ namespace saconst{
  double sa_sweight=0.0;
  double sa_nt=3;
  double sa_ns=3;
+ int sa_refindex=-1; //zhenbang. Output the index of the reference structure
 };
 //extern void WriteFiles();
 #define NPAR 12
 #define NEPS 20
 #define EPS 1.0e-6
-void SimulatedAnnealing(double (*PenaltyFunc)(double*), 
-			double *xacc,
+void SimulatedAnnealing(double (*PenaltyFunc)(double*, box*), 
+			box* system,
+            double *xacc,
 			int    N,
 			int    NT,
 			int    NS,
@@ -99,7 +102,7 @@ void SimulatedAnnealing(double (*PenaltyFunc)(double*),
 		     for(h0=0;h0<N;h0++)
 			xp[h0] = xacc[h0];
 		  
-		  penaltyp = PenaltyFunc(xp);
+		  penaltyp = PenaltyFunc(xp,system);//Zhenbang
 		  
 		  nfcnev += 1;
 		  

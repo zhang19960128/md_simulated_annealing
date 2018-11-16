@@ -48,13 +48,17 @@ class box{
 		/***************************/
 		void updatebvparameter(double** input);
 		void updatelistlj();
-    void computebv();
+    void computebv();//Zhenbang
 		void computebvv();
 		void computestress();
     void computelj();
     void computelong(double accuraccy);
-		void printnei(int i);
+		void computeAll();
+        void printnei(int i);
 		void printinfo();
+        //zhenbang
+        friend double PenaltyFunc(double* xp, box* system);
+        friend int referenceStruct(box* system, int systemSize);
 		~box()
         {
 			for(size_t i=0;i<type;i++){

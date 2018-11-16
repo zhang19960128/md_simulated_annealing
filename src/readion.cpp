@@ -17,6 +17,7 @@ box* readion(std::string inputfile,int number,int& boxnumber,double cutoff){
 	stream1>>flag;
 	boxnumber=flag;
 	stream1.clear();
+    std::cout<<"There are how many atoms "<<flag<<std::endl;
 	box* ionall=new box[flag];
 	atom* atomconfig;
 	double* period=new double[3];

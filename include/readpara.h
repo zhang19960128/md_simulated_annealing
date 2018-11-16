@@ -26,6 +26,7 @@ extern double alpha;
 namespace species{
 	extern std::vector<std::string> spe;
 	extern std::vector<int> nametag;
+    extern std::vector<int> site;/*0 for asite 1 for bsite o for O site*/ 
 	extern int** num;
 }
 void readPT(std::string PTfile);

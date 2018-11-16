@@ -7,6 +7,7 @@
 #include <iostream>
 #include <iomanip>
 #include <new>
+#include <stdlib.h> 
 /*read parameters in control.PT,and param.map, this will mainly 
  determined the total parameters.*/
 namespace control{
@@ -14,14 +15,17 @@ namespace control{
  int** bvvmatrixmap;
  double* lb;
  double* ub;
- double* charge;
- int* chargemap;
+ double* charge;/*it's the same length as input species*/
+ int* chargemap;/*only maps the asite, bsite, osite charge, so it's length is 3*/
  int* type;
  int pair_num;
  int paracount_bvv;
  int paracount_charge;
  double* xop;
  std::vector<std::string> ionfile;
+ std::vector<std::string> deopt;
+ std::vector<std::string> dfopt;
+ std::vector<std::string> dsopt;
 }
 namespace ewaldsum{
 	double cutoff;
@@ -30,7 +34,8 @@ namespace ewaldsum{
 }
 namespace species{
 	std::vector<std::string> spe;
-	std::vector<int> nametag;
+	std::vector<int> nametag; /*Go from 0 to 3*/
+    std::vector<int> site;/*0 for asite 1 for bsite 2 for O site*/ 
 	int** num;/*
 						 *the first dimention specifies how many Ion data files are there.
 						 * the second dienntion specifies the sequence of the data files.
@@ -145,10 +150,20 @@ void readPT(std::string PTfile){
 			temp_stream>>temp;
 			temp_stream>>m;
 			temp_stream>>charge_temp;
-			temp_stream.clear();
 			species::spe.push_back(temp);
 			species::nametag.push_back(m);
 			starting_charge.push_back(charge_temp);
+            temp_stream>>temp;
+            if(temp.find("asite")!=std::string::npos){
+                species::site.push_back(0);
+            }
+            else if(temp.find("bsite")!=std::string::npos){
+                species::site.push_back(1);
+            }
+            else if(temp.find("osite")!=std::string::npos){
+                species::site.push_back(2);
+            }
+			temp_stream.clear();
 		}
 			getline(fs,temp);
 		}while(temp.find("/")==std::string::npos);
@@ -160,8 +175,14 @@ void readPT(std::string PTfile){
 	}
 	std::cout<<"the species are: "<<std::endl;
 	for(size_t i=0;i<species::spe.size();i++){
-		std::cout<<species::spe[i]<<" "<<species::nametag[i]<<std::endl;
+		std::cout<<species::spe[i]<<"\t"<<species::nametag[i]<<std::endl;
 	}
+    /*the site information is: */
+    std::cout<<"the site information is:---------------------------"<<std::endl;
+    for(size_t i=0;i<species::site.size();i++){
+        std::cout<<species::site[i]<<"\t";
+    }
+    std::cout<<std::endl;
 	std::cout<<"The Starting Charge is: "<<std::endl;
 	for(size_t i=0;i<species::spe.size();i++)
 	{
@@ -205,17 +226,31 @@ void readPT(std::string PTfile){
 		getline(fs,temp);
 		do{
 		temp=decomment(temp);
-		if(!temp.empty()){
+    if(temp.find_first_not_of("\t\n ")!=std::string::npos){
 		temp_stream.str(temp);
 		temp_stream>>systemname;
 		temp_stream>>systemname;
 		control::ionfile.push_back(systemname);
+		temp_stream>>systemname;
+		control::deopt.push_back(systemname);
+		temp_stream>>systemname;
+		control::dfopt.push_back(systemname);
+		temp_stream>>systemname;
+		control::dsopt.push_back(systemname);
+		temp_stream.clear();
 		}
 		getline(fs,temp);
 		}while(temp.find("/")==std::string::npos);
 	}
+	std::cout<<"----------------------------------------------------------------------------------------------------------------"<<std::endl;
+	std::cout<<"The total Ion file you are reading is: "<<std::endl;
 	for(size_t i=0;i<control::ionfile.size();i++){
-		std::cout<<control::ionfile[i]<<" ";
+		std::cout<<control::ionfile[i]<<"\t";
+	}
+	std::cout<<std::endl;
+	std::cout<<"the corresponding file E_difference, F_difference and S_stress are: "<<std::endl;
+	for(size_t i=0;i<control::ionfile.size();i++){
+		std::cout<<control::deopt[i]<<"\t"<<control::dfopt[i]<<"\t"<<control::dsopt[i]<<std::endl;
 	}
 	species::num=new int* [control::ionfile.size()];
 	std::cout<<std::endl;
@@ -239,11 +274,22 @@ void readvmmap(std::string mapfile){
 		temp_stream.clear();
 	}
 	getline(fs,temp);
-	control::chargemap=new int [species::spe.size()];
+    /*we fixed that only asite/bsite/osite charge change, so it's only three elements, BEAR IN MIND
+    * if you ever find better vaiation principle, you can change it!!!!!!!!!!!!!!!!!!!!!!!!
+    */
+	control::chargemap=new int [3];
 	temp_stream.str(temp);
-	for(size_t j=0;j<species::spe.size();j++){
+	for(size_t j=0;j<3;j++){
 		temp_stream>>control::chargemap[j];
 	}
+    int sum=0;
+    for(size_t i=0;i<3;i++){
+        sum=sum+control::chargemap[i];
+    }
+    if(sum!=2 || sum!=0){
+       std::cout<<"not charge change neutrol"<<std::endl;
+       exit(EXIT_FAILURE);
+    }
 	std::cout<<"the map matrix is: "<<std::endl;
 	for(size_t i=0;i<pair;i++){
 		for(size_t j=0;j<12;j++){
@@ -283,69 +329,3 @@ void readbound(std::string boundfile){
 	}
 	std::cout<<"---------------------------------------------------------------END-------------------------------------------------------------"<<std::endl;
 }
-/*
- * old version readPT function, will never be used again.
-void readPT(std::string PTfile){
-	std::fstream fs;
-	fs.open(PTfile,std::fstream::in);
-	std::string temp;
-	std::istringstream temp_stream;
-	getline(fs,temp);
-	std::vector<std::string> input;
-	std::vector<std::string> input_spe;
-	size_t elements=0;
-	size_t pair;
-	int tick;
-	while(!fs.eof()){
-		getline(fs,temp);
-		//std::cout<<temp<<std::endl;
-		if(!temp.empty()){
-	    	input=split(temp,"=");
-				if(input.size()>1){
-	    	findvalue(input,"sa_temp",saconst::sa_temp);
-	    	findvalue(input,"sa_ratio",saconst::sa_ratio);
-	    	findvalue(input,"sa_eweigh",saconst::sa_max);
-	    	findvalue(input,"sa_fweight",saconst::sa_fweight);
-	    	findvalue(input,"sa_sweight",saconst::sa_sweight);
-	    	findvalue(input,"sa_nt",saconst::sa_nt);
-	    	findvalue(input,"sa_ns",saconst::sa_ns);
-				findvalue(input,"cutoff",ewaldsum::cutoff);
-				findvalue(input,"k-cutoff",ewaldsum::k_cutoff);
-				findvalue(input,"alpha",ewaldsum::alpha);
-				}
-				input_spe=splitspace(temp);
-				if(input_spe.size()==2 && input.size()!=2){
-					species::spe.push_back(input_spe[0]);
-					std::cout<<"the first is: "<<input_spe[0]<<" the second is "<<input_spe[1]<<std::endl;
-        	temp_stream.str(input_spe[1]);
-					temp_stream>>tick;
-					temp_stream.clear();
-					species::num.push_back(tick);
-				}
-				if(temp.find("bvvmodel")!=std::string::npos){
-					getline(fs,temp);
-					while(temp.substr(0,1).find('#')!=std::string::npos){
-						getline(fs,temp);
-					}
-					pair=species::num.size()*(species::num.size()+1)/2;
-					control::pair_num=pair;
-					control::bvvmatrix=new double* [pair];
-					for(size_t i=0;i<pair;i++){
-						control::bvvmatrix[i]=new double[12];
-						temp_stream.str(temp);
-						std::cout<<temp<<std::endl;
-						temp_stream>>tick;
-						temp_stream>>tick;
-						for(size_t j=0;j<12;j++)
-							temp_stream>>control::bvvmatrix[i][j];
-						temp_stream.clear();
-						getline(fs,temp);
-					}
-				}
-		}
-		else{
-			continue;
-		}
-	}
-};
-*/

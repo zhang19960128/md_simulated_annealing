@@ -193,6 +193,15 @@ void box::freezeforce(){
 		allatom[i].force[2]=0.0;
 	}
 }
+void box::computeAll(){//zhenbang
+    freezeforce();
+    computebv();
+    computebvv();
+    computestress();
+    computelj();
+    computelong(1e-5);
+}
+
 void box::printnei(int i){
    for(std::list<int>::iterator a=allatom[i].neibv.begin();a!=allatom[i].neibv.end();a++){
       std::cout<<" "<<*a;
