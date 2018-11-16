@@ -4,8 +4,10 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-box* readion(std::string inputfile,int number,int type,double cutoff){
+#include "readpara.h"
+box* readion(std::string inputfile,int number,int& boxnumber,double cutoff){
 	std::fstream fs;
+	std::cout<<"---------------------------------------STARTING READING ION COORDINATES----------------------------"<<std::endl;
 	fs.open(inputfile,std::fstream::in);
 	std::string line;
 	std::istringstream stream1;
@@ -13,6 +15,7 @@ box* readion(std::string inputfile,int number,int type,double cutoff){
 	stream1.str(line);
 	int flag=0;
 	stream1>>flag;
+	boxnumber=flag;
 	stream1.clear();
 	box* ionall=new box[flag];
 	atom* atomconfig;
@@ -20,6 +23,28 @@ box* readion(std::string inputfile,int number,int type,double cutoff){
 	double** stress_dft;
 	double dftenergy;
 	double weight;
+	std::cout<<"you are READING "<<inputfile<<" ionic files"<<std::endl;
+	/************************set the type tick**************************/
+	/*the type tick go from 0,1,2,3,4,5,6,7,.....*/
+	int* type_tick=new int [number];
+	for(size_t i=0;i<number;i++){
+		getline(fs,line);
+		for(size_t j=0;j<species::spe.size();j++){
+			if(line.find(species::spe[j])!=std::string::npos){
+				type_tick[i]=j;
+				break;
+			}
+		}
+	}
+	std::cout<<"the input sequence for atom is: "<<std::endl;
+	for(size_t i=0;i<number;i++){
+		if(i%5==0){
+			std::cout<<std::endl;
+		}
+		std::cout<<type_tick[i]+1<<"\t";
+	}
+	std::cout<<std::endl;
+	/*******************************************************************/
 	for(size_t tick=0;tick<flag;tick++){
 		getline(fs,line);
 		atomconfig=new atom [number];
@@ -86,8 +111,12 @@ box* readion(std::string inputfile,int number,int type,double cutoff){
 			for(size_t j=0;j<3;j++){
 				atomconfig[i].position[j]=atomconfig[i].position[j]*period[j];
 			}
+			atomconfig[i].type=type_tick[i];
 		}
-		ionall[tick].init(atomconfig,number,type,cutoff,period,dftenergy,stress_dft,weight);
+		ionall[tick].init(atomconfig,number,species::spe.size(),cutoff,period,dftenergy,stress_dft,weight);
+		delete [] atomconfig;
 	}
+	delete [] type_tick;
+	std::cout<<"---------------------------------------------------END--------------------------------------------"<<std::endl;
 	return ionall;
 }

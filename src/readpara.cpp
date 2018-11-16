@@ -92,11 +92,12 @@ void readPT(std::string PTfile){
 	double charge_temp;
 	std::string temp;
 	getline(fs,temp);
-	std::cout<<"Starting Reading conntrol file in the input:....... "<<std::endl;
+	std::cout<<"-------------------------------------------STARTING READING CONTROL FILE IN THE INPUT :----------------------"<<std::endl;
 	if(temp.find("&sa")!=std::string::npos){
 		getline(fs,temp);
 		do{
 		temp=decomment(temp);
+    if(temp.find_first_not_of("\t\n ")!=std::string::npos){
 	  input=split(temp,"=");
 	  findvalue(input,"sa_temp",saconst::sa_temp);
 	  findvalue(input,"sa_ratio",saconst::sa_ratio);
@@ -105,6 +106,7 @@ void readPT(std::string PTfile){
 	  findvalue(input,"sa_sweight",saconst::sa_sweight);
 	  findvalue(input,"sa_nt",saconst::sa_nt);
 	  findvalue(input,"sa_ns",saconst::sa_ns);
+		}
 		getline(fs,temp);
 		}while(temp.find("/")==std::string::npos);
 	}
@@ -120,10 +122,12 @@ void readPT(std::string PTfile){
 		getline(fs,temp);
 		do{
 		temp=decomment(temp);
+    if(temp.find_first_not_of("\t\n ")!=std::string::npos){
 	  input=split(temp,"=");
 		findvalue(input,"cutoff",ewaldsum::cutoff);
 		findvalue(input,"k-cutoff",ewaldsum::k_cutoff);
 		findvalue(input,"alpha",ewaldsum::alpha);
+		}
 		getline(fs,temp);
 		}while(temp.find("/")==std::string::npos);
 	}
@@ -136,15 +140,17 @@ void readPT(std::string PTfile){
 		getline(fs,temp);
 		do{
 		temp=decomment(temp);
-		temp_stream.str(temp);
-		temp_stream>>temp;
-		temp_stream>>m;
-		temp_stream>>charge_temp;
-		temp_stream.clear();
-		species::spe.push_back(temp);
-		species::nametag.push_back(m);
-		starting_charge.push_back(charge_temp);
-		getline(fs,temp);
+    if(temp.find_first_not_of("\t\n ")!=std::string::npos){
+			temp_stream.str(temp);
+			temp_stream>>temp;
+			temp_stream>>m;
+			temp_stream>>charge_temp;
+			temp_stream.clear();
+			species::spe.push_back(temp);
+			species::nametag.push_back(m);
+			starting_charge.push_back(charge_temp);
+		}
+			getline(fs,temp);
 		}while(temp.find("/")==std::string::npos);
 		control::charge=new double [species::spe.size()];
 		std::cout<<"the size of the system is: "<<species::spe.size()<<std::endl;
@@ -173,7 +179,7 @@ void readPT(std::string PTfile){
 					getline(fs,temp);
 					do{
 						temp=decomment(temp);
-						if(!temp.empty()){
+						if(temp.find_first_not_of("\t\n ")!=std::string::npos){
 							control::bvvmatrix[count]=new double[12];
 							temp_stream.str(temp);
 							temp_stream>>tick;
@@ -208,17 +214,18 @@ void readPT(std::string PTfile){
 		getline(fs,temp);
 		}while(temp.find("/")==std::string::npos);
 	}
-	std::cout<<"the data file you are reading is: "<<std::endl;
 	for(size_t i=0;i<control::ionfile.size();i++){
 		std::cout<<control::ionfile[i]<<" ";
 	}
 	species::num=new int* [control::ionfile.size()];
 	std::cout<<std::endl;
 	std::cout<<"  AT THIS STAGE, YOU NEED TO READ ION FILES"<<std::endl;
+	std::cout<<"-------------------------------------------------------------END------------------------------------------------"<<std::endl;
 }
 void readvmmap(std::string mapfile){
 	std::fstream fs;
 	fs.open(mapfile,std::fstream::in);
+	std::cout<<"---------------------------------------------START READING MAP MATRIX ------------------------------------------"<<std::endl;
 	size_t pair=control::pair_num;
 	control::bvvmatrixmap=new int* [pair];
 	std::istringstream temp_stream;
@@ -244,8 +251,10 @@ void readvmmap(std::string mapfile){
 		}
 		std::cout<<std::endl;
 	}
+	std::cout<<"------------------------------------------------------------END--------------------------------------------------"<<std::endl;
 };
 void readbound(std::string boundfile){
+	std::cout<<"-------------------------------------------------START READING PARAMETER BOUND ---------------------------------------------"<<std::endl;
 	std::fstream fs;
 	fs.open(boundfile,std::fstream::in);
 	int sum=0;
@@ -272,6 +281,7 @@ void readbound(std::string boundfile){
 		control::ub[i]=rang;
 		temp_stream.clear();
 	}
+	std::cout<<"---------------------------------------------------------------END-------------------------------------------------------------"<<std::endl;
 }
 /*
  * old version readPT function, will never be used again.

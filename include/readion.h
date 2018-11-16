@@ -2,5 +2,6 @@
 #define readion_h
 #include "atom.h"
 #include <string>
-box* readion(std::string inputfile,int num,int type,double cutoff);
+/*number is the number of simulation atoms, boxnumber is how many boxs are created in the simulation*/
+box* readion(std::string inputfile,int num,int& boxnumber,double cutoff);
 #endif
