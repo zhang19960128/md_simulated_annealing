@@ -1,6 +1,13 @@
 #include "penalty.h"
 #include "atom.h"
 #include "readpara.h"
+#include "readion.h"
+#include <math.h>
+#include "sa.h"
+/*Overall comment by Zhenbang: to ensure that this code can work, say we have 
+4 species, then site should be 4, charge should be 4, xp charge part should be 3
+*/
+
 /*
  * the main AIM of the two function is to map the list variable into bvv model parameters and charge parameters. 
  *
@@ -43,26 +50,79 @@ void map(double* xp){
 		indexbvvmap(control::bvvmatrixmap,i,m,n);
 		control::bvvmatrix[m][n]=xp[i];
 	}
-//    double accCharge = 0;
-	for(int i=control::paracount_bvv;i<control::paracount_bvv+control::paracount_charge;i++){
+
+    double accCharge = 0;
+    double posAccCharge = 0;
+    /*Zhenbang: ensure the same site has the same charge*/ 
+    double* siteID = new double[species::spe.size()];
+    for (size_t i=0; i<species::spe.size(); i++){
+        siteID[i] = -1;
+    }
+    int count = 0;
+    /*store the sites that have appeared. After the loop, count should be either 2 or 3*/
+    for(int i=control::paracount_bvv;i<control::paracount_bvv+control::paracount_charge;i++){
 		indexchargemap(control::chargemap,i,m);
         control::charge[m]=xp[i];
-//        if (control::site[m] == 0 || control::site[m] == 1) accCharge += charge[m];
-//        else accCharge += charge[m]*3;
-    }
-	/*perseve charge conservation law! Zhenbang*/
-    for (int i=0; i<species::spe.size(); i++){
-        if (chargemap[i] == 0){
-            if (species::site[i] == 0 || species::site[i] == 1);
-            control::charge[i] = (0-accCharge);
+        int count2=0;
+        int sameSite = -1;
+        for (int j=0; j<=count; j++){ 
+            if (species::site[m] != siteID[j]){
+                count2 += 1;
+             }
+             else{
+                sameSite = siteID[j];
+             }
+        }
 
+        if (count2 == 0){
+            siteID[count] = species::site[m];
+            count += 1;
+        }
+        else{
+            for (int j=0; j<species::site.size();j++){
+                if (sameSite == species::site[j] && m != j){
+                    control::charge[m] = control::charge[j];
+                }
+            }
+        }
+
+        if (species::site[m] == 0 || species::site[m] == 1){
+            if (count2 == 0){
+                accCharge += control::charge[m];//avoid overcounting
+                posAccCharge += control::charge[m];
+            }
+        }
+        else{
+            accCharge += control::charge[m]*3;
         }
     }
+	/*perserve charge conservation law! Zhenbang*/
+    for (int i=0; i<species::spe.size(); i++){
+        if (control::chargemap[i] == 0 && count == 2){
+            if (species::site[i] == 0 || species::site[i] == 1){
+                control::charge[i] = (0-accCharge);
+            }
+            else{
+                control::charge[i] = (0-accCharge)/3;
+            }
+        }
+        /*All the site has already been updated. Then take O site as the dependent variable*/
+        else if (control::chargemap[i] == 0 && count == 3){
+            int thisSite = species::site[i];
+            for (int j=0; j<species::spe.size(); j++){
+                if (thisSite == species::site[j] && j!= i) control::charge[i] = control::charge[j];
+            }
+            for (int j=0; j<species::spe.size(); j++){
+                if (species::site[j] == 2) control::charge[j] = (0-posAccCharge)/3; 
+            }
+        }
+    }
+    delete[] siteID;
 }
 
 //Zhenbang
 void mapToXp(double* xp){
-    count = 0;
+    int count = 0;
     for (size_t m=0; m<control::pair_num; m++){
         for (size_t n=0; n<12; n++){
             if (control::bvvmatrixmap[m][n] == 0) continue;
@@ -79,31 +139,24 @@ void mapToXp(double* xp){
     }
 }
 
-int referenceStruct(box* system, int systemSize){
-    int index = -1;
-    reference = 1e20;
-    for (size_t i=0; i<systemSize; i++){
-        if (system[i].dftenergy < reference){
-           index = i; 
-        }
-    }
-    return i;
-}
-
 //Zhenbang
-double PenaltyFunc(double* xp, box* system){
-    int indexRef = saconst::sa_refindex;
+/*
+numberone: give how many structures are in the box
+index: give the tick of minimum energy in this database.
+*/
+double PenaltyFunc(double* xp, box* system,int numberone, int index){
+    int indexRef = index;
     map(xp);
     double penalty = 0.0;
     box* ionall = system; 
-
+    int number = numberone;
     double* totalEnergy = new double[number];
 
     for (size_t i=0; i<number; i++){
         totalEnergy[i] = 0;
-        ionall[i].updatebvparameter(control::bvmatrix);
+        ionall[i].updatebvparameter(control::bvvmatrix);
         for (size_t j=0; j<ionall[i].size; j++){
-            for (size_t k=0; k<species::spe.size()){
+            for (size_t k=0; k<species::spe.size();k++){
                 if (ionall[i].allatom[j].type == k){
                     ionall[i].allatom[j].charge == control::charge[k];
                 }
@@ -111,7 +164,7 @@ double PenaltyFunc(double* xp, box* system){
         }
         ionall[i].computeAll();
         totalEnergy[i] = ionall[i].bvenergy + ionall[i].bvvenergy + ionall[i].ljenergy + ionall[i].epsilonenergy;
-        
+    }    
     /*Calculate the penalty*/
     double PenaltyE = 0;
     double PenaltyF = 0;

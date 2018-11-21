@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include "readpara.h"
+#include "penalty.h"
 box* readion(std::string inputfile,int number,int& boxnumber,double cutoff){
 	std::fstream fs;
 	std::cout<<"---------------------------------------STARTING READING ION COORDINATES----------------------------"<<std::endl;
@@ -17,7 +18,7 @@ box* readion(std::string inputfile,int number,int& boxnumber,double cutoff){
 	stream1>>flag;
 	boxnumber=flag;
 	stream1.clear();
-    std::cout<<"There are how many atoms "<<flag<<std::endl;
+    std::cout<<"There are how many atoms "<<number<<std::endl;
 	box* ionall=new box[flag];
 	atom* atomconfig;
 	double* period=new double[3];
@@ -119,5 +120,6 @@ box* readion(std::string inputfile,int number,int& boxnumber,double cutoff){
 	}
 	delete [] type_tick;
 	std::cout<<"---------------------------------------------------END--------------------------------------------"<<std::endl;
-	return ionall;
+    return ionall;
+    
 }

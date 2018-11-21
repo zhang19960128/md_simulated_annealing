@@ -7,6 +7,5 @@ void indexbvvmap(int** bvvmatrixmap,int tick,int& i,int& j);
 void indexchargemap(int* chargemap,int tick,int& i);
 void map(double* xp);
 void mapToXp(double* xp);
-int referenceStruct(box* system, int systemSize);
-double PenaltyFunc(double* xp, box* system);
+double PenaltyFunc(double* xp, box* system,int number);
 #endif

@@ -11,9 +11,10 @@ extern double sa_fweight;
 extern double sa_sweight;
 extern double sa_nt;
 extern double sa_ns;
-extern int sa_refindex; 
+extern int sa_refindex;
+extern int sa_atom_num;
 }
-void SimulatedAnnealing(double (*PenaltyFunc)(double*, box*),
+void SimulatedAnnealing(double (*PenaltyFunc)(double*, box*,int,int),
 			box* system,
             double *xacc,
 			int    N,

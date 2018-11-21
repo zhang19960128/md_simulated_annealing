@@ -3,6 +3,7 @@
 /*read control.PT*/
 #include <string>
 #include <vector>
+#include "atom.h"
 #include <iostream>
 namespace control{
 extern double** bvvmatrix;
@@ -17,6 +18,12 @@ extern int paracount_bvv;
 extern int paracount_charge;
 extern double* xop;
 extern std::vector<std::string> ionfile;
+extern std::vector<box*> database;
+extern std::vector<int> minienergytick;/*store the minimum energy of this Ion files*/
+extern std::vector<int> ionsize;/*store the structure numbers of different files*/
+extern std::vector<std::string> deopt;
+extern std::vector<std::string> dfopt;
+extern std::vector<std::string> dsopt;
 }
 namespace ewaldsum{
 extern double cutoff;

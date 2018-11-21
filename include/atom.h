@@ -57,7 +57,7 @@ class box{
         void printnei(int i);
 		void printinfo();
         //zhenbang
-        friend double PenaltyFunc(double* xp, box* system);
+        friend double PenaltyFunc(double* xp, box* system,int num,int index);
         friend int referenceStruct(box* system, int systemSize);
 		~box()
         {

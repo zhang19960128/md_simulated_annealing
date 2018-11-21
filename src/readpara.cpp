@@ -8,8 +8,21 @@
 #include <iomanip>
 #include <new>
 #include <stdlib.h> 
+#include "atom.h"
+#include "readion.h"
 /*read parameters in control.PT,and param.map, this will mainly 
  determined the total parameters.*/
+int referenceStruct(box* system, int systemSize){
+    int index = -1;
+    double reference = 1e20;
+    int i = 0;
+    for (i=0; i<systemSize; i++){
+        if (system[i].dftenergy < reference){
+           index = i; 
+        }
+    }
+    return i;
+}
 namespace control{
  double** bvvmatrix;
  int** bvvmatrixmap;
@@ -23,6 +36,9 @@ namespace control{
  int paracount_charge;
  double* xop;
  std::vector<std::string> ionfile;
+ std::vector<box*> database;
+ std::vector<int> minienergytick;/*store the minimum energy of this Ion files*/
+ std::vector<int> ionsize;/*store the structure numbers of different files*/
  std::vector<std::string> deopt;
  std::vector<std::string> dfopt;
  std::vector<std::string> dsopt;
@@ -87,6 +103,17 @@ void findvalue(std::vector<std::string>& input,std::string key,double& keyvalue)
 				temp_stream.clear();
 			}
 }
+void findvalue(std::vector<std::string>& input,std::string key,int& keyvalue){
+	   std::istringstream temp_stream;
+		 std::string flag=input[1];
+	   if(input[0].find(key)!=std::string::npos){
+				temp_stream.str(flag);
+				temp_stream>>keyvalue;
+				temp_stream.clear();
+			}
+}
+
+
 void readPT(std::string PTfile){
 	std::fstream fs;
 	fs.open(PTfile,std::fstream::in);
@@ -101,16 +128,17 @@ void readPT(std::string PTfile){
 	if(temp.find("&sa")!=std::string::npos){
 		getline(fs,temp);
 		do{
-		temp=decomment(temp);
-    if(temp.find_first_not_of("\t\n ")!=std::string::npos){
-	  input=split(temp,"=");
-	  findvalue(input,"sa_temp",saconst::sa_temp);
-	  findvalue(input,"sa_ratio",saconst::sa_ratio);
-	  findvalue(input,"sa_eweight",saconst::sa_eweight);
-	  findvalue(input,"sa_fweight",saconst::sa_fweight);
-	  findvalue(input,"sa_sweight",saconst::sa_sweight);
-	  findvalue(input,"sa_nt",saconst::sa_nt);
-	  findvalue(input,"sa_ns",saconst::sa_ns);
+		    temp=decomment(temp);
+            if(temp.find_first_not_of("\t\n ")!=std::string::npos){
+	            input=split(temp,"=");
+	            findvalue(input,"sa_temp",saconst::sa_temp);
+	            findvalue(input,"sa_ratio",saconst::sa_ratio);
+	            findvalue(input,"sa_eweight",saconst::sa_eweight);
+	            findvalue(input,"sa_fweight",saconst::sa_fweight);
+	            findvalue(input,"sa_sweight",saconst::sa_sweight);
+	            findvalue(input,"sa_nt",saconst::sa_nt);
+	            findvalue(input,"sa_ns",saconst::sa_ns);
+                findvalue(input,"sa_atom_num",saconst::sa_atom_num);
 		}
 		getline(fs,temp);
 		}while(temp.find("/")==std::string::npos);
@@ -122,7 +150,8 @@ void readPT(std::string PTfile){
 	std::cout<<"sa_fweight: "<<saconst::sa_fweight<<std::endl;
 	std::cout<<"sa_nt: "<<saconst::sa_nt<<std::endl;
 	std::cout<<"sa_ns: "<<saconst::sa_ns<<std::endl;
-	getline(fs,temp);
+	std::cout<<"sa_atom_num:"<<saconst::sa_atom_num<<std::endl;
+    getline(fs,temp);
 	if(temp.find("&ewald")!=std::string::npos){
 		getline(fs,temp);
 		do{
@@ -256,6 +285,16 @@ void readPT(std::string PTfile){
 	std::cout<<std::endl;
 	std::cout<<"  AT THIS STAGE, YOU NEED TO READ ION FILES"<<std::endl;
 	std::cout<<"-------------------------------------------------------------END------------------------------------------------"<<std::endl;
+    std::cout<<"starting readling ion files----------------------------"<<std::endl;
+    int temp_size;
+    box* temp_box;
+    for(size_t i=0;i<control::ionfile.size();i++){
+        temp_box=readion(control::ionfile[i],saconst::sa_atom_num,temp_size,ewaldsum::cutoff);
+        control::database.push_back(temp_box);
+        control::ionsize.push_back(temp_size);
+        temp_size=referenceStruct(temp_box,temp_size);
+        control::minienergytick.push_back(temp_size);
+    }
 }
 void readvmmap(std::string mapfile){
 	std::fstream fs;
@@ -277,17 +316,21 @@ void readvmmap(std::string mapfile){
     /*we fixed that only asite/bsite/osite charge change, so it's only three elements, BEAR IN MIND
     * if you ever find better vaiation principle, you can change it!!!!!!!!!!!!!!!!!!!!!!!!
     */
-	control::chargemap=new int [3];
+	control::chargemap=new int [species::spe.size()];
 	temp_stream.str(temp);
-	for(size_t j=0;j<3;j++){
+	for(size_t j=0;j<species::spe.size();j++){
 		temp_stream>>control::chargemap[j];
 	}
     int sum=0;
-    for(size_t i=0;i<3;i++){
+    for(size_t i=0;i<species::spe.size();i++){
         sum=sum+control::chargemap[i];
+//        std::cout<<sum<<std::endl;
     }
-    if(sum!=2 || sum!=0){
-       std::cout<<"not charge change neutrol"<<std::endl;
+
+    /*We only consider all the site charge change or all the site charge not change*/
+    if(!(sum == species::spe.size()-1 || sum ==0)){
+       std::cout<<species::spe.size()<<"  "<<"not charge change neutrol"<<std::endl;
+       std::cout<<"!!!!!!!!!!!!!1If you specify one atom on Asite/Bsite/Osite charge change, please also specify other elements that on the same site change charge too!, this is very important!!!!"<<std::endl;
        exit(EXIT_FAILURE);
     }
 	std::cout<<"the map matrix is: "<<std::endl;

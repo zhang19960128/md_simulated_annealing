@@ -12,7 +12,7 @@ int main(){
 	 readvmmap("param.map");
 	 readbound("param.vmbound");
 	 int size_box;
-	 readion(control::ionfile[0],40,size_box,8);
-	 return 0;
+     //SimulatedAnnealing(PenaltyFunc(xp, ) ) 
+     return 0;
 	 
 }

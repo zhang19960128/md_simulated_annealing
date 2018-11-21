@@ -1,6 +1,7 @@
 #include "sa.h"
 #include "simann.h"
 #include "atom.h"
+#include "readpara.h"
 #include <math.h>
 namespace saconst{
  double sa_temp=0.0001;
@@ -11,13 +12,13 @@ namespace saconst{
  double sa_sweight=0.0;
  double sa_nt=3;
  double sa_ns=3;
- int sa_refindex=-1; //zhenbang. Output the index of the reference structure
+ int sa_atom_num;
 };
 //extern void WriteFiles();
 #define NPAR 12
 #define NEPS 20
 #define EPS 1.0e-6
-void SimulatedAnnealing(double (*PenaltyFunc)(double*, box*), 
+void SimulatedAnnealing(double (*PenaltyFunc)(double*, box*,int,int), 
 			box* system,
             double *xacc,
 			int    N,
@@ -31,6 +32,7 @@ void SimulatedAnnealing(double (*PenaltyFunc)(double*, box*),
 			double *lb,
 			double *c)
 {
+    /*c is an array with every element to be 2.0*/
    int j,h,h0,m;
    double penaltyACC, penaltyOPT;
    double penaltySTAR[NEPS];
@@ -101,9 +103,9 @@ void SimulatedAnnealing(double (*PenaltyFunc)(double*, box*),
 		  else
 		     for(h0=0;h0<N;h0++)
 			xp[h0] = xacc[h0];
-		  
-		  penaltyp = PenaltyFunc(xp,system);//Zhenbang
-		  
+		  for(size_t i=0;i<control::ionsize.size();i++){
+		    penaltyp = PenaltyFunc(xp,control::database[i],control::ionsize[i],control::minienergytick[i]);//Zhenbang
+          }
 		  nfcnev += 1;
 		  
 		  if (penaltyp < penaltyACC)
