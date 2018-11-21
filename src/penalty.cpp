@@ -153,7 +153,7 @@ double PenaltyFunc(double* xp, box* system,int numberone, int index){
     double* totalEnergy = new double[number];
 
     for (size_t i=0; i<number; i++){
-        totalEnergy[i] = 0;
+        ionall[i].mdenergy = 0;
         ionall[i].updatebvparameter(control::bvvmatrix);
         for (size_t j=0; j<ionall[i].size; j++){
             for (size_t k=0; k<species::spe.size();k++){
@@ -163,13 +163,12 @@ double PenaltyFunc(double* xp, box* system,int numberone, int index){
             }
         }
         ionall[i].computeAll();
-        totalEnergy[i] = ionall[i].bvenergy + ionall[i].bvvenergy + ionall[i].ljenergy + ionall[i].epsilonenergy;
     }    
     /*Calculate the penalty*/
     double PenaltyE = 0;
     double PenaltyF = 0;
     for (size_t i=0; i<number; i++){
-        PenaltyE += fabs((totalEnergy[i]-totalEnergy[indexRef]) - (ionall[i].dftenergy-ionall[indexRef].dftenergy))*ionall[i].weight;
+        PenaltyE += fabs((ionall[i].mdenergy-ionall[indexRef].mdenergy) - (ionall[i].dftenergy-ionall[indexRef].dftenergy))*ionall[i].weight;
         for (size_t j=0; j<ionall[i].size; j++){
             for (size_t k=0; k<3; k++){
                 PenaltyF += fabs((ionall[i].allatom[j].force[k]-ionall[indexRef].allatom[j].force[k]) - (ionall[i].allatom[j].dftforce[k]-ionall[indexRef].allatom[j].dftforce[k]))*ionall[i].weight; 
@@ -178,7 +177,5 @@ double PenaltyFunc(double* xp, box* system,int numberone, int index){
     }
     PenaltyE = PenaltyE/number*saconst::sa_eweight;
     PenaltyF = PenaltyF/(number*3*ionall[0].size)*saconst::sa_fweight;
-    delete[] totalEnergy;
-
     return penalty = PenaltyE + PenaltyF;
 }
