@@ -422,6 +422,7 @@ void readvmmap(std::string mapfile){
 				count++;
 			}
 		}
+	control::paracount_bvv=count;
 	/*store the second map function within control::paracount_charge*/
 	std::vector<int> tempxpcharge(2,0);
 	count=0;
@@ -432,6 +433,7 @@ void readvmmap(std::string mapfile){
 			for(size_t i=control::paracount_bvv;i<control::paracount_charge+control::paracount_bvv;i++){
 				tempxpcharge[0]=i;
 				tempxpcharge[1]=map_xptick_chargetick(i);
+				std::cout<<"I am here waiting for orders: "<<i<<" "<<tempxpcharge[1]<<std::endl;
 				control::mapXpTickToChargeTick.push_back(tempxpcharge);
 			}
 			for(size_t start=species::site.size()-1;start>=0;start--){
@@ -450,10 +452,17 @@ void readvmmap(std::string mapfile){
 		}
 	}
 	/*debug*/
+	std::cout<<"MAP xp to what we want........"<<std::endl;
 	for(size_t i=0;i<control::mapXpTickToBvvTick.size();i++){
 		std::cout<<std::endl;
 		for(size_t j=0;j<control::mapXpTickToBvvTick[i].size();j++){
-	//		std::cout<<control::mapXpTickToBvv[i][j]<<"\t";
+			std::cout<<control::mapXpTickToBvvTick[i][j]<<"\t";
+		}
+	}
+	for(size_t i=0;i<control::mapXpTickToChargeTick.size();i++){
+		std::cout<<std::endl;
+		for(size_t j=0;j<control::mapXpTickToChargeTick[i].size();j++){
+			std::cout<<control::mapXpTickToChargeTick[i][j]<<"\t"	;
 		}
 	}
 	/**************** end storing map function **/
