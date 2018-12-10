@@ -24,24 +24,32 @@ int referenceStruct(box* system, int systemSize){
     return i;
 }
 namespace control{
- double** bvvmatrix;
- int** bvvmatrixmap;
- double* lb;
- double* ub;
+ double** bvvmatrix;/*bvv matrix parameters*/
+ int** bvvmatrixmap;/*bvv matrix map change parameters*/
+ double* lb;/*lower bound of change variable*/
+ double* ub;/*upper bound of change variable*/
  double* charge;/*it's the same length as input species*/
  int* chargemap;/*only maps the asite, bsite, osite charge, so it's length is 3*/
- int* type;
- int pair_num;
- int paracount_bvv;
- int paracount_charge;
- double* xop;
- std::vector<std::string> ionfile;
- std::vector<box*> database;
+ int* type;/*type matrix*/
+ int pair_num;/*how many pair of parameteres in BVV*/
+ int paracount_bvv;/*count how many parameteres that need to change in bvv*/
+ int paracount_charge;/*count how many parameters that need to change in charge*/
+ std::vector<int> para_site_charge_change;/*store the signal whether this site charge change*/
+ std::vector<double> para_site_charge;/*store the charge of this site*/
+ double* xop;/*map the all simulation optimized parameter to one line array*/
+ /*******************************for fast map************************/
+ std::vector<std::vector<int>> mapXpTickToBvvTick;/*fast map the index in xp to BvvMatrix map*/
+ std::vector<std::vector<int>> mapXpTickToChargeTick;/*fast map the index in xp to para_site_charge_change*/
+ int lastchargetick;/*store the last tick of charge change due to charge-neutral*/
+ /***********************************************************************/
+ int neutral;/*bool value to show whether you want to force charge neutral*/
+ std::vector<std::string> ionfile;/*how many ionfiles are there*/
+ std::vector<box*> database;/*the box* data to optimized*/
  std::vector<int> minienergytick;/*store the minimum energy of this Ion files*/
  std::vector<int> ionsize;/*store the structure numbers of different files*/
- std::vector<std::string> deopt;
- std::vector<std::string> dfopt;
- std::vector<std::string> dsopt;
+ std::vector<std::string> deopt;/*output difference energy*/
+ std::vector<std::string> dfopt;/*output force difference*/
+ std::vector<std::string> dsopt;/*output stress tensor difference*/
 }
 namespace ewaldsum{
 	double cutoff;
@@ -212,12 +220,27 @@ void readPT(std::string PTfile){
         std::cout<<species::site[i]<<"\t";
     }
     std::cout<<std::endl;
-	std::cout<<"The Starting Charge is: "<<std::endl;
 	for(size_t i=0;i<species::spe.size();i++)
 	{
 		std::cout<<control::charge[i]<<" ";
 	}
 	std::cout<<std::endl;
+	getline(fs,temp);
+	if(temp.find("&charge")!=std::string::npos){
+		do{
+		  getline(fs,temp);
+			if(temp.find("charge_neutral")!=std::string::npos){
+			input=split(temp,"=");
+			findvalue(input,"charge_neutral",control::neutral);
+			}
+		}while(temp.find("/")==std::string::npos);
+	}
+	if(control::neutral==1){
+		std::cout<<"=========================================================FORCE CHARGE NEUTRAL==========================================="<<std::endl;
+	}
+	else{
+		std::cout<<"=================================WARNING!!!!CHARGE NOT NEUTRAL, MAKE SURE THIS IS WAHT YOU WANT========================="<<std::endl;
+	};
 	getline(fs,temp);
 	size_t pair=0;
 	size_t count=0;
@@ -296,6 +319,18 @@ void readPT(std::string PTfile){
         control::minienergytick.push_back(temp_size);
     }
 }
+int map_xptick_chargetick(int xptick){
+	int sum=0;
+	int site=control::para_site_charge_change.size();
+	int i=0;
+	for(i=0;i<site;i++){
+		sum=sum+control::para_site_charge_change[i];
+		if(sum-1==xptick-control::paracount_bvv){
+			break;
+		}
+	}
+	return i;
+}
 void readvmmap(std::string mapfile){
 	std::fstream fs;
 	fs.open(mapfile,std::fstream::in);
@@ -326,13 +361,6 @@ void readvmmap(std::string mapfile){
         sum=sum+control::chargemap[i];
 //        std::cout<<sum<<std::endl;
     }
-
-    /*We only consider all the site charge change or all the site charge not change*/
-    if(!(sum == species::spe.size()-1 || sum ==0)){
-       std::cout<<species::spe.size()<<"  "<<"not charge change neutrol"<<std::endl;
-       std::cout<<"!!!!!!!!!!!!!1If you specify one atom on Asite/Bsite/Osite charge change, please also specify other elements that on the same site change charge too!, this is very important!!!!"<<std::endl;
-       exit(EXIT_FAILURE);
-    }
 	std::cout<<"the map matrix is: "<<std::endl;
 	for(size_t i=0;i<pair;i++){
 		for(size_t j=0;j<12;j++){
@@ -340,7 +368,96 @@ void readvmmap(std::string mapfile){
 		}
 		std::cout<<std::endl;
 	}
+	for(size_t i=0;i<3;i++){
+		control::para_site_charge_change.push_back(0);
+		control::para_site_charge.push_back(0.0);
+	}
+	for(size_t j=0;j<species::spe.size();j++){
+		control::para_site_charge_change[species::site[j]]+=control::chargemap[j];
+		control::para_site_charge_change[species::site[j]]=control::para_site_charge_change[species::site[j]]>0?1:0;
+		control::para_site_charge[species::site[j]]=control::charge[j];
+	}
+	for(size_t j=0;j<3;j++){
+		std::cout<<"the site: "<<j<<" :"<<"{{charge change(1) or not(0):}} "<<control::para_site_charge_change[j]<<" the starting charge is: "<<control::para_site_charge[j]<<std::endl;
+	}
+	int temp_sum=0;
+	for(size_t i=0;i<3;i++){
+		temp_sum=temp_sum+control::para_site_charge_change[i];
+	}
+	if(temp_sum==3){
+		control::paracount_charge=control::neutral==1 ? temp_sum-1:temp_sum;
+	}
+	else if(temp_sum==2){
+		control::paracount_charge=control::neutral==1 ? temp_sum-1:temp_sum;
+	}
+	else if(temp_sum==1){
+		std::cout<<"ONLY ONE SITE CHARGE CHANGE"<<std::endl;
+		exit(EXIT_FAILURE);
+	}
+	else if(temp_sum==0){
+		control::paracount_charge=0;
+	}
+    /*We only consider all the site charge change or all the site charge not change*/
+  /*
+	if(!(sum == species::spe.size()-1 || sum ==0)){
+       std::cout<<species::spe.size()<<"  "<<"not charge change neutrol"<<std::endl;
+       std::cout<<"!!!!!!!!!!!!!1If you specify one atom on Asite/Bsite/Osite charge change, please also specify other elements that on the same site change charge too!, this is very important!!!!"<<std::endl;
+       exit(EXIT_FAILURE);
+    }
+		*/
 	std::cout<<"------------------------------------------------------------END--------------------------------------------------"<<std::endl;
+	/*******starting to map XpTickToBvvTick*******/
+	/*store the first map function within control::paracount_bvv*/
+	std::vector<int> tempxpbvv(3,0);
+	int count=0;
+	for(size_t m=0;m<control::pair_num;m++)
+		for(size_t n=0;n<12;n++){
+			if(control::bvvmatrixmap[m][n]==0)
+				continue;
+			else{
+				tempxpbvv[0]=count;
+				tempxpbvv[1]=m;
+				tempxpbvv[2]=n;
+				control::mapXpTickToBvvTick.push_back(tempxpbvv);
+				count++;
+			}
+		}
+	/*store the second map function within control::paracount_charge*/
+	std::vector<int> tempxpcharge(2,0);
+	count=0;
+	if(control::paracount_charge==0){
+	}
+	else{
+		if(control::neutral==1){
+			for(size_t i=control::paracount_bvv;i<control::paracount_charge+control::paracount_bvv;i++){
+				tempxpcharge[0]=i;
+				tempxpcharge[1]=map_xptick_chargetick(i);
+				control::mapXpTickToChargeTick.push_back(tempxpcharge);
+			}
+			for(size_t start=species::site.size()-1;start>=0;start--){
+				if(control::para_site_charge_change[start]==1){
+				control::lastchargetick=start;
+				break;
+				}
+			}
+		}
+		else{
+			for(size_t i=control::paracount_bvv;i<control::paracount_charge+control::paracount_bvv;i++){
+				tempxpcharge[0]=i;
+				tempxpcharge[1]=map_xptick_chargetick(i);
+				control::mapXpTickToChargeTick.push_back(tempxpcharge);
+			}
+		}
+	}
+	/*debug*/
+	for(size_t i=0;i<control::mapXpTickToBvvTick.size();i++){
+		std::cout<<std::endl;
+		for(size_t j=0;j<control::mapXpTickToBvvTick[i].size();j++){
+	//		std::cout<<control::mapXpTickToBvv[i][j]<<"\t";
+		}
+	}
+	/**************** end storing map function **/
+
 };
 void readbound(std::string boundfile){
 	std::cout<<"-------------------------------------------------START READING PARAMETER BOUND ---------------------------------------------"<<std::endl;
@@ -354,9 +471,7 @@ void readbound(std::string boundfile){
 			sum=sum+control::bvvmatrixmap[i][j];
 		}
 	control::paracount_bvv=sum;
-	for(size_t i=0;i<species::spe.size();i++)
-		sum=sum+control::chargemap[i];
-	control::paracount_charge=sum-control::paracount_bvv;
+	sum=control::paracount_bvv+control::paracount_charge;
 	control::lb=new double [sum];
 	control::ub=new double [sum];
 	double rang;

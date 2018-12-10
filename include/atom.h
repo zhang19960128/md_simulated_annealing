@@ -59,6 +59,7 @@ class box{
         //zhenbang
         friend double PenaltyFunc(double* xp, box* system,int num,int index);
         friend int referenceStruct(box* system, int systemSize);
+				friend void writeoutput(box* input,int size,int tick,int saiter,std::string deoptfile,std::string dfoptfile,std::string dsoptfile);
 		~box()
         {
 			for(size_t i=0;i<type;i++){
@@ -113,6 +114,9 @@ class box{
 		double** stress;
 		double** stressdft;
 		double dftenergy;
+		double mdenergy;
+		double mdrelevantenergy;
+		double dftrelevantenergy;
 		double weight;
 };
 #endif

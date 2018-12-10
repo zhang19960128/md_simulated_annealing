@@ -61,7 +61,7 @@ void map(double* xp){
     int count = 0;
     /*store the sites that have appeared. After the loop, count should be either 2 or 3*/
     for(int i=control::paracount_bvv;i<control::paracount_bvv+control::paracount_charge;i++){
-		indexchargemap(control::chargemap,i,m);
+				indexchargemap(control::chargemap,i,m);
         control::charge[m]=xp[i];
         int count2=0;
         int sameSite = -1;
@@ -138,7 +138,82 @@ void mapToXp(double* xp){
         }
     }
 }
-
+/*jiahao zhang tend to map short the distance of map xp, not in the real code yet.
+* save the total map variable code.
+*/
+/*
+void mapXpToBv(double* xp){
+	int count=0;
+	double sum=0.0;
+	for(size_t m=0;m<control::pair_num;m++){
+		for(size_t n=0;n<12;n++){
+			if(control::bvvmatrixmap[m][n]==0)
+				continue;
+			else{
+				control::bvvmatrix[m][n]=xp[count];
+				count++;
+			}
+		}
+	}
+	if(control::paracount_charge==0){
+	}
+	else{
+		if(control::neutral==1){
+			for(size_t i=control::paracount_bvv;i<control::paracount_charge+control::paracount_bvv;i++){
+				control::para_site_charge[map_xptick_chargetick(i)]=xp[i];
+				sum=sum+xp[i];
+			}
+			control::para_site_charge[control::paracount_charge+control::paracount_bvv]=0-sum;
+		}
+		else{
+			for(size_t i=control::paracount_bvv;i<control::paracount_charge+control::paracount_bvv;i++){
+				control::para_site_charge[map_xptick_chargetick(i)]=xp[i];
+			}
+		}
+	}
+}
+int map_chargetick_xptick(int chargetick){
+	int sum=0; 
+	int site=control::para_site_charge.size();
+	for(size_t i=0;i<chargetick;i++){
+		sum=sum+control::para_site_charge_change[i];
+	}
+	return sum+control::paracount_bvv-1;
+}
+void mapBvToXp(double* xp){
+    int count = 0;
+    for (size_t m=0; m<control::pair_num; m++){
+        for (size_t n=0; n<12; n++){
+            if (control::bvvmatrixmap[m][n] == 0) continue;
+						xp[count] = control::bvvmatrix[m][n];
+            count += 1;
+        }
+    }
+		if(control::paracount_charge==0){
+		}
+		else{
+			if(control::neutral==1){
+				for(size_t i=0;i<3;i++){
+					if(control::para_site_charge_change[i]==1){
+						if(map_chargetick_xptick(i)<control::paracount_bvv+control::paracount_charge){
+							xp[map_chargetick_xptick(i)]=control::para_site_charge[i];
+						}
+					}
+				}
+			}
+			/*if not force charge neutral*/
+/*
+			else{
+				for(size_t i=0;i<3;i++){
+					if(control::para_site_charge_change[i]==1){
+						xp[map_chargetick_xptick(i)]=control::para_site_charge[i];
+					}
+				}
+			}
+		}
+}
+*/
+/********************************************end by charge************************************/
 //Zhenbang
 /*
 numberone: give how many structures are in the box

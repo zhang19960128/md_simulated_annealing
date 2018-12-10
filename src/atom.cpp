@@ -25,7 +25,7 @@ box::box(atom* inputallatom,
         ){
 	/*this paribv_input should be similar to lammps input*/
 	/*this paribvv_input should be similar to lammps input*/
-	p=new double[3];
+	p=new double [3];
 	for(size_t i=0;i<3;i++){
 		p[i]=period[i];
 	}
