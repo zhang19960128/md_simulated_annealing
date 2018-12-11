@@ -219,6 +219,20 @@ void mapBvToXp(double* xp){
 numberone: give how many structures are in the box
 index: give the tick of minimum energy in this database.
 */
+void mapjiahao(double* xp){
+	for(size_t i=0;i<control::paracount_bvv;i++){
+		control::bvvmatrix[control::mapXpTickToBvvTick[i][1]][control::mapXpTickToBvvTick[i][2]]=xp[i];
+	}
+	for(size_t i=control::paracount_bvv;i<control::paracount_charge+control::paracount_bvv;i++){
+		control::para_site_charge[control::mapXpTickToChargeTick[i-control::paracount_bvv][1]]=xp[i];
+	}
+	if(control::neutral==1){
+		/*force charge neutral*/
+	//	control::para_site_charge[control::lastchargetick]=
+	}
+	else{
+	};
+}
 double PenaltyFunc(double* xp, box* system,int numberone, int index){
     int indexRef = index;
     map(xp);

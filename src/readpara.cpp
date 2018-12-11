@@ -23,6 +23,15 @@ int referenceStruct(box* system, int systemSize){
     }
     return i;
 }
+int oldname(std::vector<std::string>& input,std::string& temp){
+	int size=input.size();
+	for(int i=0;i<size;i++){
+		if(input[i]==temp){
+			return i;/*if it's a old name, return the reference position*/
+		}
+	}
+	return -1;/*if it's not a old name return -1*/
+}
 namespace control{
  double** bvvmatrix;/*bvv matrix parameters*/
  int** bvvmatrixmap;/*bvv matrix map change parameters*/
@@ -36,10 +45,12 @@ namespace control{
  int paracount_charge;/*count how many parameters that need to change in charge*/
  std::vector<int> para_site_charge_change;/*store the signal whether this site charge change*/
  std::vector<double> para_site_charge;/*store the charge of this site*/
+ std::vector<std::string> site_name;/*store the name of this site*/
+ std::vector<double> chemical_formula;/*store the chemical formula of this site*/
  double* xop;/*map the all simulation optimized parameter to one line array*/
  /*******************************for fast map************************/
- std::vector<std::vector<int>> mapXpTickToBvvTick;/*fast map the index in xp to BvvMatrix map*/
- std::vector<std::vector<int>> mapXpTickToChargeTick;/*fast map the index in xp to para_site_charge_change*/
+ std::vector<std::vector<int> > mapXpTickToBvvTick;/*fast map the index in xp to BvvMatrix map*/
+ std::vector<std::vector<int> > mapXpTickToChargeTick;/*fast map the index in xp to para_site_charge_change*/
  int lastchargetick;/*store the last tick of charge change due to charge-neutral*/
  /***********************************************************************/
  int neutral;/*bool value to show whether you want to force charge neutral*/
@@ -178,6 +189,7 @@ void readPT(std::string PTfile){
 	std::cout<<"alpha for ewald is "<<ewaldsum::alpha<<std::endl;
 	getline(fs,temp);
 	std::vector<double> starting_charge;
+	int siteinfo;
 	if(temp.find("&species")!=std::string::npos){
 		getline(fs,temp);
 		do{
@@ -190,16 +202,14 @@ void readPT(std::string PTfile){
 			species::spe.push_back(temp);
 			species::nametag.push_back(m);
 			starting_charge.push_back(charge_temp);
-            temp_stream>>temp;
-            if(temp.find("asite")!=std::string::npos){
-                species::site.push_back(0);
-            }
-            else if(temp.find("bsite")!=std::string::npos){
-                species::site.push_back(1);
-            }
-            else if(temp.find("osite")!=std::string::npos){
-                species::site.push_back(2);
-            }
+      temp_stream>>temp;
+			siteinfo=oldname(control::site_name,temp);
+			if(siteinfo==-1){
+				control::site_name.push_back(temp);
+			}
+			else{
+				species::site.push_back(siteinfo);
+			}
 			temp_stream.clear();
 		}
 			getline(fs,temp);
@@ -209,6 +219,10 @@ void readPT(std::string PTfile){
 		for(size_t i=0;i<species::spe.size();i++){
 			control::charge[i]=starting_charge[i];
 		}
+	}
+	for(size_t i=0;i<control::site_name.size();i++){
+		std::cout<<"site is: "<<control::site_name[i]<<std::endl;
+		control::chemical_formula.push_back(0);
 	}
 	std::cout<<"the species are: "<<std::endl;
 	for(size_t i=0;i<species::spe.size();i++){
@@ -225,6 +239,20 @@ void readPT(std::string PTfile){
 		std::cout<<control::charge[i]<<" ";
 	}
 	std::cout<<std::endl;
+	getline(fs,temp);
+	int fraction;
+	if(temp.find("&chemical_formula")!=std::string::npos){
+		do{
+			getline(fs,temp);
+			temp=decomment(temp);
+			temp_stream.str(temp);
+			temp_stream>>temp;
+			temp_stream>>fraction;
+			temp_stream.clear();
+			siteinfo=oldname(control::site_name,temp);
+			control::chemical_formula[siteinfo]=fraction;
+		}while(temp.find("/")==std::string::npos);
+	}
 	getline(fs,temp);
 	if(temp.find("&charge")!=std::string::npos){
 		do{

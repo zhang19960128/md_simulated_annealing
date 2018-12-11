@@ -18,6 +18,8 @@ extern int paracount_bvv;
 extern int paracount_charge;
 extern std::vector<int> para_site_charge_change;
 extern std::vector<double> para_site_charge;
+extern std::vector<std::string> site_name;
+extern std::vector<double> chemical_formula;
 extern double* xop;
 extern std::vector<std::vector<int> > mapXpTickToBvvTick;
 extern std::vector<std::vector<int> > mapXpTickToChargeTick;
