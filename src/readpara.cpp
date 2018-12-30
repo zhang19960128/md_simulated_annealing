@@ -188,6 +188,25 @@ void readPT(std::string PTfile){
 	std::cout<<"k-cutoff for ewald is "<<ewaldsum::k_cutoff<<std::endl;
 	std::cout<<"alpha for ewald is "<<ewaldsum::alpha<<std::endl;
 	getline(fs,temp);
+	int fraction;
+	if(temp.find("&chemical_formula")!=std::string::npos){
+	  getline(fs,temp);
+		while(temp.find("/")==std::string::npos){
+			temp=decomment(temp);
+			temp_stream.str(temp);
+			temp_stream>>temp;
+			temp_stream>>fraction;
+			temp_stream.clear();
+			control::site_name.push_back(temp);
+			control::chemical_formula.push_back(fraction);
+			getline(fs,temp);
+		};
+	}
+	for(size_t i=0;i<control::site_name.size();i++){
+		std::cout<<"site is: "<<control::site_name[i]<<std::endl;
+	}
+	std::cout<<"I am here"<<std::endl;
+	getline(fs,temp);
 	std::vector<double> starting_charge;
 	int siteinfo;
 	if(temp.find("&species")!=std::string::npos){
@@ -203,26 +222,24 @@ void readPT(std::string PTfile){
 			species::nametag.push_back(m);
 			starting_charge.push_back(charge_temp);
       temp_stream>>temp;
-			siteinfo=oldname(control::site_name,temp);
-			if(siteinfo==-1){
-				control::site_name.push_back(temp);
-			}
-			else{
-				species::site.push_back(siteinfo);
+			for(size_t i=0;i<control::site_name.size();i++){
+				if(temp==control::site_name[i]){
+					species::site.push_back(i);
+				}
 			}
 			temp_stream.clear();
 		}
 			getline(fs,temp);
 		}while(temp.find("/")==std::string::npos);
+		std::cout<<"There are many sites: "<<std::endl;
+		for(size_t i=0;i<4;i++){
+			std::cout<<species::site[i]<<std::endl;
+		}
 		control::charge=new double [species::spe.size()];
 		std::cout<<"the size of the system is: "<<species::spe.size()<<std::endl;
 		for(size_t i=0;i<species::spe.size();i++){
 			control::charge[i]=starting_charge[i];
 		}
-	}
-	for(size_t i=0;i<control::site_name.size();i++){
-		std::cout<<"site is: "<<control::site_name[i]<<std::endl;
-		control::chemical_formula.push_back(0);
 	}
 	std::cout<<"the species are: "<<std::endl;
 	for(size_t i=0;i<species::spe.size();i++){
@@ -239,20 +256,6 @@ void readPT(std::string PTfile){
 		std::cout<<control::charge[i]<<" ";
 	}
 	std::cout<<std::endl;
-	getline(fs,temp);
-	int fraction;
-	if(temp.find("&chemical_formula")!=std::string::npos){
-		do{
-			getline(fs,temp);
-			temp=decomment(temp);
-			temp_stream.str(temp);
-			temp_stream>>temp;
-			temp_stream>>fraction;
-			temp_stream.clear();
-			siteinfo=oldname(control::site_name,temp);
-			control::chemical_formula[siteinfo]=fraction;
-		}while(temp.find("/")==std::string::npos);
-	}
 	getline(fs,temp);
 	if(temp.find("&charge")!=std::string::npos){
 		do{
@@ -461,7 +464,6 @@ void readvmmap(std::string mapfile){
 			for(size_t i=control::paracount_bvv;i<control::paracount_charge+control::paracount_bvv;i++){
 				tempxpcharge[0]=i;
 				tempxpcharge[1]=map_xptick_chargetick(i);
-				std::cout<<"I am here waiting for orders: "<<i<<" "<<tempxpcharge[1]<<std::endl;
 				control::mapXpTickToChargeTick.push_back(tempxpcharge);
 			}
 			for(size_t start=species::site.size()-1;start>=0;start--){

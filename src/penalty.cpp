@@ -220,6 +220,8 @@ numberone: give how many structures are in the box
 index: give the tick of minimum energy in this database.
 */
 void mapjiahao(double* xp){
+	double sum=0.0;
+	int size=control::para_site_charge.size();
 	for(size_t i=0;i<control::paracount_bvv;i++){
 		control::bvvmatrix[control::mapXpTickToBvvTick[i][1]][control::mapXpTickToBvvTick[i][2]]=xp[i];
 	}
@@ -229,6 +231,13 @@ void mapjiahao(double* xp){
 	if(control::neutral==1){
 		/*force charge neutral*/
 	//	control::para_site_charge[control::lastchargetick]=
+			for(size_t i=0;i<size;i++){
+				if(i==control::lastchargetick){
+					continue;
+				}
+				sum=sum+control::chemical_formula[i]*control::para_site_charge[i];
+			}
+			control::para_site_charge[control::lastchargetick]=(0-sum)/control::chemical_formula[control::lastchargetick];
 	}
 	else{
 	};
