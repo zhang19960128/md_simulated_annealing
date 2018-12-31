@@ -188,35 +188,6 @@ void box::computelong(double accuracy_relative){
 					    fz[i]=fz[i]+1/volume/2/epsil*temp*chargei*2*pi/p[2]*l*2*(snkr*skre-cskr*skim);
 						 }
 						 }
-		/*started to code dipole correction to the total edwald summation
-		double surface_dipole_e=0.0;
-		double surface_dipole[3]={0.0,0.0,0.0};
-		for(size_t i=0;i<size;i++){
-			for(size_t j=0;j<3;j++){
-			surface_dipole[j]=surface_dipole[j]+allatom[i].charge*allatom[i].position[j];
-		}
-		}
-		for(size_t i=0;i<3;i++){
-		surface_dipole_e+=1.0/6.0/epsil/volume*surface_dipole[i]*surface_dipole[i];
-		}
-		for(size_t i=0;i<3;i++){
-			chargei=allcharge[i];
-			fx[i]+=-1.0/3.0/epsil/volume*surface_dipole[0]*chargei;
-			fy[i]+=-1.0/3.0/epsil/volume*surface_dipole[1]*chargei;
-			fz[i]+=-1.0/3.0/epsil/volume*surface_dipole[2]*chargei;
-		}
-
-		std::cout<<"the surface dipole energy is: "<<surface_dipole_e<<std::endl;
-		end code dipole correction to the total edwald summation*/
-		//std::cout<<"the long range energy is: "<<std::setprecision(10)<<std::setw(10)<<LongRange<<std::endl;
-		//std::cout<<"the self energy is: "<<std::setprecision(10)<<std::setw(10)<<selfe<<std::endl;
-		//std::cout<<"the Short Range energy is: "<<std::setprecision(10)<<std::setw(10)<<ShortRange<<std::endl;
-		//std::cout<<"the toatl energy is: "<<std::setprecision(10)<<std::setw(10)<<LongRange+selfe+ShortRange<<std::endl;
-	/*
-		for(size_t i=0;i<size;i++){
-			std::cout<<fx[i]<<" "<<fy[i]<<" "<<fz[i]<<std::endl;
-		}
-		*/
 		for(size_t i=0;i<size;i++){
 			allatom[i].force[0]+=fx[i];
 			allatom[i].force[1]+=fy[i];

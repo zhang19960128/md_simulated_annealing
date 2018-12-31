@@ -304,8 +304,46 @@ void readPT(std::string PTfile){
 		std::cout<<std::endl;
 	}
 	getline(fs,temp);
+	if(temp.find("&map")!=std::string::npos){
+	readvmmap(fs);
+	}
+	getline(fs,temp);
+	while(temp.find("/")==std::string::npos){
+		getline(fs,temp);
+	};
+	getline(fs,temp);
+	if(temp.find("&lowbound")!=std::string::npos){
+		getline(fs,temp);
+		tick=0;
+		control::lb=new double [control::paracount_bvv+control::paracount_charge];
+		std::cout<<"lower  bound is: ";
+		do{
+			temp=decomment(temp);
+			std::cout<<temp<<"\t";
+			control::lb[tick]=std::stof(temp);
+			tick=tick+1;
+			getline(fs,temp);
+		}while(temp.find("/")==std::string::npos);
+	}
+	std::cout<<std::endl;
+	getline(fs,temp);
+	if(temp.find("&highbound")!=std::string::npos){
+		getline(fs,temp);
+		tick=0;
+		control::ub=new double [control::paracount_bvv+control::paracount_charge];
+		std::cout<<"higher bound is: ";
+		do{
+			temp=decomment(temp);
+			std::cout<<temp<<"\t";
+			control::ub[tick]=std::stof(temp);
+			tick=tick+1;
+			getline(fs,temp);
+		}while(temp.find("/")==std::string::npos);
+	}
+	std::cout<<std::endl;
+	getline(fs,temp);
 	std::string systemname;
-	if(temp.find("&datafile")!=std ::string::npos){
+	if(temp.find("&datafile")!=std::string::npos){
 		getline(fs,temp);
 		do{
 		temp=decomment(temp);
@@ -362,9 +400,7 @@ int map_xptick_chargetick(int xptick){
 	}
 	return i;
 }
-void readvmmap(std::string mapfile){
-	std::fstream fs;
-	fs.open(mapfile,std::fstream::in);
+void readvmmap(std::fstream &fs){
 	std::cout<<"---------------------------------------------START READING MAP MATRIX ------------------------------------------"<<std::endl;
 	size_t pair=control::pair_num;
 	control::bvvmatrixmap=new int* [pair];
@@ -495,34 +531,6 @@ void readvmmap(std::string mapfile){
 			std::cout<<control::mapXpTickToChargeTick[i][j]<<"\t"	;
 		}
 	}
+	std::cout<<std::endl<<"Exit the function without any erros"<<std::endl;
 	/**************** end storing map function **/
-
 };
-void readbound(std::string boundfile){
-	std::cout<<"-------------------------------------------------START READING PARAMETER BOUND ---------------------------------------------"<<std::endl;
-	std::fstream fs;
-	fs.open(boundfile,std::fstream::in);
-	int sum=0;
-	std::istringstream temp_stream;
-	std::string temp;
-	for(size_t i=0;i<control::pair_num;i++)
-		for(size_t j=0;j<12;j++){
-			sum=sum+control::bvvmatrixmap[i][j];
-		}
-	control::paracount_bvv=sum;
-	sum=control::paracount_bvv+control::paracount_charge;
-	control::lb=new double [sum];
-	control::ub=new double [sum];
-	double rang;
-	std::cout<<"the total variable need to change is "<<sum<<std::endl;
-	for(size_t i=0;i<sum;i++){
-		getline(fs,temp);
-		temp_stream.str(temp);
-		temp_stream>>rang;
-		control::lb[i]=rang;
-		temp_stream>>rang;
-		control::ub[i]=rang;
-		temp_stream.clear();
-	}
-	std::cout<<"---------------------------------------------------------------END-------------------------------------------------------------"<<std::endl;
-}

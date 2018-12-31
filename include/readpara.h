@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "atom.h"
+#include <fstream>
 #include <iostream>
 namespace control{
 extern double** bvvmatrix;
@@ -45,6 +46,6 @@ namespace species{
 	extern int** num;
 }
 void readPT(std::string PTfile);
-void readvmmap(std::string mapfile);
+void readvmmap(std::fstream &fs);
 void readbound(std::string boundfile);
 #endif

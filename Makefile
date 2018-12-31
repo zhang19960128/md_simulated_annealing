@@ -7,9 +7,9 @@ CXXFLAGS +=-I./include
 vpath %.cpp src
 vpath %.h include
 vpath %.o obj
-sa.x: interface.o atom.o ewald_jiahaoz.o lj12.o bv.o bvv.o image.o stress.o readion.o readpara.o main.o sa.o simann.o penalty.o
+sa.x: interface.o atom.o ewald_jiahaoz.o lj12.o bv.o bvv.o image.o stress.o readion.o readpara.o main.o sa.o simann.o penalty.o output.o
 	mkdir -p obj bin
-	$(CXX) -o sa.x $(LIBPATH) interface.o atom.o main.o ewald_jiahaoz.o lj12.o bv.o bvv.o image.o stress.o readion.o readpara.o sa.o simann.o penalty.o
+	$(CXX) -o sa.x $(LIBPATH) interface.o atom.o main.o ewald_jiahaoz.o lj12.o bv.o bvv.o image.o stress.o readion.o readpara.o sa.o simann.o penalty.o output.o
 	mv *.o bin/
 %.o: %.c $(DEPS)
 	$(CXX)  $(CXXFLAGS) -c -o $@ $^

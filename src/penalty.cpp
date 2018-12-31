@@ -269,7 +269,7 @@ double PenaltyFunc(double* xp, box* system,int numberone, int index){
         PenaltyE += fabs((ionall[i].mdenergy-ionall[indexRef].mdenergy) - (ionall[i].dftenergy-ionall[indexRef].dftenergy))*ionall[i].weight;
         for (size_t j=0; j<ionall[i].size; j++){
             for (size_t k=0; k<3; k++){
-                PenaltyF += fabs((ionall[i].allatom[j].force[k]-ionall[indexRef].allatom[j].force[k]) - (ionall[i].allatom[j].dftforce[k]-ionall[indexRef].allatom[j].dftforce[k]))*ionall[i].weight; 
+                PenaltyF += fabs((ionall[i].allatom[j].force[k]-ionall[i].allatom[j].dftforce[k]))*ionall[i].weight; 
             }
         }
     }

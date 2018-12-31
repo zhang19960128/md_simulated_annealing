@@ -9,8 +9,6 @@
 #include "penalty.h"
 int main(){
 	 readPT("control.PT");
-	 readvmmap("param.map");
-	 readbound("param.vmbound");
 	 int size_box;
      //SimulatedAnnealing(PenaltyFunc(xp, ) ) 
      return 0;
