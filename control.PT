@@ -82,5 +82,4 @@ charge_neutral=1
 /
 &datafile
 systemone IonFor.dat deopt.out dfopt.out dsopt.out#the first system
-systemtwo IonFor.dat.two deopt.out2 dfopt.out2 dsopt.out2 #the second system
 /
