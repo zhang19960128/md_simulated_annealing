@@ -37,6 +37,8 @@ namespace control{
  int** bvvmatrixmap;/*bvv matrix map change parameters*/
  double* lb;/*lower bound of change variable*/
  double* ub;/*upper bound of change variable*/
+ double* vm;/*ub - lb*/
+ double* c;/*all values are 2.0*/
  double* charge;/*it's the same length as input species*/
  int* chargemap;/*only maps the asite, bsite, osite charge, so it's length is 3*/
  int* type;/*type matrix*/
@@ -316,6 +318,11 @@ void readPT(std::string PTfile){
 		getline(fs,temp);
 		tick=0;
 		control::lb=new double [control::paracount_bvv+control::paracount_charge];
+		control::c=new double [control::paracount_bvv+control::paracount_charge];
+		control::vm=new double [control::paracount_bvv+control::paracount_charge];
+		for(size_t i=0;i<control::paracount_bvv+control::paracount_charge;i++){
+			control::c[i]=2.0;
+		}
 		std::cout<<"lower  bound is: ";
 		do{
 			temp=decomment(temp);
@@ -363,6 +370,9 @@ void readPT(std::string PTfile){
 		getline(fs,temp);
 		}while(temp.find("/")==std::string::npos);
 	}
+	for(size_t i=0;i<control::paracount_bvv+control::paracount_charge;i++){
+		control::vm[i]=control::ub[i]-control::lb[i];
+		}
 	std::cout<<"----------------------------------------------------------------------------------------------------------------"<<std::endl;
 	std::cout<<"The total Ion file you are reading is: "<<std::endl;
 	for(size_t i=0;i<control::ionfile.size();i++){

@@ -27,7 +27,6 @@ void SimulatedAnnealing(double (*PenaltyFunc)(double*, box*,int,int),
 			double *ub,
 			double *lb,
 			double *c
-
 );
 
 #endif

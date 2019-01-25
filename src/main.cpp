@@ -7,10 +7,21 @@
 #include "interface.h"
 #include "readpara.h"
 #include "penalty.h"
+#include "sa.h"
 int main(){
 	 readPT("control.PT");
 	 int size_box;
-     //SimulatedAnnealing(PenaltyFunc(xp, ) ) 
+   SimulatedAnnealing(&PenaltyFunc,
+			 control::database[0],
+			 control::xop,
+			 control::paracount_bvv+control::paracount_charge,
+			 saconst::sa_nt,
+			 saconst::sa_ns,
+			 saconst::sa_temp,
+			 saconst::sa_ratio,
+			 control::vm,
+			 control::ub,
+			 control::lb,
+			 control::c);
      return 0;
-	 
 }

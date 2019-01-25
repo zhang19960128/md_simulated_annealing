@@ -21,7 +21,7 @@ namespace saconst{
 void SimulatedAnnealing(double (*PenaltyFunc)(double*, box*,int,int), 
 			box* system,
             double *xacc,
-			int    N,
+			int    N,//number of parameters to be optimized.
 			int    NT,
 			int    NS,
 			int    sa_max,
@@ -79,11 +79,7 @@ void SimulatedAnnealing(double (*PenaltyFunc)(double*, box*,int,int),
        *                */
       for(m=0;m<NT;m++){
 	 for(j=0;j<NS;j++){
-#ifdef SACHECK
-	    for(h=0;h<1;h++)
-#else
             for(h=0;h<N;h++)
-#endif
 	       {
 
 		  /* x -> x + dx */
@@ -104,7 +100,7 @@ void SimulatedAnnealing(double (*PenaltyFunc)(double*, box*,int,int),
 		     for(h0=0;h0<N;h0++)
 			xp[h0] = xacc[h0];
 		  for(size_t i=0;i<control::ionsize.size();i++){
-		    penaltyp = PenaltyFunc(xp,control::database[i],control::ionsize[i],control::minienergytick[i]);//Zhenbang
+		    penaltyp = *PenaltyFunc(xp,control::database[i],control::ionsize[i],control::minienergytick[i]);//Zhenbang
           }
 		  nfcnev += 1;
 		  

@@ -11,6 +11,8 @@ extern double** bvvmatrix;
 extern int** bvvmatrixmap;
 extern double* lb;
 extern double* ub;
+extern double* vm;
+extern double* c;
 extern double* charge;
 extern int* chargemap;
 extern int* type;
