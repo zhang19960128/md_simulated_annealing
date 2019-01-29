@@ -238,9 +238,14 @@ void mapjiahao(double* xp){
 				sum=sum+control::chemical_formula[i]*control::para_site_charge[i];
 			}
 			control::para_site_charge[control::lastchargetick]=(0-sum)/control::chemical_formula[control::lastchargetick];
+			size=species::spe.size();
+			for(size_t i=0;i<size;i++){
+				control::charge[i]=control::para_site_charge[species::site[i]];
+			}
 	}
 	else{
 	};
+
 }
 double PenaltyFunc(double* xp, box* system,int numberone, int index){
     int indexRef = index;

@@ -3,6 +3,7 @@
 #include "atom.h"
 #include "readpara.h"
 #include <math.h>
+#include "output.h"
 namespace saconst{
  double sa_temp=0.0001;
  double sa_ratio=0.95;
@@ -101,6 +102,8 @@ void SimulatedAnnealing(double (*PenaltyFunc)(double*, box*,int,int),
 		  for(size_t i=0;i<control::ionsize.size();i++){
 		    penaltyp += PenaltyFunc(xp,control::database[i],control::ionsize[i],control::minienergytick[i]);//Zhenbang
           }
+			std::cout<<"The Penalty now is: "<<penaltyp<<std::endl;
+			write_opt_parameter("opt.out");
 		  nfcnev += 1;
 		  if (penaltyp < penaltyACC)
 		     {

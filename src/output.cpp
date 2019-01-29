@@ -1,6 +1,7 @@
 #include "atom.h"
 #include <string>
 #include <iostream>
+#include "readpara.h"
 #include <fstream>
 #include "sa.h"
 #include <cmath>
@@ -41,4 +42,23 @@ void writeoutput(box* input,int size,int tick,int saiter,std::string deoptfile,s
 			}
 		std::cout<<std::endl;
 	}
+}
+void write_opt_parameter(std::string optout){
+	std::fstream fs;
+	fs.open(optout,std::fstream::app);
+	for(size_t i=0;i<control::pair_num;i++){
+	  for(size_t j=0;j<12;j++){
+			fs<<control::bvvmatrix[i][j]<<"\t";
+		}
+		fs<<std::cout<<std::endl;
+	}
+	for(std::vector<std::string>::iterator a=species::spe.begin();a!=species::spe.end();a++){
+		std::cout<<*a<<"\t";
+	}
+	std::cout<<std::endl;
+	size_t size=species::spe.size();
+	for(size_t i=0;i<size;i++){
+		std::cout<<control::charge[i]<<"\t";
+	}
+	std::cout<<std::endl;
 }
