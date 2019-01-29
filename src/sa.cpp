@@ -72,7 +72,6 @@ void SimulatedAnnealing(double (*PenaltyFunc)(double*, box*,int,int),
    iseed1 = 1; iseed2 = 2;
    rmarin(&iseed1,&iseed2);
 
-
    for(saiter=0;saiter<sa_max;saiter++){
       /*                *
        *  m, j, h loop  *
@@ -100,7 +99,7 @@ void SimulatedAnnealing(double (*PenaltyFunc)(double*, box*,int,int),
 		     for(h0=0;h0<N;h0++)
 			xp[h0] = xacc[h0];
 		  for(size_t i=0;i<control::ionsize.size();i++){
-		    penaltyp = *PenaltyFunc(xp,control::database[i],control::ionsize[i],control::minienergytick[i]);//Zhenbang
+		    penaltyp = PenaltyFunc(xp,control::database[i],control::ionsize[i],control::minienergytick[i]);//Zhenbang
           }
 		  nfcnev += 1;
 		  

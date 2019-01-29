@@ -527,6 +527,17 @@ void readvmmap(std::fstream &fs){
 			}
 		}
 	}
+	/*malloc the storage space for control::paracount_charge and control::paracount_bvv*/
+  control::xop=new double [control::paracount_charge+control::paracount_bvv];
+	for(size_t i=0;i<control::paracount_bvv;i++){
+		control::xop[i]=control::bvvmatrix[control::mapXpTickToBvvTick[i][1]][control::mapXpTickToBvvTick[i][2]];
+	}
+	for(size_t j=control::paracount_bvv;j<control::paracount_bvv+control::paracount_charge;j++){
+		control::xop[j]=control::para_site_charge[control::mapXpTickToChargeTick[j-control::paracount_bvv][1]];
+	}
+	for(size_t i=0;i<control::paracount_charge+control::paracount_bvv;i++){
+		std::cout<<control::xop[i]<<std::endl;
+	}
 	/*debug*/
 	std::cout<<"MAP xp to what we want........"<<std::endl;
 	for(size_t i=0;i<control::mapXpTickToBvvTick.size();i++){
