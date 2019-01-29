@@ -20,7 +20,7 @@ namespace saconst{
 #define EPS 1.0e-6
 void SimulatedAnnealing(double (*PenaltyFunc)(double*, box*,int,int), 
 			box* system,
-            double *xacc,
+      double *xacc,
 			int    N,//number of parameters to be optimized.
 			int    NT,
 			int    NS,
@@ -71,7 +71,6 @@ void SimulatedAnnealing(double (*PenaltyFunc)(double*, box*,int,int),
     *                                      */
    iseed1 = 1; iseed2 = 2;
    rmarin(&iseed1,&iseed2);
-
    for(saiter=0;saiter<sa_max;saiter++){
       /*                *
        *  m, j, h loop  *
@@ -98,11 +97,11 @@ void SimulatedAnnealing(double (*PenaltyFunc)(double*, box*,int,int),
 		  else
 		     for(h0=0;h0<N;h0++)
 			xp[h0] = xacc[h0];
+			penaltyp=0.0;
 		  for(size_t i=0;i<control::ionsize.size();i++){
-		    penaltyp = PenaltyFunc(xp,control::database[i],control::ionsize[i],control::minienergytick[i]);//Zhenbang
+		    penaltyp += PenaltyFunc(xp,control::database[i],control::ionsize[i],control::minienergytick[i]);//Zhenbang
           }
 		  nfcnev += 1;
-		  
 		  if (penaltyp < penaltyACC)
 		     {
 			for(h0=0;h0<N;h0++)

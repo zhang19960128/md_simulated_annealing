@@ -249,19 +249,19 @@ double PenaltyFunc(double* xp, box* system,int numberone, int index){
     box* ionall = system; 
     int number = numberone;
     double* totalEnergy = new double[number];
-
     for (size_t i=0; i<number; i++){
         ionall[i].mdenergy = 0;
         ionall[i].updatebvparameter(control::bvvmatrix);
         for (size_t j=0; j<ionall[i].size; j++){
             for (size_t k=0; k<species::spe.size();k++){
                 if (ionall[i].allatom[j].type == k){
-                    ionall[i].allatom[j].charge == control::charge[k];
+                    ionall[i].allatom[j].charge == control::para_site_charge[species::site[k]];
                 }
             }
         }
-        ionall[i].computeAll();
-    }    
+   //     ionall[i].computeAll();
+    }
+		ionall[0].computeAll();
     /*Calculate the penalty*/
     double PenaltyE = 0;
     double PenaltyF = 0;

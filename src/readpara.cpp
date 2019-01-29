@@ -397,6 +397,7 @@ void readPT(std::string PTfile){
         temp_size=referenceStruct(temp_box,temp_size);
         control::minienergytick.push_back(temp_size);
     }
+		std::cout<<"End Preparing process------"<<std::endl;
 }
 int map_xptick_chargetick(int xptick){
 	int sum=0;

@@ -11,7 +11,6 @@
 int main(){
 	 readPT("control.PT");
 	 int size_box;
-	 /*
    SimulatedAnnealing(&PenaltyFunc,
 			 control::database[0],
 			 control::xop,
@@ -25,6 +24,5 @@ int main(){
 			 control::ub,
 			 control::lb,
 			 control::c);
-			 */
      return 0;
 }
