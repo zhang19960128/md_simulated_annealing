@@ -259,9 +259,9 @@ double PenaltyFunc(double* xp, box* system,int numberone, int index){
                 }
             }
         }
-   //     ionall[i].computeAll();
+        ionall[i].computeAll();
     }
-		ionall[0].computeAll();
+	//	ionall[0].computeAll();
     /*Calculate the penalty*/
     double PenaltyE = 0;
     double PenaltyF = 0;
