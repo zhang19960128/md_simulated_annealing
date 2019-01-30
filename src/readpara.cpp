@@ -398,6 +398,11 @@ void readPT(std::string PTfile){
         control::minienergytick.push_back(temp_size);
     }
 		std::cout<<"End Preparing process------"<<std::endl;
+		/*------------------Debug result----------------------------*/
+		std::cout<<"Debug"<<std::endl;
+		for(size_t i=0;i<species::spe.size();i++){
+			std::cout<<species::site[i]<<std::endl;
+		}
 }
 int map_xptick_chargetick(int xptick){
 	int sum=0;

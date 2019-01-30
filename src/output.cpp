@@ -46,19 +46,20 @@ void writeoutput(box* input,int size,int tick,int saiter,std::string deoptfile,s
 void write_opt_parameter(std::string optout){
 	std::fstream fs;
 	fs.open(optout,std::fstream::app);
+	fs<<"the new-optimized parameters are: "<<std::endl;
 	for(size_t i=0;i<control::pair_num;i++){
 	  for(size_t j=0;j<12;j++){
-			fs<<control::bvvmatrix[i][j]<<"\t";
+			fs<<std::setw(8)<<control::bvvmatrix[i][j]<<"\t";
 		}
-		fs<<std::cout<<std::endl;
+		fs<<std::endl;
 	}
 	for(std::vector<std::string>::iterator a=species::spe.begin();a!=species::spe.end();a++){
-		std::cout<<*a<<"\t";
+		fs<<*a<<"\t";
 	}
-	std::cout<<std::endl;
+	fs<<std::endl;
 	size_t size=species::spe.size();
 	for(size_t i=0;i<size;i++){
-		std::cout<<control::charge[i]<<"\t";
+		fs<<std::setw(8)<<control::charge[i]<<"\t";
 	}
-	std::cout<<std::endl;
+	fs<<std::endl;
 }

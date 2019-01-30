@@ -249,7 +249,7 @@ void mapjiahao(double* xp){
 }
 double PenaltyFunc(double* xp, box* system,int numberone, int index){
     int indexRef = index;
-    map(xp);
+    mapjiahao(xp);
     double penalty = 0.0;
     box* ionall = system; 
     int number = numberone;
@@ -260,7 +260,7 @@ double PenaltyFunc(double* xp, box* system,int numberone, int index){
         for (size_t j=0; j<ionall[i].size; j++){
             for (size_t k=0; k<species::spe.size();k++){
                 if (ionall[i].allatom[j].type == k){
-                    ionall[i].allatom[j].charge == control::para_site_charge[species::site[k]];
+                    ionall[i].allatom[j].charge == control::charge[k];
                 }
             }
         }
