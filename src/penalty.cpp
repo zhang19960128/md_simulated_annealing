@@ -259,14 +259,12 @@ double PenaltyFunc(double* xp, box* system,int numberone, int index){
         ionall[i].updatebvparameter(control::bvvmatrix);
         for (size_t j=0; j<ionall[i].size; j++){
             for (size_t k=0; k<species::spe.size();k++){
-                if (ionall[i].allatom[j].type == k){
-                    ionall[i].allatom[j].charge == control::charge[k];
-                }
+                    ionall[i].allatom[j].charge == control::charge[ionall[i].allatom[j].type];
             }
         }
         ionall[i].computeAll();
     }
-	//	ionall[0].computeAll();
+		std::cout<<ionall[0].allatom[1].neibv.size()<<std::endl;
     /*Calculate the penalty*/
     double PenaltyE = 0;
     double PenaltyF = 0;

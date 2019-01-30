@@ -98,6 +98,7 @@ void SimulatedAnnealing(double (*PenaltyFunc)(double*, box*,int,int),
 		  else
 		     for(h0=0;h0<N;h0++)
 			xp[h0] = xacc[h0];
+			/*calculating penalty*/
 			penaltyp=0.0;
 		  for(size_t i=0;i<control::ionsize.size();i++){
 		    penaltyp += PenaltyFunc(xp,control::database[i],control::ionsize[i],control::minienergytick[i]);//Zhenbang
