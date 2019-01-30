@@ -35,8 +35,8 @@ class box{
 				double** pairbvv_input,
 				double** pairlj_input,
                 double ljcut=8.0
-                );
-		void init(atom* inputallatom,int s,int t,double maxcutoff,double* period,double dft_energy,double** stress_dft,double w);
+        );
+		void init(atom* inputallatom,int s,int t,double maxcutoff,double* period,double** input,double dft_energy,double** stress_dft,double w);
 		void settype(std::vector<int>& t);
 		void freezeforce();/*freeze force for other people to calculate accumulative force*/
 		void updatelistbv();/*update once and use forever, big trick*/

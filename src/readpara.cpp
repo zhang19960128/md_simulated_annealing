@@ -14,14 +14,14 @@
  determined the total parameters.*/
 int referenceStruct(box* system, int systemSize){
     int index = -1;
-    double reference = 1e20;
+    double reference = 1e25;
     int i = 0;
     for (i=0; i<systemSize; i++){
         if (system[i].dftenergy < reference){
            index = i; 
         }
     }
-    return i;
+    return index;
 }
 int oldname(std::vector<std::string>& input,std::string& temp){
 	int size=input.size();
@@ -179,7 +179,7 @@ void readPT(std::string PTfile){
 		temp=decomment(temp);
     if(temp.find_first_not_of("\t\n ")!=std::string::npos){
 	  input=split(temp,"=");
-		findvalue(input,"cutoff",ewaldsum::cutoff);
+		findvalue(input,"r-cutoff",ewaldsum::cutoff);
 		findvalue(input,"k-cutoff",ewaldsum::k_cutoff);
 		findvalue(input,"alpha",ewaldsum::alpha);
 		}
@@ -394,15 +394,12 @@ void readPT(std::string PTfile){
         temp_box=readion(control::ionfile[i],saconst::sa_atom_num,temp_size,ewaldsum::cutoff);
         control::database.push_back(temp_box);
         control::ionsize.push_back(temp_size);
+				std::cout<<"the length of database is: "<<temp_size<<" ";
         temp_size=referenceStruct(temp_box,temp_size);
+				std::cout<<"the minimum tick of database is: "<<temp_size<<std::endl;
         control::minienergytick.push_back(temp_size);
     }
 		std::cout<<"End Preparing process------"<<std::endl;
-		/*------------------Debug result----------------------------*/
-		std::cout<<"Debug"<<std::endl;
-		for(size_t i=0;i<species::spe.size();i++){
-			std::cout<<species::site[i]<<std::endl;
-		}
 }
 int map_xptick_chargetick(int xptick){
 	int sum=0;

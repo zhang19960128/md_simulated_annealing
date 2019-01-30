@@ -115,11 +115,7 @@ box* readion(std::string inputfile,int number,int& boxnumber,double cutoff){
 			}
 			atomconfig[i].type=type_tick[i];
 		}
-		ionall[tick].init(atomconfig,number,species::spe.size(),cutoff,period,dftenergy,stress_dft,weight);
-		ionall[tick].updatelistbv();
-		ionall[tick].updatelistbvv();
-		ionall[tick].updatelistlj();
-		ionall[tick].printnei(1);
+		ionall[tick].init(atomconfig,number,species::spe.size(),cutoff,period,control::bvvmatrix,dftenergy,stress_dft,weight);
 		delete [] atomconfig;
 	}
 	delete [] type_tick;

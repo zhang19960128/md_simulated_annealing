@@ -188,6 +188,7 @@ void box::computelong(double accuracy_relative){
 					    fz[i]=fz[i]+1/volume/2/epsil*temp*chargei*2*pi/p[2]*l*2*(snkr*skre-cskr*skim);
 						 }
 						 }
+		epsilonenergy=selfe+ShortRange+LongRange;
 		for(size_t i=0;i<size;i++){
 			allatom[i].force[0]+=fx[i];
 			allatom[i].force[1]+=fy[i];

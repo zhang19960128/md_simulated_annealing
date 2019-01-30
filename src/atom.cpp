@@ -139,7 +139,7 @@ void box::updatebvparameter(double** input){
 	  	temp++;
 		}
 }
-void box::init(atom* inputallatom,int s,int t,double maxcutoff,double* period,double dft_energy,double** stress_dft,double w){
+void box::init(atom* inputallatom,int s,int t,double maxcutoff,double* period,double** input,double dft_energy,double** stress_dft,double w){
 	p=new double[3];
 	for(size_t i=0;i<3;i++){
 		p[i]=period[i];
@@ -185,6 +185,10 @@ type=t;//specify how many type are in the simulation
 	virtatom=imageall(allatom,size,period,maxcutoff,virt_size);
 	virtsize=virt_size;
   ljrcut = maxcutoff;
+	this->updatebvparameter(input);
+	this->updatelistbv();
+	this->updatelistbvv();
+	this->updatelistlj();
 }
 void box::freezeforce(){
 	for(size_t i=0;i<size;i++){
