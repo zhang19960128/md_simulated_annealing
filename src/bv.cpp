@@ -50,7 +50,7 @@ void box::computebv(){
 			allatom[i].s0+=pow(r0[allatom[i].type][virtatom[*j].type]/r,cij[allatom[i].type][virtatom[*j].type]);
 		}
 		s=allatom[i].s0-v0[allatom[i].type][allatom[i].type];
-                bvenergy=sij[allatom[i].type][allatom[i].type]*(s*s)+bvenergy;
+    bvenergy=sij[allatom[i].type][allatom[i].type]*(s*s)+bvenergy;
 		fp[i]=2*sij[allatom[i].type][allatom[i].type]*s;
 	}
 	/*finished computing energy and started to compute force*/

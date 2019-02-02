@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <list>
 #include <iomanip>
+#include "readpara.h"
 #define pi 3.14159265359
 /*Perform the Ewald summation. The lattice paramters should be given*/
 #define EWALD_F   1.12837917//actually this is 2/sqrt(3)
@@ -38,12 +39,21 @@ void box::computelong(double accuracy_relative){
 		double* fx=new double [size];
 		double* fy=new double [size];
 		double* fz=new double [size];
+		/**
+		 * pass the charge from control::charge to here
+		 */
+		/******************************************************/
+		double* chargetype=new double [species::spe.size()];
+		for(size_t i=0;i<species::spe.size();i++){
+			chargetype[i]=control::charge[i];
+		}
+		/******************************************************/
 		double chargei,chargej,temp,temp2,r3,erfc_interpolate,expm2,grij,t;//erfc_exact; use to debug when compare different erfc function.
   /*determin the value of g_ewald according to the accuracy you want*/
 	double q2=0.0;
 	double accuracy=accuracy_relative*coul_prefactor/4.0/pi;
 	for(size_t i=0;i<size;i++){
-		q2=allatom[i].charge*allatom[i].charge+q2;
+		q2=chargetype[allatom[i].type]*chargetype[allatom[i].type]+q2;
 	}
 	q2=q2*coul_prefactor/4/pi;
 	ewald_alpha=accuracy*sqrt(size*ljrcut*p[0]*p[1]*p[2])/2.0/q2;
@@ -76,11 +86,11 @@ void box::computelong(double accuracy_relative){
 			 fx[i]=0.00;
 			 fy[i]=0.00;
 			 fz[i]=0.00;
-       allcharge[i]=allatom[i].charge;
-			 chargei=allcharge[i];
+       chargei=chargetype[allatom[i].type];
+			 allcharge[i]=chargetype[allatom[i].type];
 			 //std::cout<<"I got "<<allatom[i].neilj.size()<<"neighbors"<<std::endl;
        for(std::list<int>::iterator j=allatom[i].neilj.begin();j!=allatom[i].neilj.end();j++){
-         chargej=virtatom[*j].charge;
+         chargej=chargetype[virtatom[*j].type];
 				 delx=allatom[i].position[0]-virtatom[*j].position[0];
          dely=allatom[i].position[1]-virtatom[*j].position[1];
          delz=allatom[i].position[2]-virtatom[*j].position[2];
@@ -104,9 +114,8 @@ void box::computelong(double accuracy_relative){
 			 //std::cout<<i<<" "<<fx[i]<<" "<<fy[i]<<" "<<fz[i]<<std::endl;
     }
     ShortRange=ShortRange/2.0;
-		//std::cout<<"the short range coulumb potential is: "<<std::setprecision(10)<<ShortRange<<std::endl;
     for(size_t i=0;i<size;i++){
-      selfe=selfe-1/root2pi/sigma/4/pi/epsil*(allatom[i].charge)*allatom[i].charge;
+      selfe=selfe-1/root2pi/sigma/4/pi/epsil*(chargetype[allatom[i].type])*chargetype[allatom[i].type];
     }
 		//std::cout<<"the self energy is: "<<selfe<<std::endl;
     /*calculate the longrange energy*/
@@ -216,5 +225,6 @@ void box::computelong(double accuracy_relative){
 		delete [] fx;
 		delete [] fy;
 		delete [] fz;
+		delete [] chargetype;
     /*end memory allocation*/
 }

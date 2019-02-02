@@ -301,7 +301,7 @@ void readPT(std::string PTfile){
 	std::cout<<"the starting BDV model parameters are:"<<std::endl;
 	for(size_t i=0;i<control::pair_num;i++){
 		for(size_t j=0;j<12;j++){
-			std::cout<<std::setprecision(10)<<std::setw(5)<<control::bvvmatrix[i][j]<<"\t";
+			std::cout<<std::setprecision(7)<<std::setw(7)<<control::bvvmatrix[i][j]<<"\t";
 		}
 		std::cout<<std::endl;
 	}
@@ -327,7 +327,9 @@ void readPT(std::string PTfile){
 		do{
 			temp=decomment(temp);
 			std::cout<<temp<<"\t";
+			if(tick<control::paracount_bvv+control::paracount_charge){
 			control::lb[tick]=std::stof(temp);
+			}
 			tick=tick+1;
 			getline(fs,temp);
 		}while(temp.find("/")==std::string::npos);
@@ -342,7 +344,9 @@ void readPT(std::string PTfile){
 		do{
 			temp=decomment(temp);
 			std::cout<<temp<<"\t";
+			if(tick<control::paracount_bvv+control::paracount_charge){
 			control::ub[tick]=std::stof(temp);
+			}
 			tick=tick+1;
 			getline(fs,temp);
 		}while(temp.find("/")==std::string::npos);
