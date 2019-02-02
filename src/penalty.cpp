@@ -257,22 +257,8 @@ double PenaltyFunc(double* xp, box* system,int numberone, int index){
     for (size_t i=0; i<number; i++){
         ionall[i].mdenergy = 0;
         ionall[i].updatebvparameter(control::bvvmatrix);
-        for (size_t j=0; j<ionall[i].size; j++){
-            for (size_t k=0; k<species::spe.size();k++){
-                    ionall[i].allatom[j].charge = control::charge[ionall[i].allatom[j].type];
-            }
-        }
         ionall[i].computeAll();
     }
-		for(size_t i=0;i<numberone;i++){
-		std::cout<<"the md energy is: "<<ionall[i].mdenergy<<"the dft energy is: "<<ionall[0].dftenergy<<std::endl;
-		for(size_t j=0;j<ionall[i].size;j++){
-			for(size_t k=0;k<3;k++){
-				std::cout<<ionall[i].allatom[j].force[k]<<"\t";
-			}
-			std::cout<<std::endl;
-		}
-		}
     /*Calculate the penalty*/
     double PenaltyE = 0;
     double PenaltyF = 0;
@@ -286,6 +272,7 @@ double PenaltyFunc(double* xp, box* system,int numberone, int index){
     }
     PenaltyE = PenaltyE/number*saconst::sa_eweight;
     PenaltyF = PenaltyF/(number*3*ionall[0].size)*saconst::sa_fweight;
+		penalty = PenaltyE + PenaltyF;
 		std::cout<<"the penalty is : "<<penalty<<std::endl;
-    return penalty = PenaltyE + PenaltyF;
+    return penalty;
 }

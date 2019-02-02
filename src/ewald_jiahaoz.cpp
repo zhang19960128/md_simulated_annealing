@@ -35,7 +35,6 @@ void box::computelong(double accuracy_relative){
     double* xall=new double[size];
     double* yall=new double [size];
     double* zall=new double [size];
-    double* allcharge=new double [size];
 		double* fx=new double [size];
 		double* fy=new double [size];
 		double* fz=new double [size];
@@ -87,7 +86,6 @@ void box::computelong(double accuracy_relative){
 			 fy[i]=0.00;
 			 fz[i]=0.00;
        chargei=chargetype[allatom[i].type];
-			 allcharge[i]=chargetype[allatom[i].type];
 			 //std::cout<<"I got "<<allatom[i].neilj.size()<<"neighbors"<<std::endl;
        for(std::list<int>::iterator j=allatom[i].neilj.begin();j!=allatom[i].neilj.end();j++){
          chargej=chargetype[virtatom[*j].type];
@@ -162,15 +160,16 @@ void box::computelong(double accuracy_relative){
 	       }
              for(size_t i=0;i<size;i++){
 	        /*finish computing real part*/
-                skre=skre+(cskxrx[abs(h)][i]*cskyry[abs(k)][i]*cskzrz[abs(l)][i])*allcharge[i];
-                skre=skre-allcharge[i]*cskxrx[abs(h)][i]*snkyry[abs(k)][i]*snkzrz[abs(l)][i]*(k>0 ? 1:-1)*(l>0 ? 1:-1);
-	        skre=skre-allcharge[i]*snkxrx[abs(h)][i]*cskyry[abs(k)][i]*snkzrz[abs(l)][i]*(h>0 ? 1:-1)*(l>0 ? 1:-1);
-	        skre=skre-allcharge[i]*snkxrx[abs(h)][i]*snkyry[abs(k)][i]*cskzrz[abs(l)][i]*(h>0 ? 1:-1)*(k>0 ? 1:-1);
+							 chargei=chargetype[allatom[i].type];
+                skre=skre+(cskxrx[abs(h)][i]*cskyry[abs(k)][i]*cskzrz[abs(l)][i])*chargei;
+                skre=skre-chargei*cskxrx[abs(h)][i]*snkyry[abs(k)][i]*snkzrz[abs(l)][i]*(k>0 ? 1:-1)*(l>0 ? 1:-1);
+	        skre=skre-chargei*snkxrx[abs(h)][i]*cskyry[abs(k)][i]*snkzrz[abs(l)][i]*(h>0 ? 1:-1)*(l>0 ? 1:-1);
+	        skre=skre-chargei*snkxrx[abs(h)][i]*snkyry[abs(k)][i]*cskzrz[abs(l)][i]*(h>0 ? 1:-1)*(k>0 ? 1:-1);
 	        /*start to compute the imaginary part*/
-	        skim=skim+allcharge[i]*cskxrx[abs(h)][i]*cskyry[abs(k)][i]*snkzrz[abs(l)][i]*(l>0 ? 1:-1);
-	        skim=skim+allcharge[i]*snkxrx[abs(h)][i]*cskyry[abs(k)][i]*cskzrz[abs(l)][i]*(h>0 ? 1:-1);
-	        skim=skim+allcharge[i]*cskxrx[abs(h)][i]*snkyry[abs(k)][i]*cskzrz[abs(l)][i]*(k>0 ? 1:-1);
-	        skim=skim-allcharge[i]*snkxrx[abs(h)][i]*snkyry[abs(k)][i]*snkzrz[abs(l)][i]*(h>0 ? 1:-1)*(k>0 ? 1:-1)*(l>0 ? 1:-1);
+	        skim=skim+chargei*cskxrx[abs(h)][i]*cskyry[abs(k)][i]*snkzrz[abs(l)][i]*(l>0 ? 1:-1);
+	        skim=skim+chargei*snkxrx[abs(h)][i]*cskyry[abs(k)][i]*cskzrz[abs(l)][i]*(h>0 ? 1:-1);
+	        skim=skim+chargei*cskxrx[abs(h)][i]*snkyry[abs(k)][i]*cskzrz[abs(l)][i]*(k>0 ? 1:-1);
+	        skim=skim-chargei*snkxrx[abs(h)][i]*snkyry[abs(k)][i]*snkzrz[abs(l)][i]*(h>0 ? 1:-1)*(k>0 ? 1:-1)*(l>0 ? 1:-1);
 						 }
           ksq=h*2*pi/p[0]*h*2*pi/p[0]+k*2*pi/p[1]*k*2*pi/p[1]+l*2*pi/p[2]*l*2*pi/p[2];
 		      skmodsq=skre*skre+skim*skim;
@@ -178,7 +177,7 @@ void box::computelong(double accuracy_relative){
 		      LongRange=LongRange+1/volume/2/epsil*temp*skmodsq;
 						 for(size_t i=0;i<size;i++){
 		//std::cout<<"the real part is: "<<skre<<" the imaginary part is: "<<skim<<std::endl;
-		 			chargei=allcharge[i];
+		 			chargei=chargetype[allatom[i].type];
 		 			kr=h*2*pi/p[0]*xall[i]+k*2*pi/p[1]*yall[i]+l*2*pi/p[2]*zall[i];
 					snkr=sin(kr);
 					//snkr=(snkxrx[abs(h)][i]*cskyry[abs(k)][i])*cskzrz[abs(l)][i]*(h>0?1:-1);
@@ -221,7 +220,6 @@ void box::computelong(double accuracy_relative){
     delete [] xall;
     delete [] yall;
     delete [] zall;
-    delete [] allcharge;
 		delete [] fx;
 		delete [] fy;
 		delete [] fz;

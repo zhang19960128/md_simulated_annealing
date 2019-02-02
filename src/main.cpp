@@ -11,7 +11,6 @@
 int main(){
 	 readPT("control.PT");
 	 int size_box;
-	 /*
    SimulatedAnnealing(&PenaltyFunc,
 			 control::database[0],
 			 control::xop,
@@ -25,7 +24,6 @@ int main(){
 			 control::ub,
 			 control::lb,
 			 control::c);
-     */
 	 int i=0;
 		double penaltyp = PenaltyFunc(control::xop,control::database[i],control::ionsize[i],control::minienergytick[i]);//Zhenbang
 		return 0;
