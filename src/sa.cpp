@@ -122,7 +122,6 @@ void SimulatedAnnealing(double (*PenaltyFunc)(double*, box*,int,int),
 			  // WriteFiles(NT,NS,N,h,j,m, saiter, nnew, penaltyp, vm);
 			   fprintf(safile,"  NEW OPTIMUM\t%10.5lg %7d %7d %7d %3d %10.5lg\n",
 				   penaltyOPT,saiter,m,j,h,xp[h]);
-			   fflush(safile);
 			}
 		     }
 		  else

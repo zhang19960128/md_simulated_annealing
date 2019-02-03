@@ -19,6 +19,7 @@ int referenceStruct(box* system, int systemSize){
     for (i=0; i<systemSize; i++){
         if (system[i].dftenergy < reference){
            index = i; 
+					 reference=system[i].dftenergy;
         }
     }
     return index;
