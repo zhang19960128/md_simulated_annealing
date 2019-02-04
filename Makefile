@@ -1,4 +1,4 @@
-CXX=g++
+CXX=icpc
 CXXFLAGS= -std=c++11
 DEPS= interface.h image.h atom.h readion.h readpara.h sa.h penalty.h simann.h
 LIBPATH =

@@ -273,6 +273,5 @@ double PenaltyFunc(double* xp, box* system,int numberone, int index){
     PenaltyE = PenaltyE/number*saconst::sa_eweight;
     PenaltyF = PenaltyF/(number*3*ionall[0].size)*saconst::sa_fweight;
 		penalty = PenaltyE + PenaltyF;
-		std::cout<<"the penalty is : "<<penalty<<std::endl;
     return penalty;
 }
